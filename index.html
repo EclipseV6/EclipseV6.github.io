@@ -530,7 +530,7 @@
             });
 
             // taskbar icon binding
-            const t = el('div'); t.className = 'taskbar-icon'; t.innerHTML = `<img src="${(installedApps && installedApps[0] && installedApps[0].icon) || '/assets/icons/browser.png'}"><div class="dot"></div>`;
+            const t = el('div'); t.className = 'taskbar-icon'; t.innerHTML = `<img src="${(installedApps && installedApps[0] && installedApps[0].icon) || '/assets/browsericons/browser.png'}"><div class="dot"></div>`;
             t.addEventListener('click', () => {
               if (win.style.display === 'none') { win.style.display = 'flex'; t.classList.remove('active'); const all = Array.from(document.querySelectorAll('.window')); const top = Math.max(0, ...all.map(w => Number(w.style.zIndex || 0))); win.style.zIndex = top + 1; }
               else { win.style.display = 'none'; t.classList.add('active'); }
