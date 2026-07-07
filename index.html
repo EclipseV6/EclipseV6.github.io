@@ -92,6 +92,51 @@
       .browser-address{max-width:520px}
       #quick-left{display:none}
     }
+    /* Context Menu */
+#context-menu{
+  position:fixed;
+  display:none;
+  min-width:180px;
+  background:rgba(18,18,18,.96);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:12px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  overflow:hidden;
+  z-index:99999;
+}
+
+.ctx-item{
+  padding:12px 16px;
+  cursor:pointer;
+  color:var(--text);
+  font-size:14px;
+  transition:.15s;
+}
+
+.ctx-item:hover{
+  background:rgba(255,31,58,.15);
+  color:#fff;
+}
+    .pin-menu{
+  position:fixed;
+  background:#111;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;
+  overflow:hidden;
+  z-index:99999;
+  box-shadow:0 15px 40px rgba(0,0,0,.65);
+}
+
+.pin-item{
+  padding:10px 14px;
+  cursor:pointer;
+  color:white;
+}
+
+.pin-item:hover{
+  background:rgba(255,31,58,.2);
+}
   </style>
 </head>
 <body>
@@ -105,6 +150,25 @@
     <div class="desktop-icon" style="top:20px; left:260px" data-app="settings" data-name="Settings">
       <img src="/assets/browsericons/settings.png" alt=""><span>Settings</span>
     </div>
+    <div class="desktop-icon" style="top:20px; left:380px" data-app="games">
+  <img src="/assets/browsericons/games.png" alt="">
+  <span>Games</span>
+</div>
+
+<div class="desktop-icon" style="top:20px; left:500px" data-app="movies">
+  <img src="/assets/browsericons/movies.png" alt="">
+  <span>Movies</span>
+</div>
+
+<div class="desktop-icon" style="top:20px; left:620px" data-app="launcher">
+  <img src="/assets/browsericons/launcher.png" alt="">
+  <span>Launcher</span>
+</div>
+
+<div class="desktop-icon" style="top:20px; left:740px" data-app="phoenix">
+  <img src="/assets/browsericons/phoenix.png" alt="">
+  <span>Phoenix</span>
+</div>
   </div>
 
   <div id="quick-left">
@@ -169,10 +233,47 @@
         const KEY_ICONS = 'eclipse_icons_v_safe';
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
 
-        const presetLibrary = [
-          { id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: 'Eclipse://Home' },
- 
-        ];
+       const presetLibrary = [
+  {
+    id: 'home',
+    name: 'Eclipse Home',
+    url: 'https://7-7-7-14.github.io/active',
+    icon: '/assets/browsericons/home.png',
+    label: 'Eclipse://Home'
+  },
+
+  {
+    id: 'games',
+    name: 'Games',
+    url: 'https://eclipsev6.github.io/g/',
+    icon: '/assets/browsericons/games.png',
+    label: 'Eclipse://Games'
+  },
+
+  {
+    id: 'movies',
+    name: 'Movies',
+    url: 'https://eclipsev6.github.io/m/',
+    icon: '/assets/browsericons/movies.png',
+    label: 'Eclipse://Movies'
+  },
+
+  {
+    id: 'launcher',
+    name: 'Launcher',
+    url: 'https://eclipsev6.github.io/l/',
+    icon: '/assets/browsericons/launcher.png',
+    label: 'Eclipse://Launcher'
+  },
+
+  {
+    id: 'phoenix',
+    name: 'Phoenix',
+    url: 'https://eclipsev6.github.io/m/p/',
+    icon: '/assets/browsericons/phoenix.png',
+    label: 'Eclipse://Phoenix'
+  }
+];
 
         let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
         let desktopIconsPersist = JSON.parse(localStorage.getItem(KEY_ICONS) || '[]');
@@ -318,22 +419,35 @@
         }
 
         function showContextMenuFor(node, x, y) {
-          const ctx = $('#context-menu');
-          if (!ctx) return;
-          ctx.style.left = x + 'px'; ctx.style.top = y + 'px'; ctx.style.display = 'block';
-          function onClick(ev) {
-            const action = ev.target.dataset.action;
-            if (!action) return;
-            if (action === 'open') node.dispatchEvent(new MouseEvent('dblclick'));
-            else if (action === 'edit') enableIconEdit(node);
-            else if (action === 'pin') pinToTaskbar(node);
-            else if (action === 'delete') removeDesktopIcon(node);
-            ctx.removeEventListener('click', onClick);
-            ctx.style.display = 'none';
-          }
-          ctx.addEventListener('click', onClick);
-          document.addEventListener('click', function hide() { ctx.style.display = 'none'; document.removeEventListener('click', hide); }, { once: true });
-        }
+  const ctx = $('#context-menu');
+  if (!ctx) return;
+
+  ctx.style.display = 'block';
+  ctx.style.left = x + 'px';
+  ctx.style.top = y + 'px';
+  ctx.style.zIndex = '99999';
+
+  function onClick(ev) {
+    const action = ev.target.dataset.action;
+
+    if (action === 'open')
+      node.dispatchEvent(new MouseEvent('dblclick'));
+
+    else if (action === 'edit')
+      enableIconEdit(node);
+
+    else if (action === 'pin')
+      pinToTaskbar(node);
+
+    else if (action === 'delete')
+      removeDesktopIcon(node);
+
+    ctx.style.display = 'none';
+    ctx.removeEventListener('click', onClick);
+  }
+
+  ctx.addEventListener('click', onClick);
+}
 
         function enableIconEdit(node) {
           try {
@@ -368,24 +482,94 @@
           } catch (e) { console.warn('enableIconEdit error', e); }
         }
 
-        function pinToTaskbar(node) {
-          try {
-            const img = node.querySelector('img')?.src || makePlaceholderIcon(node.querySelector('span')?.textContent || 'A');
-            const t = el('div'); t.className = 'taskbar-icon'; t.innerHTML = `<img src="${img}"><div class="dot"></div>`;
-            t.addEventListener('click', () => node.dispatchEvent(new MouseEvent('dblclick')));
-            taskbar && taskbar.appendChild(t);
-          } catch (e) { console.warn('pinToTaskbar err', e); }
-        }
+       function pinToTaskbar(node) {
 
-        function removeDesktopIcon(node) {
-          if (!confirm('Remove icon?')) return;
-          const id = node.dataset.customId;
-          if (id) {
-            const ix = (desktopIconsPersist || []).findIndex(x => x.id === id);
-            if (ix >= 0) { desktopIconsPersist.splice(ix, 1); saveState(); }
-          }
-          node.remove();
-        }
+  const img =
+    node.querySelector('img')?.src ||
+    makePlaceholderIcon("A");
+
+  const name =
+    node.querySelector('span')?.textContent ||
+    "App";
+
+  const t = document.createElement("div");
+
+  t.className = "taskbar-icon";
+
+  t.innerHTML = `
+    <img src="${img}">
+    <div class="dot"></div>
+  `;
+
+  taskbar.appendChild(t);
+
+  // launch
+  t.addEventListener("click", () => {
+    node.dispatchEvent(new MouseEvent("dblclick"));
+  });
+
+  // right click
+  t.addEventListener("contextmenu", e => {
+
+    e.preventDefault();
+
+    const menu = document.createElement("div");
+
+    menu.className = "pin-menu";
+
+    menu.style.left = e.clientX + "px";
+    menu.style.top  = e.clientY + "px";
+
+    menu.innerHTML = `
+      <div class="pin-item">Unpin from Taskbar</div>
+    `;
+
+    document.body.appendChild(menu);
+
+    menu.querySelector(".pin-item")
+      .addEventListener("click", () => {
+        t.remove();
+        menu.remove();
+        showToast(name + " unpinned");
+      });
+
+    document.addEventListener("click", () => {
+      menu.remove();
+    }, { once:true });
+
+  });
+
+}
+function removeDesktopIcon(node) {
+
+  const appRef = node.dataset.app;
+  const appName = node.querySelector("span")?.textContent;
+
+  if (!confirm(`Remove ${appName}?`))
+    return;
+
+  // Remove icon from desktop
+  node.remove();
+
+  // Remove saved desktop icon
+  desktopIconsPersist =
+    desktopIconsPersist.filter(icon =>
+      icon.appRef !== appRef
+    );
+
+  // Remove installed app by ID OR name
+  installedApps =
+    installedApps.filter(app =>
+      app.id !== appRef &&
+      app.name !== appName
+    );
+
+  saveState();
+
+  populateLauncher();
+
+  showToast(appName + " removed");
+}
 
         /* Smooth draggable helper (requestAnimationFrame batch + pointer capture) */
         function makeDraggable(elm, handle) {
@@ -562,9 +746,98 @@
         function openSettings() {
           try {
             const { win, content } = createWindow({ title: 'Settings', width: 780, height: 520 });
-            content.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div class="settings-card"><h3>Appearance</h3><p class="muted">Window opacity</p><div style="margin-top:12px"><input id="s-opacity" type="range" min="0.4" max="1" step="0.01" value="${settings.windowOpacity}" style="width:100%"></div></div><div class="settings-card"><h3>Network</h3><p class="muted">Proxy base (optional)</p><div style="margin-top:8px"><input id="s-proxy" placeholder="https://your-proxy/?u=" value="${settings.proxyBase||''}" style="width:100%;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);color:var(--text)"></div></div></div>`;
+         content.innerHTML = `
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+
+  <div class="settings-card">
+    <h3>Appearance</h3>
+    <p class="muted">Window opacity</p>
+
+    <input
+      id="s-opacity"
+      type="range"
+      min="0.4"
+      max="1"
+      step="0.01"
+      value="${settings.windowOpacity}"
+      style="width:100%"
+    >
+  </div>
+
+  <div class="settings-card">
+    <h3>Network</h3>
+
+    <p class="muted">Proxy base (optional)</p>
+
+    <input
+      id="s-proxy"
+      value="${settings.proxyBase || ''}"
+      placeholder="https://your-proxy/?u="
+      style="
+        width:100%;
+        padding:8px;
+        border-radius:8px;
+      "
+    >
+  </div>
+
+  <div class="settings-card">
+    <h3>Apps</h3>
+
+    <p class="muted">
+      Remove all installed apps and desktop icons.
+    </p>
+
+    <button
+      id="reset-apps"
+      class="primary-btn"
+      style="margin-top:12px"
+       >
+      Reset Apps
+    </button>
+  </div>
+
+</div>`;
+
             const op = content.querySelector('#s-opacity'); if (op) op.addEventListener('input', (e) => { settings.windowOpacity = Number(e.target.value); document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity)); saveState(); });
-            const pr = content.querySelector('#s-proxy'); if (pr) pr.addEventListener('input', (e) => { settings.proxyBase = e.target.value.trim(); saveState(); });
+            const pr = content.querySelector('#s-proxy'); const resetApps =
+  content.querySelector("#reset-apps");
+
+if(resetApps){
+
+  resetApps.addEventListener("click",()=>{
+
+    if(
+      !confirm(
+        "Remove ALL installed apps?"
+      )
+    ) return;
+
+    installedApps = [];
+
+    desktopIconsPersist = [];
+
+    localStorage.removeItem(KEY_APPS);
+    localStorage.removeItem(KEY_ICONS);
+
+    document
+      .querySelectorAll(
+        ".desktop-icon[data-custom-id]"
+      )
+      .forEach(icon=>icon.remove());
+
+    saveState();
+
+    populateLauncher();
+
+    showToast(
+      "All apps removed"
+    );
+
+  });
+
+}
+            if (pr) pr.addEventListener('input', (e) => { settings.proxyBase = e.target.value.trim(); saveState(); });
           } catch (e) { console.warn('openSettings err', e); }
         }
 
@@ -597,7 +870,27 @@
                 inst.appendChild(card);
                 card.querySelector('.launch').addEventListener('click', () => openInstalledApp(it));
                 card.querySelector('.add-desktop').addEventListener('click', () => { const pos = { id: 'c-' + Math.random().toString(36).slice(2, 9), name: it.name, icon: it.icon || makePlaceholderIcon(it.name), top: '160px', left: (160 + Math.random() * 300) + 'px', appRef: it.id }; desktopIconsPersist.push(pos); saveState(); renderPersistedIcons(); showToast('Added to desktop'); });
-                card.querySelector('.remove').addEventListener('click', () => { const idx = installedApps.findIndex(x => x.id === it.id); if (idx >= 0) { installedApps.splice(idx, 1); saveState(); render(); populateLauncher(); } });
+               card.querySelector('.remove').addEventListener('click', () => {
+
+  if (!confirm(`Remove ${it.name}?`))
+    return;
+
+  installedApps =
+    installedApps.filter(app => app.id !== it.id);
+
+  desktopIconsPersist =
+    desktopIconsPersist.filter(icon =>
+      icon.appRef !== it.id
+    );
+
+  saveState();
+
+  render();
+  populateLauncher();
+  renderPersistedIcons();
+
+  showToast(it.name + " removed");
+});
               }
             }
             filter && filter.addEventListener('input', render);
