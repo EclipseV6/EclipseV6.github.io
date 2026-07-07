@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Eclipse OS</title>
+  <title>Eclipse OS 6.0.1</title>
   <link rel="icon" href="/assets/logo/logo.png" id="page-favicon">
   <style>
     /* Theme */
@@ -97,13 +97,13 @@
 <body>
   <div id="desktop">
     <div class="desktop-icon" style="top:20px; left:20px" data-app="browser" data-name="Browser">
-      <img src="/assets/icons/browser.png" alt=""><span>Browser</span>
+      <img src="/assets/browsericons/browser.png" alt=""><span>Browser</span>
     </div>
     <div class="desktop-icon" style="top:20px; left:140px" data-app="files" data-name="Files">
-      <img src="/assets/icons/files.png" alt=""><span>Files</span>
+      <img src="/assets/browsericons/files.png" alt=""><span>Files</span>
     </div>
     <div class="desktop-icon" style="top:20px; left:260px" data-app="settings" data-name="Settings">
-      <img src="/assets/icons/settings.png" alt=""><span>Settings</span>
+      <img src="/assets/browsericons/settings.png" alt=""><span>Settings</span>
     </div>
   </div>
 
@@ -170,8 +170,8 @@
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
 
         const presetLibrary = [
-          { id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/icons/browser.png', label: 'Eclipse://Home' },
-          { id: 'browser', name: 'Eclipse Browser', url: 'https://7-7-7-14.github.io/active', icon: '/assets/icons/browser.png', label: 'Eclipse://Browser' }
+          { id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: 'Eclipse://Home' },
+     
         ];
 
         let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
@@ -244,10 +244,10 @@
           if (!launcherGrid) return;
           launcherGrid.innerHTML = '';
           const builtin = [
-            { id: 'browser', name: 'Browser', icon: '/assets/icons/browser.png', action: () => openBuiltIn('browser') },
-            { id: 'files', name: 'Files', icon: '/assets/icons/files.png', action: () => openBuiltIn('files') },
-            { id: 'settings', name: 'Settings', icon: '/assets/icons/settings.png', action: () => openBuiltIn('settings') },
-            { id: 'store', name: 'Store', icon: '/assets/icons/store.png', action: () => openBuiltIn('store') }
+            { id: 'browser', name: 'Browser', icon: '/assets/browsericons/browser.png', action: () => openBuiltIn('browser') },
+            { id: 'files', name: 'Files', icon: '/assets/browsericons/files.png', action: () => openBuiltIn('files') },
+            { id: 'settings', name: 'Settings', icon: '/assets/browsericons/settings.png', action: () => openBuiltIn('settings') },
+            { id: 'store', name: 'Store', icon: '/assets/browsericons/store.png', action: () => openBuiltIn('store') }
           ];
           const items = builtin.concat(installedApps || []);
           const filtered = items.filter(it => !filter || (it.name || it.label || '').toLowerCase().includes(filter.toLowerCase()));
