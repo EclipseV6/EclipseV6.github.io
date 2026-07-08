@@ -237,6 +237,66 @@ input[type="range"]::-moz-range-thumb{
   position:relative;
   z-index:10002;
 }
+    .eos-toast{
+  position:fixed;
+  right:20px;
+  bottom:100px;
+
+  min-width:280px;
+
+  background:rgba(12,12,12,.96);
+  color:white;
+
+  padding:14px 16px 10px;
+
+  border-radius:12px;
+
+  border:1px solid rgba(255,255,255,.06);
+
+  backdrop-filter:blur(20px);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.55);
+
+  overflow:hidden;
+
+  animation:
+    toastIn .18s ease-out;
+
+  z-index:99999;
+}
+
+.eos-toast-bar{
+  position:absolute;
+  left:0;
+  bottom:0;
+
+  height:4px;
+  width:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  transform-origin:left center;
+}
+
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:
+      translateY(15px);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0);
+  }
+}
 
   </style>
 </head>
@@ -390,8 +450,55 @@ fill="white"
         const $ = s => document.querySelector(s);
         const $$ = s => Array.from(document.querySelectorAll(s));
         function el(tag, attrs = {}) { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
-        function showToast(msg, t = 2200) { const to = el('div'); to.className = 'eos-toast'; to.textContent = msg; document.body.appendChild(to); setTimeout(() => { to.style.opacity = 0; setTimeout(() => to.remove(), 220); }, t); }
+function showToast(msg, t = 2200){
 
+  const toast =
+    document.createElement("div");
+
+  toast.className =
+    "eos-toast";
+
+  toast.innerHTML = `
+    <div>${msg}</div>
+    <div class="eos-toast-bar"></div>
+  `;
+
+  document.body.appendChild(
+    toast
+  );
+
+  const bar =
+    toast.querySelector(
+      ".eos-toast-bar"
+    );
+
+  bar.animate(
+    [
+      { transform:"scaleX(1)" },
+      { transform:"scaleX(0)" }
+    ],
+    {
+      duration:t,
+      easing:"linear",
+      fill:"forwards"
+    }
+  );
+
+  setTimeout(()=>{
+
+    toast.style.transition =
+      "opacity .2s";
+
+    toast.style.opacity = "0";
+
+    setTimeout(
+      ()=>toast.remove(),
+      200
+    );
+
+  }, t);
+
+}
         const KEY_APPS = 'eclipse_apps_v_safe';
         const KEY_ICONS = 'eclipse_icons_v_safe';
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
