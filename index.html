@@ -301,6 +301,43 @@ input[type="range"]::-moz-range-thumb{
     z-index:19999999 !important;
 }
     
+    .browser-toolbar{
+    padding:12px;
+    gap:8px;
+
+    background:
+    linear-gradient(
+        180deg,
+        rgba(25,25,25,.95),
+        rgba(10,10,10,.95)
+    );
+
+    border-bottom:
+        1px solid rgba(255,255,255,.05);
+}
+
+.browser-btn{
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,.04);
+
+    color:white;
+
+    transition:.18s;
+}
+
+.browser-btn:hover{
+    background:
+        rgba(255,31,58,.15);
+
+    color:
+        var(--accent);
+}
 
   </style>
 </head>
@@ -515,7 +552,7 @@ function showToast(msg, t = 2200){
     name: 'Eclipse Home',
     url: 'https://7-7-7-14.github.io/active',
     icon: '/assets/browsericons/home.png',
-    label: 'Eclipse://Home'
+    label: ''
   },
 
   {
@@ -523,7 +560,7 @@ function showToast(msg, t = 2200){
     name: 'Games',
     url: 'https://eclipsev6.github.io/g/',
     icon: '/assets/browsericons/games.png',
-    label: 'Eclipse://Games'
+    label: ''
   },
 
   {
@@ -531,7 +568,7 @@ function showToast(msg, t = 2200){
     name: 'Movies',
     url: 'https://eclipsev6.github.io/m/',
     icon: '/assets/browsericons/movies.png',
-    label: 'Eclipse://Movies'
+    label: ''
   },
 
   {
@@ -539,7 +576,7 @@ function showToast(msg, t = 2200){
     name: 'Launcher',
     url: 'https://eclipsev6.github.io/l/',
     icon: '/assets/browsericons/launch.png',
-    label: 'Eclipse://Launcher'
+    label: ''
   },
 
   {
@@ -547,7 +584,7 @@ function showToast(msg, t = 2200){
     name: 'Phoenix',
     url: 'https://eclipsev6.github.io/m/p/',
     icon: '/assets/browsericons/phoenix.png',
-    label: 'Eclipse://Phoenix'
+    label: ''
   }
 ];
 
@@ -920,20 +957,15 @@ function removeDesktopIcon(node) {
                 <div class="browser-toolbar">
                   <button class="browser-btn back" title="Back">←</button>
                   <button class="browser-btn forward" title="Forward">→</button>
+                    <button class="browser-btn reload" title="Reload">⟳</button>
                  
   <div class="browser-address">
-    <img class="browser-favicon">
-    <div class="label"></div>
+   
+   
     <input class="real-url" value="${url}">
   </div>
 
-                  <button class="browser-btn reload" title="Reload">⟳</button>
-                  <button class="browser-btn home" title="Home" aria-label="Home">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
-                  <button class="browser-btn bookmark" title="Bookmark">☆</button>
-                  <button class="browser-btn popout" title="Pop out">⤢</button>
-                  <button class="browser-btn copyurl" title="Copy URL">📋</button>
+               
                   <button class="browser-btn open-new" title="Open in new tab">↗</button>
                 </div>
                 <div class="browser-page" style="position:relative">
@@ -945,7 +977,7 @@ function removeDesktopIcon(node) {
             const iframe = content.querySelector('iframe');
             const realUrlInput = content.querySelector('.real-url');
             const faviconEl = content.querySelector('.browser-favicon');
-const labelEl = content.querySelector('.label');
+
 
 const preset = getPresetByUrl(url);
 
@@ -969,11 +1001,11 @@ if (preset) {
             // controls
             const backBtn = content.querySelector('.back'), fwdBtn = content.querySelector('.forward');
             content.querySelector('.reload').addEventListener('click', () => { iframe.src = iframe.src; });
-            content.querySelector('.home').addEventListener('click', () => { const h = presetLibrary[0]?.url || ''; realUrlInput.value = h; iframe.src = resolveUrlForIframe(h); content.querySelector('.label').textContent = presetLibrary[0]?.label || 'Eclipse://Home'; pushHistory(h); });
+          
             content.querySelector('.open-new').addEventListener('click', () => { const to = realUrlInput.value; if (!to) return; window.open(to.startsWith('http') ? to : ('https://' + to), '_blank'); });
-            content.querySelector('.bookmark').addEventListener('click', () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) { showToast('No URL to bookmark'); return; } const nm = content.querySelector('.label').textContent || u; let bookmarks = JSON.parse(localStorage.getItem('eclipse_bookmarks_v1') || '[]'); bookmarks.push({ id: 'bm-' + Math.random().toString(36).slice(2, 8), title: nm, url: u }); localStorage.setItem('eclipse_bookmarks_v1', JSON.stringify(bookmarks)); showToast('Bookmarked'); });
-            content.querySelector('.popout').addEventListener('click', () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) return; window.open(u.startsWith('http') ? u : ('https://' + u), '_blank'); });
-            content.querySelector('.copyurl').addEventListener('click', async () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) return showToast('No URL to copy'); try { await navigator.clipboard.writeText(u); showToast('URL copied'); } catch (e) { showToast('Copy failed'); } });
+           
+          
+           
 
             backBtn.addEventListener('click', () => { if (win._historyIndex > 0) { win._historyIndex -= 1; const u = win._history[win._historyIndex]; iframe.src = resolveUrlForIframe(u); realUrlInput.value = u; } else showToast('No back history'); });
             fwdBtn.addEventListener('click', () => { if (win._historyIndex < win._history.length - 1) { win._historyIndex += 1; const u = win._history[win._historyIndex]; iframe.src = resolveUrlForIframe(u); realUrlInput.value = u; } else showToast('No forward history'); });
@@ -1035,15 +1067,15 @@ if (preset) {
 
         function openBuiltIn(name) {
           try {
-            if (name === 'browser') openBrowser({ url: presetLibrary[0]?.url || '', label: presetLibrary[0]?.label || 'Eclipse://Home' });
+            if (name === 'browser') openBrowser({ url: presetLibrary[0]?.url || '', label: presetLibrary[0]?.label || '' });
             else if (name === 'settings') openSettings();
             else if (name === 'files') openFiles();
             else if (name === 'store') openStore();
           } catch (e) { console.warn('openBuiltIn error', e); }
         }
 
-        function openInstalledApp(app) { openBrowser({ url: app.url, label: app.label || app.name || 'Eclipse://App' }); }
-        function openUrlInBrowser(url) { openBrowser({ url, label: 'Eclipse://Custom' }); }
+        function openInstalledApp(app) { openBrowser({ url: app.url, label: app.label || app.name || '' }); }
+        function openUrlInBrowser(url) { openBrowser({ url, label: '' }); }
 
         // Settings/Store/Files (kept simple and robust)
         function openSettings() {
