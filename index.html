@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Eclipse OS 6.0.1</title>
+  <title>Eclipse OS</title>
   <link rel="icon" href="/assets/logo/logo.png" id="page-favicon">
   <style>
     /* Theme */
@@ -57,7 +57,14 @@
     .control-btn{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);display:grid;place-items:center;color:var(--text);cursor:pointer;transition:transform .09s}
     .control-btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.02)}
     .control-btn.close{background:linear-gradient(90deg,#ff4b61,#c61b2b);color:#fff}
-    .content{flex:1;padding:12px;overflow:auto;color:var(--text);background:transparentposition:relative}
+  .content{
+  flex:1;
+  padding:12px;
+  overflow:auto;
+  color:var(--text);
+  background:transparent;
+  position:relative;
+}
 
     /* Browser */
     .browser-toolbar{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
@@ -137,6 +144,75 @@
 .pin-item:hover{
   background:rgba(255,31,58,.2);
 }
+    .tray-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0 8px;
+  height:36px;
+  border-radius:10px;
+  background:rgba(255,255,255,.03);
+}
+
+#wifi-status,
+#batt-status{
+  font-size:12px;
+  color:var(--muted);
+}
+
+#tray-clock{
+  min-width:75px;
+  text-align:center;
+}
+    input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+
+  width:100%;
+  height:6px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  outline:none;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+
+  width:20px;
+  height:20px;
+
+  border-radius:50%;
+
+  background:white;
+
+  border:3px solid var(--accent);
+
+  cursor:pointer;
+
+  box-shadow:
+    0 0 12px rgba(255,31,58,.6);
+}
+
+input[type="range"]::-moz-range-thumb{
+  width:20px;
+  height:20px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:white;
+}
+
+  
   </style>
 </head>
 <body>
@@ -183,11 +259,73 @@
   </svg>
 </div>
     <div id="taskbar-icons" role="toolbar" aria-label="Open apps"></div>
-    <div id="system-tray">
-      <div class="tray-item" id="tray-wifi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 8.82C7.39 4.59 16.61 4.59 22 8.82" stroke="#fff" stroke-opacity=".7" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div class="tray-item" id="tray-batt"><svg width="22" height="14" viewBox="0 0 24 14" fill="none"><rect x="1" y="1" width="18" height="12" rx="2" stroke="#fff" stroke-opacity=".12" stroke-width="1.2" fill="none"></rect><rect x="19.2" y="4.2" width="2.6" height="5.6" rx="0.6" fill="#fff" opacity=".08"></rect></svg>
-    </div>
-  </div>
+   <div id="system-tray">
+
+<div class="tray-item" id="tray-wifi">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path d="M2 8.5C7.5 4.5 16.5 4.5 22 8.5"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"/>
+
+    <path d="M5 12.5C9 9.5 15 9.5 19 12.5"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"/>
+
+    <path d="M8.5 16C11 14.5 13 14.5 15.5 16"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"/>
+
+    <circle cx="12" cy="19" r="1.5" fill="white"/>
+  </svg>
+
+  <div id="wifi-status">Online</div>
+</div>
+
+  <div class="tray-item" id="tray-batt">
+
+<svg width="22" height="14" viewBox="0 0 24 14">
+
+<rect
+x="1"
+y="1"
+width="18"
+height="12"
+rx="2"
+stroke="white"
+stroke-width="1.2"
+fill="none"
+/>
+
+<rect
+x="3"
+y="3"
+width="12"
+height="8"
+rx="1"
+fill="#59ff8f"
+/>
+
+<rect
+x="20"
+y="4"
+width="3"
+height="6"
+rx="1"
+fill="white"
+/>
+
+</svg>
+
+<div id="batt-status">--%</div>
+
+</div>
+
+  <div id="tray-clock"></div>
+
+</div>
 
   <!-- Launcher (hidden by default) -->
   <div id="launcher" style="position:fixed; left:18px; bottom:86px; width:480px; z-index:1400; display:none">
@@ -217,6 +355,7 @@
     <div class="ctx-item" data-action="pin" role="menuitem">Pin to Taskbar</div>
     <div class="ctx-item" data-action="delete" role="menuitem">Remove</div>
   </div>
+ 
 
   <script>
     // Wrap initialization to avoid partial initialization / errors blocking everything
@@ -652,6 +791,12 @@ function removeDesktopIcon(node) {
                   <button class="browser-btn back" title="Back">←</button>
                   <button class="browser-btn forward" title="Forward">→</button>
                  
+  <div class="browser-address">
+    <img class="browser-favicon">
+    <div class="label"></div>
+    <input class="real-url" value="${url}">
+  </div>
+
                   <button class="browser-btn reload" title="Reload">⟳</button>
                   <button class="browser-btn home" title="Home" aria-label="Home">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -670,12 +815,15 @@ function removeDesktopIcon(node) {
             const iframe = content.querySelector('iframe');
             const realUrlInput = content.querySelector('.real-url');
             const faviconEl = content.querySelector('.browser-favicon');
+const labelEl = content.querySelector('.label');
 
-         const preset = getPresetByUrl(url);
+const preset = getPresetByUrl(url);
 
 if (preset) {
+  labelEl.textContent = preset.label;
   faviconEl.src = preset.icon;
 } else {
+  labelEl.textContent = url;
   faviconEl.src =
     'https://www.google.com/s2/favicons?domain=' +
     getDomain(url);
@@ -708,6 +856,17 @@ if (preset) {
                 content.querySelector('.label').textContent = 'Eclipse://Browser';
                 if (settings.cloakEnabled) { applyTabCloak(settings.cloak); win._appliedCloak = true; }
                 pushHistory(val);
+                const preset = presetLibrary.find(app => app.url === val);
+
+if (preset) {
+  labelEl.textContent = preset.label;
+  faviconEl.src = preset.icon;
+} else {
+  labelEl.textContent = val;
+  faviconEl.src =
+    'https://www.google.com/s2/favicons?domain=' +
+    getDomain(val);
+}
               }
             });
 
@@ -810,6 +969,24 @@ if (preset) {
       Reset Apps
     </button>
   </div>
+<div class="settings-card">
+
+<h3>System</h3>
+
+<p class="muted">
+Version 6.0.5
+</p>
+
+<p class="muted">
+Engine v6
+</p>
+
+<p class="muted">
+Apps Installed:
+<span id="app-count"></span>
+</p>
+
+</div>
 
 </div>`;
 
@@ -943,6 +1120,9 @@ if(resetApps){
         alert('Eclipse OS initialization failed — check the console for details.');
       }
     }); // DOMContentLoaded
+    
+
+
     async function updateBattery() {
   if (!('getBattery' in navigator)) {
     document.getElementById('batt-status').textContent = 'N/A';
@@ -979,6 +1159,25 @@ window.addEventListener('online', updateWifiStatus);
 window.addEventListener('offline', updateWifiStatus);
 
 updateWifiStatus();
+    function updateClock() {
+  const clock =
+    document.getElementById("tray-clock");
+
+  if (!clock) return;
+
+  clock.textContent =
+    new Date().toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+}
+
+setInterval(updateClock, 1000);
+updateClock();
   </script>
 </body>
+  
+  </div>
+
+</div>
 </html>
