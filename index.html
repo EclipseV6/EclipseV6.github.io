@@ -232,6 +232,12 @@ input[type="range"]::-moz-range-thumb{
 #context-menu{
     z-index:10001 !important;
 }
+    
+#start-btn{
+  position:relative;
+  z-index:10002;
+}
+
   </style>
 </head>
 <body>
@@ -538,11 +544,9 @@ fill="white"
         });
 
         // initial seed
-        if (!Array.isArray(installedApps) || installedApps.length === 0) {
-          installedApps = [];
-          presetLibrary.forEach(p => installedApps.push({ id: p.id || ('preset-' + Math.random().toString(36).slice(2, 8)), name: p.name, url: p.url, icon: p.icon, label: p.label }));
-          saveState();
-        }
+      if (!Array.isArray(installedApps)) {
+  installedApps = [];
+}
         populateLauncher();
 
         /* Desktop icons: render persisted icons (safe) */
@@ -563,6 +567,11 @@ fill="white"
         requestAnimationFrame(() => {
   renderPersistedIcons();
 });
+        
+document.addEventListener("contextmenu", e => {
+  alert("RIGHT CLICK");
+});
+
 
         function attachIconHandlers(node) {
           try {
@@ -1132,7 +1141,8 @@ installed
   });
 
 }
-             card.querySelector('.install').addEventListener('click', () => {
+             card.querySelector('.install')
+               ?.addEventListener('click', () => {
                const exists =
   installedApps.some(
     app => app.url === p.url
@@ -1161,7 +1171,8 @@ if(exists){
 
     showToast("Installed " + p.name);
 });
-                card.querySelector('.install-desk').addEventListener('click', () => {
+                card.querySelector('.install-desk')
+                  ?.addEventListener('click', () => {
                   const newp = { id: 'app-' + Math.random().toString(36).slice(2, 9), name: p.name, url: p.url, icon: p.icon, label: p.label };
                   installedApps.push(newp);
                   const pos = { id: 'c-' + Math.random().toString(36).slice(2, 9), name: p.name, icon: p.icon || makePlaceholderIcon(p.name), top: '120px', left: (120 + Math.random() * 300) + 'px', appRef: newp.id };
@@ -1213,7 +1224,7 @@ if(exists){
 
         // hide launcher/context on click outside
         document.addEventListener('click', (e) => {
-          const l = $('#launcher'); if (l && !l.contains(e.target) && e.target !== $('#start-btn')) l.style.display = 'none';
+          const l = $('#launcher'); if (l && !l.contains(e.target) && !$('#start-btn').contains(e.target)) l.style.display = 'none';
           const cm = $('#context-menu'); if (cm && cm.style.display === 'block' && !cm.contains(e.target)) cm.style.display = 'none';
         });
 
@@ -1287,6 +1298,10 @@ updateWifiStatus();
 
 setInterval(updateClock, 1000);
 updateClock();
+    
+function restoreTabCloak(){}
+function applyTabCloak(){}
+
   </script>
 </body>
   
