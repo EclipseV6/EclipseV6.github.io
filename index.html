@@ -212,7 +212,26 @@ input[type="range"]::-moz-range-thumb{
   background:white;
 }
 
-  
+  #desktop{
+    z-index:1;
+}
+
+.desktop-icon{
+    z-index:5;
+}
+
+#taskbar{
+    position:relative;
+    z-index:9999;
+}
+
+#launcher{
+    z-index:10000 !important;
+}
+
+#context-menu{
+    z-index:10001 !important;
+}
   </style>
 </head>
 <body>
@@ -541,7 +560,9 @@ fill="white"
             }
           } catch (e) { console.warn('renderPersistedIcons failed', e); }
         }
-        renderPersistedIcons();
+        requestAnimationFrame(() => {
+  renderPersistedIcons();
+});
 
         function attachIconHandlers(node) {
           try {
@@ -1042,12 +1063,104 @@ if(resetApps){
             function render() {
               lib.innerHTML = ''; inst.innerHTML = '';
               const q = (filter && filter.value || '').toLowerCase();
-              for (const p of presetLibrary) {
-                if (q && !p.name.toLowerCase().includes(q)) continue;
-                const card = el('div'); card.className = 'store-card';
-                card.innerHTML = `<img src="${p.icon || makePlaceholderIcon(p.name)}" alt=""><div style="font-weight:700">${p.name}</div><div class="muted" style="font-size:12px;word-break:break-all">${p.url}</div><div style="display:flex;gap:8px;margin-top:8px"><button class="small-btn install">Install</button><button class="primary-btn install-desk">Install + Desktop</button></div>`;
+             for (const p of presetLibrary) {
+
+  if (q && !p.name.toLowerCase().includes(q))
+    continue;
+
+  const installed =
+    installedApps.some(
+      app => app.url === p.url
+    );
+
+  const card = el('div');
+  card.className = 'store-card';
+                card.innerHTML = `<img src="${p.icon || makePlaceholderIcon(p.name)}" alt=""><div style="font-weight:700">${p.name}</div><div class="muted" style="font-size:12px;word-break:break-all">${p.url}</div><div style="display:flex;gap:8px;margin-top:8px">
+
+${
+installed
+?
+`
+<button class="small-btn uninstall">
+  Remove
+</button>
+`
+:
+`
+<button class="small-btn install">
+  Install
+</button>
+
+<button class="primary-btn install-desk">
+  Install + Desktop
+</button>
+`
+}
+
+</div>`;
                 lib.appendChild(card);
-                card.querySelector('.install').addEventListener('click', () => { installedApps.push({ id: 'app-' + Math.random().toString(36).slice(2, 9), name: p.name, url: p.url, icon: p.icon, label: p.label }); saveState(); render(); populateLauncher(); showToast('Installed ' + p.name); });
+               if(installed){
+
+  card.querySelector('.uninstall')
+  ?.addEventListener('click',()=>{
+
+    installedApps =
+      installedApps.filter(
+        app => app.url !== p.url
+      );
+
+    desktopIconsPersist =
+      desktopIconsPersist.filter(
+        icon =>
+          !installedApps.find(
+            a => a.id === icon.appRef
+          )
+      );
+
+    saveState();
+
+    render();
+
+    populateLauncher();
+
+    renderPersistedIcons();
+
+    showToast(
+      p.name + " removed"
+    );
+
+  });
+
+}
+             card.querySelector('.install').addEventListener('click', () => {
+               const exists =
+  installedApps.some(
+    app => app.url === p.url
+  );
+
+if(exists){
+  showToast(
+    p.name + " already installed"
+  );
+  return;
+}
+
+ 
+
+    installedApps.push({
+        id:'app-'+Math.random().toString(36).slice(2,9),
+        name:p.name,
+        url:p.url,
+        icon:p.icon,
+        label:p.label
+    });
+
+    saveState();
+    render();
+    populateLauncher();
+
+    showToast("Installed " + p.name);
+});
                 card.querySelector('.install-desk').addEventListener('click', () => {
                   const newp = { id: 'app-' + Math.random().toString(36).slice(2, 9), name: p.name, url: p.url, icon: p.icon, label: p.label };
                   installedApps.push(newp);
@@ -1177,7 +1290,5 @@ updateClock();
   </script>
 </body>
   
-  </div>
-
-</div>
+ 
 </html>
