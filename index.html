@@ -292,22 +292,7 @@
           localStorage.setItem(KEY_ICONS, JSON.stringify(desktopIconsPersist));
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
         }
-        function updateWifiStatus() {
-  const txt = document.getElementById('wifi-status');
-
-  if (navigator.onLine) {
-    txt.textContent = "Online";
-    txt.style.color = "#59ff8f";
-  } else {
-    txt.textContent = "Offline";
-    txt.style.color = "#ff5b5b";
-  }
-}
-
-window.addEventListener('online', updateWifiStatus);
-window.addEventListener('offline', updateWifiStatus);
-
-updateWifiStatus();
+  
 
         // placeholder icon generator
         function makePlaceholderIcon(text) {
@@ -651,6 +636,11 @@ function removeDesktopIcon(node) {
           makeDraggable(win, tb);
           return { win, content, titlebar: tb };
         }
+        function getPresetByUrl(url) {
+  return presetLibrary.find(app =>
+    app.url === url
+  );
+}
 
         /* Browser (iframe) with overlay fallback and a few helper features */
         function openBrowser({ url = '', label = 'Eclipse://Browser', cloak = null } = {}) {
@@ -661,7 +651,7 @@ function removeDesktopIcon(node) {
                 <div class="browser-toolbar">
                   <button class="browser-btn back" title="Back">←</button>
                   <button class="browser-btn forward" title="Forward">→</button>
-                  <div class="browser-address"><img class="browser-favicon"><div class="label">${label}</div><input class="real-url" value="${url}"></div>
+                 
                   <button class="browser-btn reload" title="Reload">⟳</button>
                   <button class="browser-btn home" title="Home" aria-label="Home">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:block"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 21V11h14v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -676,11 +666,20 @@ function removeDesktopIcon(node) {
                 </div>
               </div>
             `;
+          
             const iframe = content.querySelector('iframe');
             const realUrlInput = content.querySelector('.real-url');
             const faviconEl = content.querySelector('.browser-favicon');
 
-            faviconEl.src = cloak?.favicon || settings.cloak.favicon || ('https://www.google.com/s2/favicons?domain=' + (getDomain(url) || location.hostname));
+         const preset = getPresetByUrl(url);
+
+if (preset) {
+  faviconEl.src = preset.icon;
+} else {
+  faviconEl.src =
+    'https://www.google.com/s2/favicons?domain=' +
+    getDomain(url);
+}
 
             // small per-window history (for address-entered loads)
             win._history = win._history || [];
@@ -964,6 +963,22 @@ if(resetApps){
 }
 
 updateBattery();
+          function updateWifiStatus() {
+  const txt = document.getElementById('wifi-status');
+
+  if (navigator.onLine) {
+    txt.textContent = "Online";
+    txt.style.color = "#59ff8f";
+  } else {
+    txt.textContent = "Offline";
+    txt.style.color = "#ff5b5b";
+  }
+}
+
+window.addEventListener('online', updateWifiStatus);
+window.addEventListener('offline', updateWifiStatus);
+
+updateWifiStatus();
   </script>
 </body>
 </html>
