@@ -57,7 +57,7 @@
     .control-btn{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);display:grid;place-items:center;color:var(--text);cursor:pointer;transition:transform .09s}
     .control-btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.02)}
     .control-btn.close{background:linear-gradient(90deg,#ff4b61,#c61b2b);color:#fff}
-    .content{flex:1;padding:12px;overflow:auto;color:var(--text);background:transparent;position:relative}
+    .content{flex:1;padding:12px;overflow:auto;color:var(--text);background:transparentposition:relative}
 
     /* Browser */
     .browser-toolbar{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
@@ -150,26 +150,42 @@
     <div class="desktop-icon" style="top:20px; left:260px" data-app="settings" data-name="Settings">
       <img src="/assets/browsericons/settings.png" alt=""><span>Settings</span>
     </div>
+     <div class="desktop-icon" style="top:20px; left:380px" data-app="store" data-name="Store">
+      <img src="/assets/browsericons/store.png" alt=""><span>Store</span>
+    </div>
   </div>
 
 
 
   <div id="quick-left">
-    <div class="quick-btn" id="quick-store" title="Store" aria-label="Store">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z" stroke="#fff" stroke-opacity=".95" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+   
     <div class="quick-btn search" id="quick-search" title="Search" aria-label="Quick search">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21l-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
 
   <div id="taskbar">
-    <div id="start-btn" title="Launcher"></div>
+    <div id="start-btn" title="Launcher">
+  <svg width="24" height="24" viewBox="0 0 24 24">
+    <g fill="white">
+      <rect x="3" y="3" width="4" height="4" rx="1"/>
+      <rect x="10" y="3" width="4" height="4" rx="1"/>
+      <rect x="17" y="3" width="4" height="4" rx="1"/>
+
+      <rect x="3" y="10" width="4" height="4" rx="1"/>
+      <rect x="10" y="10" width="4" height="4" rx="1"/>
+      <rect x="17" y="10" width="4" height="4" rx="1"/>
+
+      <rect x="3" y="17" width="4" height="4" rx="1"/>
+      <rect x="10" y="17" width="4" height="4" rx="1"/>
+      <rect x="17" y="17" width="4" height="4" rx="1"/>
+    </g>
+  </svg>
+</div>
     <div id="taskbar-icons" role="toolbar" aria-label="Open apps"></div>
     <div id="system-tray">
-      <div class="tray-item" id="tray-wifi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 8.82C7.39 4.59 16.61 4.59 22 8.82" stroke="#fff" stroke-opacity=".7" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="wifi-status" class="muted">Offline</div></div>
-      <div class="tray-item" id="tray-batt"><svg width="22" height="14" viewBox="0 0 24 14" fill="none"><rect x="1" y="1" width="18" height="12" rx="2" stroke="#fff" stroke-opacity=".12" stroke-width="1.2" fill="none"></rect><rect x="19.2" y="4.2" width="2.6" height="5.6" rx="0.6" fill="#fff" opacity=".08"></rect></svg><div id="batt-status" class="muted">--%</div></div>
-      <div class="tray-item" id="tray-clock"></div>
+      <div class="tray-item" id="tray-wifi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 8.82C7.39 4.59 16.61 4.59 22 8.82" stroke="#fff" stroke-opacity=".7" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="tray-item" id="tray-batt"><svg width="22" height="14" viewBox="0 0 24 14" fill="none"><rect x="1" y="1" width="18" height="12" rx="2" stroke="#fff" stroke-opacity=".12" stroke-width="1.2" fill="none"></rect><rect x="19.2" y="4.2" width="2.6" height="5.6" rx="0.6" fill="#fff" opacity=".08"></rect></svg>
     </div>
   </div>
 
@@ -276,6 +292,22 @@
           localStorage.setItem(KEY_ICONS, JSON.stringify(desktopIconsPersist));
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
         }
+        function updateWifiStatus() {
+  const txt = document.getElementById('wifi-status');
+
+  if (navigator.onLine) {
+    txt.textContent = "Online";
+    txt.style.color = "#59ff8f";
+  } else {
+    txt.textContent = "Offline";
+    txt.style.color = "#ff5b5b";
+  }
+}
+
+window.addEventListener('online', updateWifiStatus);
+window.addEventListener('offline', updateWifiStatus);
+
+updateWifiStatus();
 
         // placeholder icon generator
         function makePlaceholderIcon(text) {
@@ -912,6 +944,26 @@ if(resetApps){
         alert('Eclipse OS initialization failed — check the console for details.');
       }
     }); // DOMContentLoaded
+    async function updateBattery() {
+  if (!('getBattery' in navigator)) {
+    document.getElementById('batt-status').textContent = 'N/A';
+    return;
+  }
+
+  const battery = await navigator.getBattery();
+
+  function refresh() {
+    document.getElementById('batt-status').textContent =
+      Math.round(battery.level * 100) + '%';
+  }
+
+  battery.addEventListener('levelchange', refresh);
+  battery.addEventListener('chargingchange', refresh);
+
+  refresh();
+}
+
+updateBattery();
   </script>
 </body>
 </html>
