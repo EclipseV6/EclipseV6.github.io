@@ -297,6 +297,10 @@ input[type="range"]::-moz-range-thumb{
       translateY(0);
   }
 }
+    #context-menu{
+    z-index:19999999 !important;
+}
+    
 
   </style>
 </head>
@@ -677,9 +681,7 @@ function showToast(msg, t = 2200){
   renderPersistedIcons();
 });
         
-document.addEventListener("contextmenu", e => {
-  alert("RIGHT CLICK");
-});
+
 
 
         function attachIconHandlers(node) {
@@ -696,35 +698,24 @@ document.addEventListener("contextmenu", e => {
           } catch (e) { console.warn('attachIconHandlers:', e); }
         }
 
-        function showContextMenuFor(node, x, y) {
-  const ctx = $('#context-menu');
-  if (!ctx) return;
+       function showContextMenuFor(node, x, y) {
 
-  ctx.style.display = 'block';
-  ctx.style.left = x + 'px';
-  ctx.style.top = y + 'px';
-  ctx.style.zIndex = '99999';
+  const ctx =
+    document.getElementById(
+      'context-menu'
+    );
 
-  function onClick(ev) {
-    const action = ev.target.dataset.action;
-
-    if (action === 'open')
-      node.dispatchEvent(new MouseEvent('dblclick'));
-
-    else if (action === 'edit')
-      enableIconEdit(node);
-
-    else if (action === 'pin')
-      pinToTaskbar(node);
-
-    else if (action === 'delete')
-      removeDesktopIcon(node);
-
-    ctx.style.display = 'none';
-    ctx.removeEventListener('click', onClick);
+  if (!ctx) {
+    alert("No context menu found");
+    return;
   }
 
-  ctx.addEventListener('click', onClick);
+  ctx.style.display = "block";
+  ctx.style.position = "fixed";
+  ctx.style.left = x + "px";
+  ctx.style.top = y + "px";
+  ctx.style.zIndex = "999999";
+
 }
 
         function enableIconEdit(node) {
@@ -980,7 +971,7 @@ if (preset) {
             content.querySelector('.reload').addEventListener('click', () => { iframe.src = iframe.src; });
             content.querySelector('.home').addEventListener('click', () => { const h = presetLibrary[0]?.url || ''; realUrlInput.value = h; iframe.src = resolveUrlForIframe(h); content.querySelector('.label').textContent = presetLibrary[0]?.label || 'Eclipse://Home'; pushHistory(h); });
             content.querySelector('.open-new').addEventListener('click', () => { const to = realUrlInput.value; if (!to) return; window.open(to.startsWith('http') ? to : ('https://' + to), '_blank'); });
-            content.querySelector('.bookmark').addEventListener('click', () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) { showToast('No URL to bookmark'); return; } const nm = content.querySelector('.label').textContent || u; bookmarks = JSON.parse(localStorage.getItem('eclipse_bookmarks_v1') || '[]'); bookmarks.push({ id: 'bm-' + Math.random().toString(36).slice(2, 8), title: nm, url: u }); localStorage.setItem('eclipse_bookmarks_v1', JSON.stringify(bookmarks)); showToast('Bookmarked'); });
+            content.querySelector('.bookmark').addEventListener('click', () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) { showToast('No URL to bookmark'); return; } const nm = content.querySelector('.label').textContent || u; let bookmarks = JSON.parse(localStorage.getItem('eclipse_bookmarks_v1') || '[]'); bookmarks.push({ id: 'bm-' + Math.random().toString(36).slice(2, 8), title: nm, url: u }); localStorage.setItem('eclipse_bookmarks_v1', JSON.stringify(bookmarks)); showToast('Bookmarked'); });
             content.querySelector('.popout').addEventListener('click', () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) return; window.open(u.startsWith('http') ? u : ('https://' + u), '_blank'); });
             content.querySelector('.copyurl').addEventListener('click', async () => { const u = realUrlInput.value.trim() || iframe.src; if (!u) return showToast('No URL to copy'); try { await navigator.clipboard.writeText(u); showToast('URL copied'); } catch (e) { showToast('Copy failed'); } });
 
@@ -1250,6 +1241,7 @@ installed
   });
 
 }
+               
              card.querySelector('.install')
                ?.addEventListener('click', () => {
                const exists =
@@ -1280,14 +1272,47 @@ if(exists){
 
     showToast("Installed " + p.name);
 });
-                card.querySelector('.install-desk')
-                  ?.addEventListener('click', () => {
-                  const newp = { id: 'app-' + Math.random().toString(36).slice(2, 9), name: p.name, url: p.url, icon: p.icon, label: p.label };
-                  installedApps.push(newp);
-                  const pos = { id: 'c-' + Math.random().toString(36).slice(2, 9), name: p.name, icon: p.icon || makePlaceholderIcon(p.name), top: '120px', left: (120 + Math.random() * 300) + 'px', appRef: newp.id };
-                  desktopIconsPersist.push(pos); saveState(); renderPersistedIcons(); render(); populateLauncher(); showToast('Installed and added to desktop');
-                });
-              }
+            card.querySelector('.install-desk')
+?.addEventListener('click', () => {
+
+    const newp = {
+        id: 'app-' + Math.random().toString(36).slice(2, 9),
+        name: p.name,
+        url: p.url,
+        icon: p.icon,
+        label: p.label
+    };
+
+    installedApps.push(newp);
+
+    const spot = getNextDesktopPosition();
+
+    const pos = {
+        id: 'c-' + Math.random().toString(36).slice(2, 9),
+        name: p.name,
+        icon: p.icon,
+        top: spot.top,
+        left: spot.left,
+        appRef: newp.id
+    };
+
+    desktopIconsPersist.push(pos);
+
+    saveState();
+    renderPersistedIcons();
+    render();
+    populateLauncher();
+
+    showToast("Installed " + p.name);
+
+});
+
+} // end presetLibrary loop            
+               
+
+
+
+              
               for (const it of installedApps) {
                 const card = el('div'); card.className = 'store-card';
                 card.innerHTML = `<img src="${it.icon || makePlaceholderIcon(it.name)}" alt=""><div style="font-weight:700">${it.name}</div><div style="display:flex;gap:6px;margin-top:8px"><button class="small-btn launch">Launch</button><button class="small-btn add-desktop">AddDesk</button><button class="small-btn remove">Remove</button></div>`;
@@ -1410,6 +1435,25 @@ updateClock();
     
 function restoreTabCloak(){}
 function applyTabCloak(){}
+    function getNextDesktopPosition() {
+
+  const iconCount =
+    document.querySelectorAll(
+      '.desktop-icon'
+    ).length;
+
+  const col =
+    iconCount % 6;
+
+  const row =
+    Math.floor(iconCount / 6);
+
+  return {
+    top: (20 + row * 110) + 'px',
+    left: (20 + col * 120) + 'px'
+  };
+}
+
 
   </script>
 </body>
