@@ -29,10 +29,10 @@
     #desktop{position:absolute;inset:0 0 var(--taskbar-h) 0;padding:18px;box-sizing:border-box;overflow:auto}
 
     /* Taskbar */
-    #taskbar{height:var(--taskbar-h);display:flex;align-items:center;gap:12px;padding:0 18px;background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66));border-top:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow);z-index:1600;backdrop-filter: blur(8px);}
+    #taskbar{height:var(--taskbar-h);display:flex;align-items:center;gap:12px;padding:0 18px;background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66));border-top:1px solid rgba(255,255,255,0.05);box-shadow:0 -4px 12px rgba(0,0,0,0.3)}
     #start-btn{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg,var(--accent),var(--accent-2));cursor:pointer}
     #taskbar-icons{display:flex;gap:10px;align-items:center}
-    .taskbar-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.03);cursor:pointer;position:relative}
+    .taskbar-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.05)}
     .taskbar-icon img{width:28px;height:28px;border-radius:6px}
     .taskbar-icon .dot{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);display:none}
     .taskbar-icon.active .dot{display:block}
@@ -40,7 +40,7 @@
 
     /* Quick-left stack: store + quick search */
     #quick-left{position:fixed;left:18px;bottom:calc(var(--taskbar-h)+12px);z-index:1550;display:flex;flex-direction:column;gap:10px}
-    .quick-btn{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));cursor:pointer;border:1px solid rgba(255,255,255,0.03)}
+    .quick-btn{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));cursor:pointer;border:1px solid rgba(255,255,255,0.05)}
     .quick-btn.search{ background: linear-gradient(180deg,var(--accent),var(--accent-2)); color: #fff; box-shadow:0 8px 28px rgba(200,0,40,0.18) }
 
     /* Desktop icons */
@@ -49,25 +49,18 @@
     .desktop-icon span{display:block;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
     /* Windows */
-    .window{position:absolute;min-width:360px;min-height:260px;width:900px;height:600px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(20,20,20,var(--window-opacity)),rgba(8,8,8,var(--window-opacity)));border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;z-index:120;backdrop-filter:blur(8px)}
+    .window{position:absolute;min-width:360px;min-height:260px;width:900px;height:600px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(20,20,20,var(--window-opacity)),rgba(8,8,8,var(--window-opacity)));box-shadow:var(--shadow);display:flex;flex-direction:column;z-index:100}
     .window.maximized{top:0!important;left:0!important;width:100vw!important;height:calc(100vh - var(--taskbar-h))!important;border-radius:0}
-    .titlebar{height:56px;display:flex;align-items:center;gap:12px;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));border-bottom:1px solid rgba(255,255,255,0.02);cursor:grab}
+    .titlebar{height:56px;display:flex;align-items:center;gap:12px;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));border-bottom:1px solid rgba(255,255,255,0.05)}
     .title{font-weight:700;font-size:15px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .win-controls{display:flex;gap:8px;align-items:center}
-    .control-btn{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);display:grid;place-items:center;color:var(--text);cursor:pointer;transition:transform .09s}
+    .control-btn{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);display:grid;place-items:center;color:var(--text);cursor:pointer;transition:all 0.15s}
     .control-btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.02)}
     .control-btn.close{background:linear-gradient(90deg,#ff4b61,#c61b2b);color:#fff}
-  .content{
-  flex:1;
-  padding:12px;
-  overflow:auto;
-  color:var(--text);
-  background:transparent;
-  position:relative;
-}
+    .content{flex:1;padding:12px;overflow:auto;color:var(--text);background:transparent;position:relative;}
 
     /* Browser */
-    .browser-toolbar{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02)}
+    .browser-toolbar{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.05)}
     .browser-btn{padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02);color:var(--text);cursor:pointer}
     .browser-address{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:999px;background:rgba(0,0,0,0.36);border:1px solid rgba(255,255,255,0.02);flex:1}
     .browser-address .label{color:var(--muted);font-size:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -77,20 +70,20 @@
     .browser-page iframe{width:100%;height:100%;border:0;display:block;background:transparent}
 
     /* Settings/Store */
-    .settings-card{padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(18,18,18,0.9),rgba(12,12,12,0.9));border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .settings-card{padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(18,18,18,0.9),rgba(12,12,12,0.9));border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
     .muted{color:var(--muted);font-size:13px}
     .switch{width:46px;height:26px;border-radius:999px;background:rgba(255,255,255,0.04);display:inline-block;position:relative;cursor:pointer}
     .switch .knob{position:absolute;left:4px;top:4px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .12s}
     .switch.on{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
     .switch.on .knob{left:24px}
     .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-    .store-card{padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02);box-shadow:0 10px 26px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:8px}
+    .store-card{padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02);box-shadow:0 10px 26px rgba(0,0,0,0.5);cursor:pointer}
     .store-card img{width:96px;height:96px;border-radius:12px;object-fit:cover}
     .small-btn{padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer}
     .primary-btn{padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;cursor:pointer}
 
     /* iframe overlay when blocked */
-    .iframe-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));color:var(--text);gap:10px;padding:16px;text-align:center}
+    .iframe-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));color:var(--muted);gap:10px}
 
     /* toast */
     .eos-toast{position:fixed;right:20px;bottom:100px;background:rgba(0,0,0,0.7);color:#fff;padding:10px 12px;border-radius:8px;z-index:3000;box-shadow:0 8px 24px rgba(0,0,0,0.45)}
@@ -100,244 +93,161 @@
       #quick-left{display:none}
     }
     /* Context Menu */
-#context-menu{
-  position:fixed;
-  display:none;
-  min-width:180px;
-  background:rgba(18,18,18,.96);
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:12px;
-  backdrop-filter:blur(12px);
-  box-shadow:0 20px 40px rgba(0,0,0,.6);
-  overflow:hidden;
-  z-index:99999;
-}
-
-.ctx-item{
-  padding:12px 16px;
-  cursor:pointer;
-  color:var(--text);
-  font-size:14px;
-  transition:.15s;
-}
-
-.ctx-item:hover{
-  background:rgba(255,31,58,.15);
-  color:#fff;
-}
-    .pin-menu{
-  position:fixed;
-  background:#111;
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:10px;
-  overflow:hidden;
-  z-index:99999;
-  box-shadow:0 15px 40px rgba(0,0,0,.65);
-}
-
-.pin-item{
-  padding:10px 14px;
-  cursor:pointer;
-  color:white;
-}
-
-.pin-item:hover{
-  background:rgba(255,31,58,.2);
-}
-    .tray-item{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:0 8px;
-  height:36px;
-  border-radius:10px;
-  background:rgba(255,255,255,.03);
-}
-
-#wifi-status,
-#batt-status{
-  font-size:12px;
-  color:var(--muted);
-}
-
-#tray-clock{
-  min-width:75px;
-  text-align:center;
-}
-    input[type="range"]{
-  -webkit-appearance:none;
-  appearance:none;
-
-  width:100%;
-  height:6px;
-
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--accent),
-      var(--accent-2)
-    );
-
-  outline:none;
-}
-
-input[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none;
-
-  width:20px;
-  height:20px;
-
-  border-radius:50%;
-
-  background:white;
-
-  border:3px solid var(--accent);
-
-  cursor:pointer;
-
-  box-shadow:
-    0 0 12px rgba(255,31,58,.6);
-}
-
-input[type="range"]::-moz-range-thumb{
-  width:20px;
-  height:20px;
-
-  border:none;
-
-  border-radius:50%;
-
-  background:white;
-}
-
-  #desktop{
-    z-index:1;
-}
-
-.desktop-icon{
-    z-index:5;
-}
-
-#taskbar{
-    position:relative;
-    z-index:9999;
-}
-
-#launcher{
-    z-index:10000 !important;
-}
-
-#context-menu{
-    z-index:10001 !important;
-}
-    
-#start-btn{
-  position:relative;
-  z-index:10002;
-}
-    .eos-toast{
-  position:fixed;
-  right:20px;
-  bottom:100px;
-
-  min-width:280px;
-
-  background:rgba(12,12,12,.96);
-  color:white;
-
-  padding:14px 16px 10px;
-
-  border-radius:12px;
-
-  border:1px solid rgba(255,255,255,.06);
-
-  backdrop-filter:blur(20px);
-
-  box-shadow:
-    0 20px 40px rgba(0,0,0,.55);
-
-  overflow:hidden;
-
-  animation:
-    toastIn .18s ease-out;
-
-  z-index:99999;
-}
-
-.eos-toast-bar{
-  position:absolute;
-  left:0;
-  bottom:0;
-
-  height:4px;
-  width:100%;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--accent),
-      var(--accent-2)
-    );
-
-  transform-origin:left center;
-}
-
-@keyframes toastIn{
-  from{
-    opacity:0;
-    transform:
-      translateY(15px);
-  }
-
-  to{
-    opacity:1;
-    transform:
-      translateY(0);
-  }
-}
     #context-menu{
-    z-index:19999999 !important;
-}
-    
+      position:fixed;
+      display:none;
+      min-width:180px;
+      background:rgba(18,18,18,.96);
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:12px;
+      backdrop-filter:blur(12px);
+      box-shadow:0 20px 40px rgba(0,0,0,.6);
+      overflow:hidden;
+      z-index:19999999 !important;
+    }
+
+    .ctx-item{
+      padding:12px 16px;
+      cursor:pointer;
+      color:var(--text);
+      font-size:14px;
+      transition:.15s;
+    }
+
+    .ctx-item:hover{
+      background:rgba(255,31,58,.15);
+      color:#fff;
+    }
+
+    .pin-menu{
+      position:fixed;
+      background:#111;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:10px;
+      overflow:hidden;
+      z-index:99999;
+      box-shadow:0 15px 40px rgba(0,0,0,.65);
+    }
+
+    .pin-item{
+      padding:10px 14px;
+      cursor:pointer;
+      color:white;
+    }
+
+    .pin-item:hover{
+      background:rgba(255,31,58,.2);
+    }
+
+    .tray-item{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:0 8px;
+      height:36px;
+      border-radius:10px;
+      background:rgba(255,255,255,.03);
+    }
+
+    #wifi-status,
+    #batt-status{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    #tray-clock{
+      min-width:75px;
+      text-align:center;
+    }
+
+    input[type="range"]{
+      -webkit-appearance:none;
+      appearance:none;
+      width:100%;
+      height:6px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      outline:none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:white;
+      border:3px solid var(--accent);
+      cursor:pointer;
+      box-shadow:0 0 12px rgba(255,31,58,.6);
+    }
+
+    input[type="range"]::-moz-range-thumb{
+      width:20px;
+      height:20px;
+      border:none;
+      border-radius:50%;
+      background:white;
+    }
+
+    #desktop{z-index:1;}
+    .desktop-icon{z-index:5;}
+    #taskbar{position:relative;z-index:9999;}
+    #launcher{z-index:10000 !important;}
+    #start-btn{position:relative;z-index:10002;}
+
+    .eos-toast{
+      position:fixed;
+      right:20px;
+      bottom:100px;
+      min-width:280px;
+      background:rgba(12,12,12,.96);
+      color:white;
+      padding:14px 16px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(20px);
+      box-shadow:0 20px 40px rgba(0,0,0,.55);
+      overflow:hidden;
+      animation:toastIn .18s ease-out;
+      z-index:99999;
+    }
+
+    .eos-toast-bar{
+      position:absolute;
+      left:0;
+      bottom:0;
+      height:4px;
+      width:100%;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transform-origin:left center;
+    }
+
+    @keyframes toastIn{
+      from{opacity:0;transform:translateY(15px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
     .browser-toolbar{
-    padding:12px;
-    gap:8px;
+      padding:12px;
+      gap:8px;
+      background:linear-gradient(180deg,rgba(25,25,25,.95),rgba(10,10,10,.95));
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
 
-    background:
-    linear-gradient(
-        180deg,
-        rgba(25,25,25,.95),
-        rgba(10,10,10,.95)
-    );
+    .browser-btn{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:white;
+      transition:.18s;
+    }
 
-    border-bottom:
-        1px solid rgba(255,255,255,.05);
-}
-
-.browser-btn{
-    width:42px;
-    height:42px;
-
-    border:none;
-    border-radius:12px;
-
-    background:
-        rgba(255,255,255,.04);
-
-    color:white;
-
-    transition:.18s;
-}
-
-.browser-btn:hover{
-    background:
-        rgba(255,31,58,.15);
-
-    color:
-        var(--accent);
-}
+    .browser-btn:hover{
+      background:rgba(255,31,58,.15);
+      color:var(--accent);
+    }
 
   </style>
 </head>
@@ -357,103 +267,50 @@ input[type="range"]::-moz-range-thumb{
     </div>
   </div>
 
-
-
   <div id="quick-left">
-   
     <div class="quick-btn search" id="quick-search" title="Search" aria-label="Quick search">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21l-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m21 21-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
 
   <div id="taskbar">
     <div id="start-btn" title="Launcher">
-  <svg width="24" height="24" viewBox="0 0 24 24">
-    <g fill="white">
-      <rect x="3" y="3" width="4" height="4" rx="1"/>
-      <rect x="10" y="3" width="4" height="4" rx="1"/>
-      <rect x="17" y="3" width="4" height="4" rx="1"/>
-
-      <rect x="3" y="10" width="4" height="4" rx="1"/>
-      <rect x="10" y="10" width="4" height="4" rx="1"/>
-      <rect x="17" y="10" width="4" height="4" rx="1"/>
-
-      <rect x="3" y="17" width="4" height="4" rx="1"/>
-      <rect x="10" y="17" width="4" height="4" rx="1"/>
-      <rect x="17" y="17" width="4" height="4" rx="1"/>
-    </g>
-  </svg>
-</div>
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <g fill="white">
+          <rect x="3" y="3" width="4" height="4" rx="1"/>
+          <rect x="10" y="3" width="4" height="4" rx="1"/>
+          <rect x="17" y="3" width="4" height="4" rx="1"/>
+          <rect x="3" y="10" width="4" height="4" rx="1"/>
+          <rect x="10" y="10" width="4" height="4" rx="1"/>
+          <rect x="17" y="10" width="4" height="4" rx="1"/>
+          <rect x="3" y="17" width="4" height="4" rx="1"/>
+          <rect x="10" y="17" width="4" height="4" rx="1"/>
+          <rect x="17" y="17" width="4" height="4" rx="1"/>
+        </g>
+      </svg>
+    </div>
     <div id="taskbar-icons" role="toolbar" aria-label="Open apps"></div>
-   <div id="system-tray">
-
-<div class="tray-item" id="tray-wifi">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-    <path d="M2 8.5C7.5 4.5 16.5 4.5 22 8.5"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"/>
-
-    <path d="M5 12.5C9 9.5 15 9.5 19 12.5"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"/>
-
-    <path d="M8.5 16C11 14.5 13 14.5 15.5 16"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"/>
-
-    <circle cx="12" cy="19" r="1.5" fill="white"/>
-  </svg>
-
-  <div id="wifi-status">Online</div>
-</div>
-
-  <div class="tray-item" id="tray-batt">
-
-<svg width="22" height="14" viewBox="0 0 24 14">
-
-<rect
-x="1"
-y="1"
-width="18"
-height="12"
-rx="2"
-stroke="white"
-stroke-width="1.2"
-fill="none"
-/>
-
-
-<rect
-x="3"
-y="3"
-width="12"
-height="8"
-rx="1"
-fill="#707070"
-/>
-
-
-<rect
-x="20"
-y="4"
-width="3"
-height="6"
-rx="1"
-fill="white"
-/>
-
-</svg>
-
-<div id="batt-status">--%</div>
-
-</div>
-
-  <div id="tray-clock"></div>
-
-</div>
+    <div id="system-tray">
+      <div class="tray-item" id="tray-wifi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M2 8.5C7.5 4.5 16.5 4.5 22 8.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M5 12.5C9 9.5 15 9.5 19 12.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M8.5 16C11 14.5 13 14.5 15.5 16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="19" r="1.5" fill="white"/>
+        </svg>
+        <div id="wifi-status">Online</div>
+      </div>
+      <div class="tray-item" id="tray-batt">
+        <svg width="22" height="14" viewBox="0 0 24 14">
+          <rect x="1" y="1" width="18" height="12" rx="2" stroke="white" stroke-width="1.2" fill="none"/>
+          <rect x="3" y="3" width="12" height="8" rx="1" fill="#707070"/>
+          <rect x="20" y="4" width="3" height="6" rx="1" fill="white"/>
+        </svg>
+        <div id="batt-status">--%</div>
+      </div>
+      <div id="tray-clock"></div>
+    </div>
+  </div>
 
   <!-- Launcher (hidden by default) -->
   <div id="launcher" style="position:fixed; left:18px; bottom:86px; width:480px; z-index:1400; display:none">
@@ -483,110 +340,40 @@ fill="white"
     <div class="ctx-item" data-action="pin" role="menuitem">Pin to Taskbar</div>
     <div class="ctx-item" data-action="delete" role="menuitem">Remove</div>
   </div>
- 
 
   <script>
-    // Wrap initialization to avoid partial initialization / errors blocking everything
     document.addEventListener('DOMContentLoaded', () => {
       try {
         // Helpers & state
         const $ = s => document.querySelector(s);
         const $$ = s => Array.from(document.querySelectorAll(s));
         function el(tag, attrs = {}) { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
-function showToast(msg, t = 2200){
+        
+        function showToast(msg, t = 2200){
+          const toast = document.createElement("div");
+          toast.className = "eos-toast";
+          toast.innerHTML = `<div>${msg}</div><div class="eos-toast-bar"></div>`;
+          document.body.appendChild(toast);
+          const bar = toast.querySelector(".eos-toast-bar");
+          bar.animate([{ transform:"scaleX(1)" }, { transform:"scaleX(0)" }], {duration:t, easing:"linear", fill:"forwards"});
+          setTimeout(()=>{
+            toast.style.transition = "opacity .2s";
+            toast.style.opacity = "0";
+            setTimeout(()=>toast.remove(), 200);
+          }, t);
+        }
 
-  const toast =
-    document.createElement("div");
-
-  toast.className =
-    "eos-toast";
-
-  toast.innerHTML = `
-    <div>${msg}</div>
-    <div class="eos-toast-bar"></div>
-  `;
-
-  document.body.appendChild(
-    toast
-  );
-
-  const bar =
-    toast.querySelector(
-      ".eos-toast-bar"
-    );
-
-  bar.animate(
-    [
-      { transform:"scaleX(1)" },
-      { transform:"scaleX(0)" }
-    ],
-    {
-      duration:t,
-      easing:"linear",
-      fill:"forwards"
-    }
-  );
-
-  setTimeout(()=>{
-
-    toast.style.transition =
-      "opacity .2s";
-
-    toast.style.opacity = "0";
-
-    setTimeout(
-      ()=>toast.remove(),
-      200
-    );
-
-  }, t);
-
-}
         const KEY_APPS = 'eclipse_apps_v_safe';
         const KEY_ICONS = 'eclipse_icons_v_safe';
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
 
-       const presetLibrary = [
-  {
-    id: 'home',
-    name: 'Eclipse Home',
-    url: 'https://7-7-7-14.github.io/active',
-    icon: '/assets/browsericons/home.png',
-    label: ''
-  },
-
-  {
-    id: 'games',
-    name: 'Games',
-    url: 'https://eclipsev6.github.io/g/',
-    icon: '/assets/browsericons/games.png',
-    label: ''
-  },
-
-  {
-    id: 'movies',
-    name: 'Movies',
-    url: 'https://eclipsev6.github.io/m/',
-    icon: '/assets/browsericons/movies.png',
-    label: ''
-  },
-
-  {
-    id: 'launcher',
-    name: 'Launcher',
-    url: 'https://eclipsev6.github.io/l/',
-    icon: '/assets/browsericons/launch.png',
-    label: ''
-  },
-
-  {
-    id: 'phoenix',
-    name: 'Phoenix',
-    url: 'https://eclipsev6.github.io/m/p/',
-    icon: '/assets/browsericons/phoenix.png',
-    label: ''
-  }
-];
+        const presetLibrary = [
+          {id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: ''},
+          {id: 'games', name: 'Games', url: 'https://eclipsev6.github.io/g/', icon: '/assets/browsericons/games.png', label: ''},
+          {id: 'movies', name: 'Movies', url: 'https://eclipsev6.github.io/m/', icon: '/assets/browsericons/movies.png', label: ''},
+          {id: 'launcher', name: 'Launcher', url: 'https://eclipsev6.github.io/l/', icon: '/assets/browsericons/launch.png', label: ''},
+          {id: 'phoenix', name: 'Phoenix', url: 'https://eclipsev6.github.io/m/p/', icon: '/assets/browsericons/phoenix.png', label: ''}
+        ];
 
         let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
         let desktopIconsPersist = JSON.parse(localStorage.getItem(KEY_ICONS) || '[]');
@@ -606,9 +393,7 @@ function showToast(msg, t = 2200){
           localStorage.setItem(KEY_ICONS, JSON.stringify(desktopIconsPersist));
           localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
         }
-  
 
-        // placeholder icon generator
         function makePlaceholderIcon(text) {
           const size = 128, r = 20;
           const c = document.createElement('canvas'); c.width = size; c.height = size;
@@ -617,7 +402,7 @@ function showToast(msg, t = 2200){
           const accent2 = getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim() || '#c30f24';
           const g = ctx.createLinearGradient(0, 0, size, size); g.addColorStop(0, accent); g.addColorStop(1, accent2);
           ctx.fillStyle = g;
-          ctx.beginPath(); ctx.moveTo(r, 0); ctx.lineTo(size - r, 0); ctx.quadraticCurveTo(size, 0, size, r); ctx.lineTo(size, size - r); ctx.quadraticCurveTo(size, size, size - r, size); ctx.lineTo(r, size); ctx.quadraticCurveTo(0, size, 0, size - r); ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(r, 0); ctx.lineTo(size - r, 0); ctx.quadraticCurveTo(size, 0, size, r); ctx.lineTo(size, size - r); ctx.quadraticCurveTo(size, size, size - r, size); ctx.lineTo(r, size); ctx.quadraticCurveTo(0, size, 0, size - r); ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0); ctx.fill();
           ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.fillRect(0, 0, size, size);
           ctx.fillStyle = '#fff'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
           const letter = (text || '?').toString().trim().charAt(0).toUpperCase();
@@ -633,13 +418,11 @@ function showToast(msg, t = 2200){
           return full;
         }
 
-        // basic UI wiring (safe: check element exists before using)
         const launcherBtn = $('#start-btn');
         const launcherPanel = $('#launcher');
         const launcherGrid = $('#launcher-grid');
         const launcherSearch = $('#launcher-search');
         const taskbar = $('#taskbar-icons');
-        const quickStore = $('#quick-store');
         const quickSearch = $('#quick-search');
         const quickOverlay = $('#quick-search-overlay');
         const quickInput = $('#quick-search-input');
@@ -678,9 +461,7 @@ function showToast(msg, t = 2200){
         }
         if ($('#launcher-close')) $('#launcher-close').addEventListener('click', () => { if (launcherPanel) launcherPanel.style.display = 'none'; });
         if (launcherSearch) launcherSearch.addEventListener('input', (e) => populateLauncher(e.target.value));
-        if (quickStore) quickStore.addEventListener('click', () => openBuiltIn('store'));
 
-        // quick-search wiring (safe)
         if (quickSearch && quickOverlay) {
           quickSearch.addEventListener('click', () => {
             quickOverlay.style.display = quickOverlay.style.display === 'none' || !quickOverlay.style.display ? 'block' : 'none';
@@ -693,13 +474,9 @@ function showToast(msg, t = 2200){
           if (q) { openBrowser({ url: 'https://duckduckgo.com/?q=' + encodeURIComponent(q), label: 'Eclipse://Search' }); quickOverlay.style.display = 'none'; if (quickInput) quickInput.value = ''; }
         });
 
-        // initial seed
-      if (!Array.isArray(installedApps)) {
-  installedApps = [];
-}
+        if (!Array.isArray(installedApps)) installedApps = [];
         populateLauncher();
 
-        /* Desktop icons: render persisted icons (safe) */
         function renderPersistedIcons() {
           try {
             $$('.desktop-icon[data-custom-id]').forEach(n => n.remove());
@@ -714,12 +491,36 @@ function showToast(msg, t = 2200){
             }
           } catch (e) { console.warn('renderPersistedIcons failed', e); }
         }
-        requestAnimationFrame(() => {
-  renderPersistedIcons();
-});
-        
+        requestAnimationFrame(() => renderPersistedIcons());
 
+        let activeIcon = null;
 
+        function showContextMenuFor(node, x, y) {
+          activeIcon = node;
+          const ctx = document.getElementById("context-menu");
+          ctx.style.display = "block";
+          ctx.style.left = x + "px";
+          ctx.style.top = y + "px";
+        }
+
+        function closeContextMenu() {
+          const ctx = document.getElementById("context-menu");
+          ctx.style.display = "none";
+        }
+
+        // Set up context menu item listeners (delegate)
+        document.addEventListener('click', (e) => {
+          if (e.target.matches('#context-menu .ctx-item')) {
+            const action = e.target.dataset.action;
+            if (action === "open" && activeIcon) activeIcon.dispatchEvent(new MouseEvent("dblclick"));
+            if (action === "edit" && activeIcon) enableIconEdit(activeIcon);
+            if (action === "pin" && activeIcon) pinToTaskbar(activeIcon);
+            if (action === "delete" && activeIcon) removeDesktopIcon(activeIcon);
+            closeContextMenu();
+          } else if (!e.target.closest('#context-menu')) {
+            closeContextMenu();
+          }
+        });
 
         function attachIconHandlers(node) {
           try {
@@ -735,29 +536,6 @@ function showToast(msg, t = 2200){
           } catch (e) { console.warn('attachIconHandlers:', e); }
         }
 
-      let activeIcon = null;
-
-function showContextMenuFor(node, x, y) {
-  activeIcon = node;
-
-  const ctx = document.getElementById("context-menu");
-  ctx.style.display = "block";
-  ctx.style.left = x + "px";
-  ctx.style.top = y + "px";
-}
-
-document.querySelectorAll("#context-menu .ctx-item")
-  .forEach(item => {
-    item.addEventListener("click", () => {
-      const action = item.dataset.action;
-
-      if (action === "edit") enableIconEdit(activeIcon);
-      if (action === "pin") pinToTaskbar(activeIcon);
-      if (action === "delete") removeDesktopIcon(activeIcon);
-
-      document.getElementById("context-menu").style.display = "none";
-    });
-  });
         function enableIconEdit(node) {
           try {
             const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 2200;
@@ -776,7 +554,7 @@ document.querySelectorAll("#context-menu .ctx-item")
                 document.removeEventListener('pointerup', onUp);
                 const id = node.dataset.customId || ('c-' + Math.random().toString(36).slice(2, 9));
                 node.dataset.customId = id;
-                const rec = { id, name: node.querySelector('span')?.textContent || 'App', icon: node.querySelector('img')?.src || null, top: node.style.top, left: node.style.left, appRef: node.dataset.app || '' };
+                const rec = { id, name: node.querySelector('span')?.textContent || 'App', icon: node.querySelector('img')?.src || null, top: node.style.top, left: node.style.left, appRef: node.dataset.app };
                 const idx = (desktopIconsPersist || []).findIndex(x => x.id === id);
                 if (idx >= 0) desktopIconsPersist[idx] = rec; else desktopIconsPersist.push(rec);
                 saveState();
@@ -791,702 +569,56 @@ document.querySelectorAll("#context-menu .ctx-item")
           } catch (e) { console.warn('enableIconEdit error', e); }
         }
 
-       function pinToTaskbar(node) {
-
-  const img =
-    node.querySelector('img')?.src ||
-    makePlaceholderIcon("A");
-
-  const name =
-    node.querySelector('span')?.textContent ||
-    "App";
-
-  const t = document.createElement("div");
-
-  t.className = "taskbar-icon";
-
-  t.innerHTML = `
-    <img src="${img}">
-    <div class="dot"></div>
-  `;
-
-  taskbar.appendChild(t);
-
-  // launch
-  t.addEventListener("click", () => {
-    node.dispatchEvent(new MouseEvent("dblclick"));
-  });
-
-  // right click
-  t.addEventListener("contextmenu", e => {
-
-    e.preventDefault();
-
-    const menu = document.createElement("div");
-
-    menu.className = "pin-menu";
-
-    menu.style.left = e.clientX + "px";
-    menu.style.top  = e.clientY + "px";
-
-    menu.innerHTML = `
-      <div class="pin-item">Unpin from Taskbar</div>
-    `;
-
-    document.body.appendChild(menu);
-
-    menu.querySelector(".pin-item")
-      .addEventListener("click", () => {
-        t.remove();
-        menu.remove();
-        showToast(name + " unpinned");
-      });
-
-    document.addEventListener("click", () => {
-      menu.remove();
-    }, { once:true });
-
-  });
-
-}
-function removeDesktopIcon(node) {
-
-  const appRef = node.dataset.app;
-  const appName = node.querySelector("span")?.textContent;
-
-  if (!confirm(`Remove ${appName}?`))
-    return;
-
-  // Remove icon from desktop
-  node.remove();
-
-  // Remove saved desktop icon
-  desktopIconsPersist =
-    desktopIconsPersist.filter(icon =>
-      icon.appRef !== appRef
-    );
-
-  // Remove installed app by ID OR name
-  installedApps =
-    installedApps.filter(app =>
-      app.id !== appRef &&
-      app.name !== appName
-    );
-
-  saveState();
-
-  populateLauncher();
-
-  showToast(appName + " removed");
-}
-
-        /* Smooth draggable helper (requestAnimationFrame batch + pointer capture) */
-        function makeDraggable(elm, handle) {
-          handle.style.touchAction = 'none';
-          let pointerId = null, startX = 0, startY = 0, startLeft = 0, startTop = 0, rafId = null;
-          function onDown(e) {
-            if (e.pointerType === 'mouse' && e.button !== 0) return;
-            // Prevent dragging when clicking control buttons
-            if (e.target.closest('.win-controls')) return;
-            pointerId = e.pointerId;
-            handle.setPointerCapture(pointerId);
-            startX = e.clientX; startY = e.clientY;
-            startLeft = parseFloat(getComputedStyle(elm).left) || 0;
-            startTop = parseFloat(getComputedStyle(elm).top) || 0;
-            function onMove(ev) {
-              if (ev.pointerId !== pointerId) return;
-              const dx = ev.clientX - startX, dy = ev.clientY - startY;
-              if (rafId) cancelAnimationFrame(rafId);
-              rafId = requestAnimationFrame(() => {
-                elm.style.left = (startLeft + dx) + 'px';
-                elm.style.top = (startTop + dy) + 'px';
-              });
-            }
-            function onUp(ev) {
-              if (ev.pointerId !== pointerId) return;
-              handle.releasePointerCapture(pointerId);
-              handle.removeEventListener('pointermove', onMove);
-              handle.removeEventListener('pointerup', onUp);
-              handle.removeEventListener('pointercancel', onUp);
-              if (rafId) cancelAnimationFrame(rafId);
-              pointerId = null;
-            }
-            handle.addEventListener('pointermove', onMove);
-            handle.addEventListener('pointerup', onUp);
-            handle.addEventListener('pointercancel', onUp);
-          }
-          handle.addEventListener('pointerdown', onDown);
-        }
-
-        /* Window factory with working mouse controls */
-        function createWindow(opts = {}) {
-          const width = opts.width || 900, height = opts.height || 600;
-          const win = el('div'); win.className = 'window';
-          win.style.width = width + 'px'; win.style.height = height + 'px';
-          win.style.left = (60 + Math.random() * 120) + 'px'; win.style.top = (60 + Math.random() * 80) + 'px';
-          const tb = el('div'); tb.className = 'titlebar';
-          const t = el('div'); t.className = 'title'; t.textContent = opts.title || 'Window';
-          const controls = el('div'); controls.className = 'win-controls';
-          controls.innerHTML = '<button class="control-btn minimize" title="Minimize">_</button><button class="control-btn maximize" title="Maximize">▢</button><button class="control-btn fullscreen" title="Fullscreen">⤢</button><button class="control-btn close" title="Close">×</button>';
-          tb.appendChild(t); tb.appendChild(controls);
-          const content = el('div'); content.className = 'content';
-          win.appendChild(tb); win.appendChild(content); document.body.appendChild(win);
-
-          const btnMin = controls.querySelector('.minimize'), btnMax = controls.querySelector('.maximize'), btnFull = controls.querySelector('.fullscreen'), btnClose = controls.querySelector('.close');
-
-          btnMin.addEventListener('click', () => { win.style.display = 'none'; if (win._taskbarIcon) win._taskbarIcon.classList.add('active'); });
-          btnMax.addEventListener('click', () => {
-            if (!win.classList.contains('maximized')) { win._prevBounds = { left: win.style.left, top: win.style.top, width: win.style.width, height: win.style.height }; win.classList.add('maximized'); const all = Array.from(document.querySelectorAll('.window')); const top = Math.max(0, ...all.map(w => Number(w.style.zIndex || 0))); win.style.zIndex = top + 1; }
-            else { win.classList.remove('maximized'); if (win._prevBounds) { win.style.left = win._prevBounds.left; win.style.top = win._prevBounds.top; win.style.width = win._prevBounds.width; win.style.height = win._prevBounds.height; win._prevBounds = null; } }
+        function pinToTaskbar(node) {
+          const img = node.querySelector('img')?.src || makePlaceholderIcon("A");
+          const name = node.querySelector('span')?.textContent || "App";
+          const t = document.createElement("div");
+          t.className = "taskbar-icon";
+          t.innerHTML = `<img src="${img}"><div class="dot"></div>`;
+          taskbar.appendChild(t);
+          t.addEventListener("click", () => node.dispatchEvent(new MouseEvent("dblclick")));
+          t.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            const menu = document.createElement("div");
+            menu.className = "pin-menu";
+            menu.style.left = e.clientX + "px";
+            menu.style.top = e.clientY + "px";
+            menu.innerHTML = `<div class="pin-item">Unpin from Taskbar</div>`;
+            document.body.appendChild(menu);
+            menu.querySelector(".pin-item").addEventListener("click", () => {
+              t.remove();
+              menu.remove();
+              showToast(name + " unpinned");
+            });
+            document.addEventListener("click", () => menu.remove(), { once:true });
           });
-          btnFull.addEventListener('click', async () => { try { if (!document.fullscreenElement) await win.requestFullscreen(); else await document.exitFullscreen(); } catch (e) { console.warn('fullscreen failed', e); } });
-          btnClose.addEventListener('click', () => { if (win._taskbarIcon) win._taskbarIcon.remove(); win.remove(); if (win._appliedCloak) restoreTabCloak(); });
-
-          makeDraggable(win, tb);
-          return { win, content, titlebar: tb };
-        }
-        function getPresetByUrl(url) {
-  return presetLibrary.find(app =>
-    app.url === url
-  );
-}
-
-        /* Browser (iframe) with overlay fallback and a few helper features */
-        function openBrowser({ url = '', label = 'Eclipse://Browser', cloak = null } = {}) {
-          try {
-            const { win, content } = createWindow({ title: label, width: 1000, height: 640 });
-            content.innerHTML = `
-              <div style="height:100%;display:flex;flex-direction:column">
-                <div class="browser-toolbar">
-                  <button class="browser-btn back" title="Back">←</button>
-                  <button class="browser-btn forward" title="Forward">→</button>
-                    <button class="browser-btn reload" title="Reload">⟳</button>
-                 
-  <div class="browser-address">
-   
-   
-    <input class="real-url" value="${url}">
-  </div>
-
-               
-                  <button class="browser-btn open-new" title="Open in new tab">↗</button>
-                </div>
-                <div class="browser-page" style="position:relative">
-                  <iframe sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-modals" src="${resolveUrlForIframe(url)}" allow="geolocation; microphone; camera; clipboard-read; clipboard-write"></iframe>
-                </div>
-              </div>
-            `;
-          
-            const iframe = content.querySelector('iframe');
-            const realUrlInput = content.querySelector('.real-url');
-            const faviconEl = content.querySelector('.browser-favicon');
-
-
-
-
-            // small per-window history (for address-entered loads)
-            win._history = win._history || [];
-            win._historyIndex = win._historyIndex ?? -1;
-            function pushHistory(u) { if (win._history[win._historyIndex] === u) return; if (win._historyIndex < win._history.length - 1) win._history.splice(win._historyIndex + 1); win._history.push(u); win._historyIndex = win._history.length - 1; }
-
-            if (url) pushHistory(url);
-
-            // controls
-            const backBtn = content.querySelector('.back'), fwdBtn = content.querySelector('.forward');
-            content.querySelector('.reload').addEventListener('click', () => { iframe.src = iframe.src; });
-          
-            content.querySelector('.open-new').addEventListener('click', () => { const to = realUrlInput.value; if (!to) return; window.open(to.startsWith('http') ? to : ('https://' + to), '_blank'); });
-           
-          
-           
-
-            backBtn.addEventListener('click', () => { if (win._historyIndex > 0) { win._historyIndex -= 1; const u = win._history[win._historyIndex]; iframe.src = resolveUrlForIframe(u); realUrlInput.value = u; } else showToast('No back history'); });
-            fwdBtn.addEventListener('click', () => { if (win._historyIndex < win._history.length - 1) { win._historyIndex += 1; const u = win._history[win._historyIndex]; iframe.src = resolveUrlForIframe(u); realUrlInput.value = u; } else showToast('No forward history'); });
-
-            realUrlInput.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter') {
-                const val = realUrlInput.value.trim();
-                if (!val) return;
-                iframe.src = resolveUrlForIframe(val);
-                content.querySelector('.label').textContent = 'Eclipse://Browser';
-                if (settings.cloakEnabled) { applyTabCloak(settings.cloak); win._appliedCloak = true; }
-                pushHistory(val);
-                const preset = presetLibrary.find(app => app.url === val);
-
-
-              }
-            });
-
-            // iframe overlay fallback (lightweight and safe)
-            let overlay = null;
-            function removeOverlay() { if (overlay) { overlay.remove(); overlay = null; } }
-            iframe.addEventListener('load', () => {
-              removeOverlay();
-              // we avoid risky same-origin checks; show nothing else — user can open in new tab via UI
-            });
-            iframe.addEventListener('error', () => {
-              removeOverlay();
-              overlay = el('div'); overlay.className = 'iframe-overlay';
-              overlay.innerHTML = `<div style="font-weight:700">Failed to load</div><div style="display:flex;gap:8px"><button id="ov-new" class="primary-btn">Open in new tab</button><button id="ov-retry" class="small-btn">Retry</button></div><div style="margin-top:8px;color:var(--muted);word-break:break-all">${iframe.src}</div>`;
-              content.querySelector('.browser-page').appendChild(overlay);
-              overlay.querySelector('#ov-new').addEventListener('click', () => window.open(iframe.src.startsWith('http') ? iframe.src : decodeURIComponent(iframe.src), '_blank'));
-              overlay.querySelector('#ov-retry').addEventListener('click', () => { removeOverlay(); iframe.src = iframe.src; });
-            });
-
-            // taskbar icon binding
-            const t = el('div'); t.className = 'taskbar-icon'; t.innerHTML = `<img src="${(installedApps && installedApps[0] && installedApps[0].icon) || '/assets/icons/browser.png'}"><div class="dot"></div>`;
-            t.addEventListener('click', () => {
-              if (win.style.display === 'none') { win.style.display = 'flex'; t.classList.remove('active'); const all = Array.from(document.querySelectorAll('.window')); const top = Math.max(0, ...all.map(w => Number(w.style.zIndex || 0))); win.style.zIndex = top + 1; }
-              else { win.style.display = 'none'; t.classList.add('active'); }
-            });
-            taskbar && taskbar.appendChild(t);
-            win._taskbarIcon = t;
-
-            if (settings.cloakEnabled) { applyTabCloak(cloak || settings.cloak); win._appliedCloak = true; }
-            return { win, iframe };
-          } catch (err) {
-            console.error('openBrowser failed', err);
-            showToast('Failed to open Browser (see console)');
-          }
         }
 
-        function openBuiltIn(name) {
-          try {
-            if (name === 'browser') openBrowser({ url: presetLibrary[0]?.url || '', label: presetLibrary[0]?.label || '' });
-            else if (name === 'settings') openSettings();
-            else if (name === 'files') openFiles();
-            else if (name === 'store') openStore();
-          } catch (e) { console.warn('openBuiltIn error', e); }
+        function removeDesktopIcon(node) {
+          const appRef = node.dataset.app;
+          const appName = node.querySelector("span")?.textContent;
+          if (!confirm(`Remove ${appName}?`)) return;
+          node.remove();
+          desktopIconsPersist = desktopIconsPersist.filter(icon => icon.appRef !== appRef);
+          installedApps = installedApps.filter(app => app.id !== appRef && app.name !== appName);
+          saveState();
+          populateLauncher();
+          showToast(appName + " removed");
         }
 
-        function openInstalledApp(app) { openBrowser({ url: app.url, label: app.label || app.name || '' }); }
-        function openUrlInBrowser(url) { openBrowser({ url, label: '' }); }
-
-        // Settings/Store/Files (kept simple and robust)
-        function openSettings() {
-          try {
-            const { win, content } = createWindow({ title: 'Settings', width: 780, height: 520 });
-         content.innerHTML = `
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-
-  <div class="settings-card">
-    <h3>Appearance</h3>
-    <p class="muted">Window opacity</p>
-
-    <input
-      id="s-opacity"
-      type="range"
-      min="0.4"
-      max="1"
-      step="0.01"
-      value="${settings.windowOpacity}"
-      style="width:100%"
-    >
-  </div>
-
-  <div class="settings-card">
-    <h3>Network</h3>
-
-    <p class="muted">Proxy base (optional)</p>
-
-    <input
-      id="s-proxy"
-      value="${settings.proxyBase || ''}"
-      placeholder="https://your-proxy/?u="
-      style="
-        width:100%;
-        padding:8px;
-        border-radius:8px;
-      "
-    >
-  </div>
-
-  <div class="settings-card">
-    <h3>Apps</h3>
-
-    <p class="muted">
-      Remove all installed apps and desktop icons.
-    </p>
-
-    <button
-      id="reset-apps"
-      class="primary-btn"
-      style="margin-top:12px"
-       >
-      Reset Apps
-    </button>
-  </div>
-<div class="settings-card">
-
-<h3>System</h3>
-
-<p class="muted">
-Version 6.0.5
-</p>
-
-<p class="muted">
-Engine v6
-</p>
-
-<p class="muted">
-Apps Installed:
-<span id="app-count"></span>
-</p>
-
-</div>
-
-</div>`;
-
-            const op = content.querySelector('#s-opacity'); if (op) op.addEventListener('input', (e) => { settings.windowOpacity = Number(e.target.value); document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity)); saveState(); });
-            const pr = content.querySelector('#s-proxy'); const resetApps =
-  content.querySelector("#reset-apps");
-
-if(resetApps){
-
-  resetApps.addEventListener("click",()=>{
-
-    if(
-      !confirm(
-        "Remove ALL installed apps?"
-      )
-    ) return;
-
-    installedApps = [];
-
-    desktopIconsPersist = [];
-
-    localStorage.removeItem(KEY_APPS);
-    localStorage.removeItem(KEY_ICONS);
-
-    document
-      .querySelectorAll(
-        ".desktop-icon[data-custom-id]"
-      )
-      .forEach(icon=>icon.remove());
-
-    saveState();
-
-    populateLauncher();
-
-    showToast(
-      "All apps removed"
-    );
-
-  });
-
-}
-            if (pr) pr.addEventListener('input', (e) => { settings.proxyBase = e.target.value.trim(); saveState(); });
-          } catch (e) { console.warn('openSettings err', e); }
-        }
-
-        function openFiles() { const { win, content } = createWindow({ title: 'Files', width: 720, height: 440 }); content.innerHTML = `<div class="settings-card"><h3>Files (demo)</h3><p class="muted">No iframe here — will not be blank.</p></div>`; }
-
-        function openStore() {
-          try {
-            const { win, content } = createWindow({ title: 'Store', width: 920, height: 560 });
-            content.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px"><div style="display:flex;justify-content:space-between;align-items:center"><div><h3 style="margin:0">Preset Library</h3><p class="muted" style="margin:0">Install preset apps</p></div><div style="display:flex;gap:8px"><input id="store-filter" placeholder="Filter" style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--text)"><button id="store-refresh" class="small-btn">Refresh</button></div></div><div id="store-lib" class="store-grid"></div><hr><div><h3 style="margin:0">Installed</h3><div id="store-installed" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"></div></div></div>`;
-            const lib = content.querySelector('#store-lib'), inst = content.querySelector('#store-installed'), filter = content.querySelector('#store-filter');
-            function render() {
-              lib.innerHTML = ''; inst.innerHTML = '';
-              const q = (filter && filter.value || '').toLowerCase();
-             for (const p of presetLibrary) {
-
-  if (q && !p.name.toLowerCase().includes(q))
-    continue;
-
-  const installed =
-    installedApps.some(
-      app => app.url === p.url
-    );
-
-  const card = el('div');
-  card.className = 'store-card';
-                card.innerHTML = `<img src="${p.icon || makePlaceholderIcon(p.name)}" alt=""><div style="font-weight:700">${p.name}</div><div class="muted" style="font-size:12px;word-break:break-all">${p.url}</div><div style="display:flex;gap:8px;margin-top:8px">
-
-${
-installed
-?
-`
-<button class="small-btn uninstall">
-  Remove
-</button>
-`
-:
-`
-<button class="small-btn install">
-  Install
-</button>
-
-<button class="primary-btn install-desk">
-  Install + Desktop
-</button>
-`
-}
-
-</div>`;
-                lib.appendChild(card);
-               if(installed){
-
-  card.querySelector('.uninstall')
-  ?.addEventListener('click',()=>{
-
-    installedApps =
-      installedApps.filter(
-        app => app.url !== p.url
-      );
-
-    desktopIconsPersist =
-      desktopIconsPersist.filter(
-        icon =>
-          !installedApps.find(
-            a => a.id === icon.appRef
-          )
-      );
-
-    saveState();
-
-    render();
-
-    populateLauncher();
-
-    renderPersistedIcons();
-
-    showToast(
-      p.name + " removed"
-    );
-
-  });
-
-}
-               
-             card.querySelector('.install')
-               ?.addEventListener('click', () => {
-               const exists =
-  installedApps.some(
-    app => app.url === p.url
-  );
-
-if(exists){
-  showToast(
-    p.name + " already installed"
-  );
-  return;
-}
-
- 
-
-    installedApps.push({
-        id:'app-'+Math.random().toString(36).slice(2,9),
-        name:p.name,
-        url:p.url,
-        icon:p.icon,
-        label:p.label
-    });
-
-    saveState();
-    render();
-    populateLauncher();
-
-    showToast("Installed " + p.name);
-});
-            card.querySelector('.install-desk')
-?.addEventListener('click', () => {
-
-    const newp = {
-        id: 'app-' + Math.random().toString(36).slice(2, 9),
-        name: p.name,
-        url: p.url,
-        icon: p.icon,
-        label: p.label
-    };
-
-    installedApps.push(newp);
-
-    const spot = getNextDesktopPosition();
-
-    const pos = {
-        id: 'c-' + Math.random().toString(36).slice(2, 9),
-        name: p.name,
-        icon: p.icon,
-        top: spot.top,
-        left: spot.left,
-        appRef: newp.id
-    };
-
-    desktopIconsPersist.push(pos);
-
-    saveState();
-    renderPersistedIcons();
-    render();
-    populateLauncher();
-
-    showToast("Installed " + p.name);
-
-});
-
-} // end presetLibrary loop            
-               
-
-
-
-              
-              for (const it of installedApps) {
-                const card = el('div'); card.className = 'store-card';
-                card.innerHTML = `<img src="${it.icon || makePlaceholderIcon(it.name)}" alt=""><div style="font-weight:700">${it.name}</div><div style="display:flex;gap:6px;margin-top:8px"><button class="small-btn launch">Launch</button><button class="small-btn add-desktop">AddDesk</button><button class="small-btn remove">Remove</button></div>`;
-                inst.appendChild(card);
-                card.querySelector('.launch').addEventListener('click', () => openInstalledApp(it));
-                card.querySelector('.add-desktop').addEventListener('click', () => { const pos = { id: 'c-' + Math.random().toString(36).slice(2, 9), name: it.name, icon: it.icon || makePlaceholderIcon(it.name), top: '160px', left: (160 + Math.random() * 300) + 'px', appRef: it.id }; desktopIconsPersist.push(pos); saveState(); renderPersistedIcons(); showToast('Added to desktop'); });
-               card.querySelector('.remove').addEventListener('click', () => {
-
-  if (!confirm(`Remove ${it.name}?`))
-    return;
-
-  installedApps =
-    installedApps.filter(app => app.id !== it.id);
-
-  desktopIconsPersist =
-    desktopIconsPersist.filter(icon =>
-      icon.appRef !== it.id
-    );
-
-  saveState();
-
-  render();
-  populateLauncher();
-  renderPersistedIcons();
-
-  showToast(it.name + " removed");
-});
-              }
-            }
-            filter && filter.addEventListener('input', render);
-            content.querySelector('#store-refresh').addEventListener('click', render);
-            render();
-          } catch (e) { console.warn('openStore err', e); }
-        }
-
-        // utilities
-        function getDomain(u) { try { return (new URL(u)).hostname; } catch (e) { return u; } }
-
-        // attach handlers to initial DOM icons
-        $$('.desktop-icon').forEach(n => attachIconHandlers(n));
-        // initial persisted icons already rendered earlier
-        populateLauncher();
-
-        // hide launcher/context on click outside
-        document.addEventListener('click', (e) => {
-          const l = $('#launcher'); if (l && !l.contains(e.target) && !$('#start-btn').contains(e.target)) l.style.display = 'none';
-          const cm = $('#context-menu'); if (cm && cm.style.display === 'block' && !cm.contains(e.target)) cm.style.display = 'none';
-        });
-
-        // keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-          if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') { settings.devMode = !settings.devMode; document.body.classList.toggle('dev-mode', settings.devMode); saveState(); showToast('Dev mode: ' + (settings.devMode ? 'on' : 'off')); }
-        });
-
-        // expose for debugging
-        window.EclipseOS = { installedApps, desktopIconsPersist, settings, saveState, makePlaceholderIcon };
-
-        console.log('Eclipse OS loaded (safe init).');
-
-      } catch (err) {
-        // top-level guard so errors won't break the page; log and notify
-        console.error('Eclipse OS init failed', err);
-        alert('Eclipse OS initialization failed — check the console for details.');
+        // Placeholder stubs for undefined functions
+        const openInstalledApp = (app) => console.log('Open app:', app);
+        const openBuiltIn = (app) => console.log('Open built-in:', app);
+        const openUrlInBrowser = (url) => console.log('Open URL:', url);
+        const openBrowser = (opts) => console.log('Open browser:', opts);
+
+        // Attach handlers to initial desktop icons
+        $$('.desktop-icon').forEach(icon => attachIconHandlers(icon));
+
+      } catch (e) {
+        console.error('Initialization error:', e);
       }
-    }); // DOMContentLoaded
-    
-
-
-    async function updateBattery() {
-  if (!('getBattery' in navigator)) {
-    document.getElementById('batt-status').textContent = 'N/A';
-    return;
-  }
-
-  const battery = await navigator.getBattery();
-
-  function refresh() {
-    document.getElementById('batt-status').textContent =
-      Math.round(battery.level * 100) + '%';
-  }
-
-  battery.addEventListener('levelchange', refresh);
-  battery.addEventListener('chargingchange', refresh);
-
-  refresh();
-}
-
-updateBattery();
-          function updateWifiStatus() {
-  const txt = document.getElementById('wifi-status');
-
-  if (navigator.onLine) {
-    txt.textContent = "Online";
-    txt.style.color = "#ff1f3a";
-  } else {
-    txt.textContent = "Offline";
-    txt.style.color = "#ff5b5b";
-  }
-}
-
-window.addEventListener('online', updateWifiStatus);
-window.addEventListener('offline', updateWifiStatus);
-
-updateWifiStatus();
-    function updateClock() {
-  const clock =
-    document.getElementById("tray-clock");
-
-  if (!clock) return;
-
-  clock.textContent =
-    new Date().toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit"
     });
-}
-
-setInterval(updateClock, 1000);
-updateClock();
-    
-function restoreTabCloak(){}
-function applyTabCloak(){}
-    function getNextDesktopPosition() {
-
-  const iconCount =
-    document.querySelectorAll(
-      '.desktop-icon'
-    ).length;
-
-  const col =
-    iconCount % 6;
-
-  const row =
-    Math.floor(iconCount / 6);
-
-  return {
-    top: (20 + row * 110) + 'px',
-    left: (20 + col * 120) + 'px'
-  };
-}
-
-
   </script>
-    <script>
-
-if(
-"serviceWorker"
-in navigator
-){
-
-navigator.serviceWorker
-.register("/sw.js");
-
-}
-
-</script>
 </body>
-  
- 
 </html>
