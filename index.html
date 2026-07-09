@@ -735,26 +735,29 @@ function showToast(msg, t = 2200){
           } catch (e) { console.warn('attachIconHandlers:', e); }
         }
 
-       function showContextMenuFor(node, x, y) {
+      let activeIcon = null;
 
-  const ctx =
-    document.getElementById(
-      'context-menu'
-    );
+function showContextMenuFor(node, x, y) {
+  activeIcon = node;
 
-  if (!ctx) {
-    alert("No context menu found");
-    return;
-  }
-
+  const ctx = document.getElementById("context-menu");
   ctx.style.display = "block";
-  ctx.style.position = "fixed";
   ctx.style.left = x + "px";
   ctx.style.top = y + "px";
-  ctx.style.zIndex = "999999";
-
 }
 
+document.querySelectorAll("#context-menu .ctx-item")
+  .forEach(item => {
+    item.addEventListener("click", () => {
+      const action = item.dataset.action;
+
+      if (action === "edit") enableIconEdit(activeIcon);
+      if (action === "pin") pinToTaskbar(activeIcon);
+      if (action === "delete") removeDesktopIcon(activeIcon);
+
+      document.getElementById("context-menu").style.display = "none";
+    });
+  });
         function enableIconEdit(node) {
           try {
             const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 2200;
@@ -979,17 +982,7 @@ function removeDesktopIcon(node) {
             const faviconEl = content.querySelector('.browser-favicon');
 
 
-const preset = getPresetByUrl(url);
 
-if (preset) {
-  labelEl.textContent = preset.label;
-  faviconEl.src = preset.icon;
-} else {
-  labelEl.textContent = url;
-  faviconEl.src =
-    'https://www.google.com/s2/favicons?domain=' +
-    getDomain(url);
-}
 
             // small per-window history (for address-entered loads)
             win._history = win._history || [];
@@ -1020,15 +1013,7 @@ if (preset) {
                 pushHistory(val);
                 const preset = presetLibrary.find(app => app.url === val);
 
-if (preset) {
-  labelEl.textContent = preset.label;
-  faviconEl.src = preset.icon;
-} else {
-  labelEl.textContent = val;
-  faviconEl.src =
-    'https://www.google.com/s2/favicons?domain=' +
-    getDomain(val);
-}
+
               }
             });
 
