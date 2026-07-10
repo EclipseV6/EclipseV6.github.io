@@ -22,71 +22,352 @@
       --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
 
-    html,body{height:100%;margin:0;background:var(--bg) fixed center/cover var(--bg-img);font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;}
-    body{display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;}
+    html,body{
+      height:100%;
+      margin:0;background:var(--bg) fixed center/cover var(--bg-img);font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;}
+    
+    body{
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      overflow:hidden;}
 
     /* Desktop */
-    #desktop{position:absolute;inset:0 0 var(--taskbar-h) 0;padding:18px;box-sizing:border-box;overflow:auto}
+    #desktop{
+      position:absolute;
+      inset:0 0 var(--taskbar-h) 0;
+      padding:18px;
+      box-sizing:border-box;
+      overflow:auto}
 
     /* Taskbar */
-    #taskbar{height:var(--taskbar-h);display:flex;align-items:center;gap:12px;padding:0 18px;background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66));border-top:1px solid rgba(255,255,255,0.05);box-shadow:0 -4px 12px rgba(0,0,0,0.3)}
-    #start-btn{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg,var(--accent),var(--accent-2));cursor:pointer}
-    #taskbar-icons{display:flex;gap:10px;align-items:center}
-    .taskbar-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.05)}
-    .taskbar-icon img{width:28px;height:28px;border-radius:6px}
-    .taskbar-icon .dot{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);display:none}
-    .taskbar-icon.active .dot{display:block}
-    #system-tray{margin-left:auto;display:flex;gap:12px;align-items:center;color:var(--muted);font-size:13px}
+    #taskbar{
+      height:var(--taskbar-h);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:0 18px;
+      background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66));
+      border-top:1px solid rgba(255,255,255,0.05);
+      box-shadow:0 -4px 12px rgba(0,0,0,0.3)}
+    
+    #start-btn{
+      width:48px;
+      height:48px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg,var(--accent),var(--accent-2));
+      cursor:pointer}
+    
+    #taskbar-icons{
+      display:flex;
+      gap:10px;
+      align-items:center}
+    
+    .taskbar-icon{
+      width:46px;
+      height:46px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.05)}
+    
+    .taskbar-icon img{
+      width:28px;
+      height:28px;
+      border-radius:6px}
+    
+    .taskbar-icon .dot{
+      position:absolute;
+      bottom:-6px;
+      left:50%;
+      transform:translateX(-50%);width:8px;height:8px;border-radius:50%;
+      background:var(--accent);display:none}
+    
+    .taskbar-icon.active .dot{
+      display:block}
+    
+    #system-tray{
+      margin-left:auto;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px}
 
     /* Quick-left stack: store + quick search */
-    #quick-left{position:fixed;left:18px;bottom:calc(var(--taskbar-h)+12px);z-index:1550;display:flex;flex-direction:column;gap:10px}
-    .quick-btn{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));cursor:pointer;border:1px solid rgba(255,255,255,0.05)}
-    .quick-btn.search{ background: linear-gradient(180deg,var(--accent),var(--accent-2)); color: #fff; box-shadow:0 8px 28px rgba(200,0,40,0.18) }
+    #quick-left{
+      position:fixed;
+      left:18px;
+      bottom:calc(var(--taskbar-h)+12px);
+      z-index:1550;
+      display:flex;
+      flex-direction:column;
+      gap:10px}
+    
+    .quick-btn{
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.05)}
+    .quick-btn.search{
+      background: linear-gradient(180deg,var(--accent),var(--accent-2));
+      color: #fff;
+      box-shadow:0 8px 28px rgba(200,0,40,0.18) }
 
     /* Desktop icons */
-    .desktop-icon{position:absolute;width:100px;text-align:center;padding:6px;cursor:default;user-select:none}
-    .desktop-icon img{width:64px;height:64px;border-radius:12px;display:block;margin:0 auto 6px;box-shadow:0 12px 34px rgba(0,0,0,0.6)}
-    .desktop-icon span{display:block;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .desktop-icon{
+      position:absolute;
+      width:100px;
+      text-align:center;
+      padding:6px;
+      cursor:default;
+      user-select:none}
+    
+    .desktop-icon img{
+      width:64px;height:64px;
+      border-radius:12px;
+      display:block;
+      margin:0 auto 6px;
+      box-shadow:0 12px 34px rgba(0,0,0,0.6)}
+    
+    .desktop-icon span{
+      display:block;
+      font-size:12px;
+      color:var(--text);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
 
     /* Windows */
-    .window{position:absolute;min-width:360px;min-height:260px;width:900px;height:600px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(20,20,20,var(--window-opacity)),rgba(8,8,8,var(--window-opacity)));box-shadow:var(--shadow);display:flex;flex-direction:column;z-index:100}
-    .window.maximized{top:0!important;left:0!important;width:100vw!important;height:calc(100vh - var(--taskbar-h))!important;border-radius:0}
-    .titlebar{height:56px;display:flex;align-items:center;gap:12px;padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));border-bottom:1px solid rgba(255,255,255,0.05)}
-    .title{font-weight:700;font-size:15px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .win-controls{display:flex;gap:8px;align-items:center}
-    .control-btn{width:38px;height:38px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.02);display:grid;place-items:center;color:var(--text);cursor:pointer;transition:all 0.15s}
-    .control-btn:hover{transform:translateY(-3px);background:rgba(255,255,255,0.02)}
-    .control-btn.close{background:linear-gradient(90deg,#ff4b61,#c61b2b);color:#fff}
-    .content{flex:1;padding:12px;overflow:auto;color:var(--text);background:transparent;position:relative;}
+    .window{
+      position:absolute;
+      min-width:360px;
+      min-height:260px;
+      width:900px;
+      height:600px;
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(20,20,20,var(--window-opacity)),rgba(8,8,8,var(--window-opacity)));
+      box-shadow:var(--shadow);
+      display:flex;flex-direction:column;
+      z-index:100}
+    
+    .window.maximized{
+      top:0!important;left:0!important;
+      width:100vw!important;
+      height:calc(100vh - var(--taskbar-h))!important;
+      border-radius:0}
+    
+    .titlebar{
+      height:56px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));
+      border-bottom:1px solid rgba(255,255,255,0.05)}
+    
+    .title{
+      font-weight:700;
+      font-size:15px;
+      color:var(--text);
+      flex:1;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
+    
+    .win-controls{
+      display:flex;
+      gap:8px;
+      align-items:center}
+    
+    .control-btn{
+      width:38px;
+      height:38px;
+      border-radius:10px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.02);
+      display:grid;place-items:center;
+      color:var(--text);
+      cursor:pointer;
+      transition:all 0.15s}
+    
+    .control-btn:hover{
+      transform:translateY(-3px);
+      background:rgba(255,255,255,0.02)}
+    
+    .control-btn.close{
+      background:linear-gradient(90deg,#ff4b61,#c61b2b);
+      color:#fff}
+    
+    .content{
+      flex:1;
+      padding:12px;
+      overflow:auto;
+      color:var(--text);
+      background:transparent;
+      position:relative;}
 
     /* Browser */
-    .browser-toolbar{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.05)}
-    .browser-btn{padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02);color:var(--text);cursor:pointer}
-    .browser-address{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:999px;background:rgba(0,0,0,0.36);border:1px solid rgba(255,255,255,0.02);flex:1}
-    .browser-address .label{color:var(--muted);font-size:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .browser-address input{border:none;outline:none;background:transparent;color:var(--text);font-size:14px;width:100%}
-    .browser-favicon{width:18px;height:18px;border-radius:4px}
-    .browser-page{flex:1;display:block;background:transparent}
-    .browser-page iframe{width:100%;height:100%;border:0;display:block;background:transparent}
+    .browser-toolbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));
+      border:1px solid rgba(255,255,255,0.05)}
+    
+    .browser-btn{
+      padding:8px 10px;
+      border-radius:8px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.02);
+      color:var(--text);
+      cursor:pointer}
+    
+    .browser-address{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.36);
+      border:1px solid rgba(255,255,255,0.02);
+      flex:1}
+    
+    .browser-address .label{
+      color:var(--muted);
+      font-size:12px;
+      max-width:220px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
+    
+    .browser-address input{
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+      width:100%}
+    
+    .browser-favicon{
+      width:18px;
+      height:18px;
+      border-radius:4px}
+    
+    .browser-page{
+      flex:1;
+      display:block;
+      background:transparent}
+    
+    .browser-page iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:transparent}
 
     /* Settings/Store */
-    .settings-card{padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(18,18,18,0.9),rgba(12,12,12,0.9));border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-    .muted{color:var(--muted);font-size:13px}
-    .switch{width:46px;height:26px;border-radius:999px;background:rgba(255,255,255,0.04);display:inline-block;position:relative;cursor:pointer}
-    .switch .knob{position:absolute;left:4px;top:4px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .12s}
-    .switch.on{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-    .switch.on .knob{left:24px}
-    .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-    .store-card{padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));border:1px solid rgba(255,255,255,0.02);box-shadow:0 10px 26px rgba(0,0,0,0.5);cursor:pointer}
-    .store-card img{width:96px;height:96px;border-radius:12px;object-fit:cover}
-    .small-btn{padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer}
-    .primary-btn{padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;cursor:pointer}
+    .settings-card{
+      padding:14px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(18,18,18,0.9),rgba(12,12,12,0.9));
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+
+    
+    .muted{
+      color:var(--muted);
+           font-size:13px}
+    
+    .switch{
+      width:46px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.04);
+      display:inline-block;
+      position:relative;
+      cursor:pointer}
+    
+    .switch .knob{
+      position:absolute;
+      left:4px;top:4px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:left .12s}
+  
+    .switch.on{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    
+    .switch.on .knob{
+      left:24px}
+    
+    .store-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:12px}
+    
+    .store-card{
+      padding:12px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow:0 10px 26px rgba(0,0,0,0.5);
+      cursor:pointer}
+    
+    .store-card img{
+      width:96px;
+      height:96px;
+      border-radius:12px;
+      object-fit:cover}
+   
+    .small-btn{
+      padding:8px 10px;
+      border-radius:8px;
+      border:none;
+      background:rgba(255,255,255,0.03);
+      color:var(--text);
+      cursor:pointer}
+    
+    .primary-btn{
+      padding:8px 12px;
+      border-radius:10px;
+      border:none;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;cursor:pointer}
 
     /* iframe overlay when blocked */
-    .iframe-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));color:var(--muted);gap:10px}
+    .iframe-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));
+      color:var(--muted);gap:10px}
 
     /* toast */
-    .eos-toast{position:fixed;right:20px;bottom:100px;background:rgba(0,0,0,0.7);color:#fff;padding:10px 12px;border-radius:8px;z-index:3000;box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+    .eos-toast{
+      position:fixed;
+      right:20px;
+      bottom:100px;
+      background:rgba(0,0,0,0.7);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:8px;
+      z-index:3000;
+      box-shadow:0 8px 24px rgba(0,0,0,0.45)}
 
     @media (max-width:900px){
       .browser-address{max-width:520px}
@@ -269,7 +550,9 @@
 
   <div id="quick-left">
     <div class="quick-btn search" id="quick-search" title="Search" aria-label="Quick search">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m21 21-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m21 21-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
 
@@ -313,21 +596,63 @@
   </div>
 
   <!-- Launcher (hidden by default) -->
-  <div id="launcher" style="position:fixed; left:18px; bottom:86px; width:480px; z-index:1400; display:none">
-    <div style="padding:12px;border-radius:12px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow)">
-      <div style="display:flex;gap:10px;align-items:center">
-        <input id="launcher-search" placeholder="Search apps..." style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+  <div id="launcher"  style="
+    position:fixed;
+    left:18px;
+    bottom:86px;
+    width:480px;
+    z-index:1400;
+    display:none">
+    <div style="
+      padding:12px;
+      border-radius:12px;
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:var(--shadow)">
+      <div style="
+        display:flex;
+        gap:10px;
+        align-items:center">
+        <input id="launcher-search" placeholder="Search apps..." style="
+          flex:1;
+          padding:10px;
+          border-radius:10px;
+          background:rgba(255,255,255,0.02);
+          border:1px solid rgba(255,255,255,0.03);
+          color:var(--text)">
         <button id="launcher-close" class="control-btn">✕</button>
       </div>
       <hr style="margin:10px 0">
-      <div id="launcher-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px"></div>
+      <div id="launcher-grid" style="
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:12px"></div>
     </div>
   </div>
 
   <!-- Quick search overlay (hidden by default) -->
-  <div id="quick-search-overlay" style="display:none;position:fixed;left:84px;bottom:calc(var(--taskbar-h)+20px);z-index:2000">
-    <div style="padding:10px;border-radius:10px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow);display:flex;gap:8px;align-items:center">
-      <input id="quick-search-input" placeholder="Search web..." style="width:360px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+  <div id="quick-search-overlay" style="
+    display:none;
+    position:fixed;
+    left:84px;
+    bottom:calc(var(--taskbar-h)+20px);
+    z-index:2000">
+    <div style="
+      padding:10px;
+      border-radius:10px;
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:var(--shadow);
+      display:flex;
+      gap:8px;
+      align-items:center">
+      <input id="quick-search-input" placeholder="Search web..." style="
+        width:360px;
+        padding:8px;
+        border-radius:8px;
+        background:rgba(255,255,255,0.02);
+        border:1px solid rgba(255,255,255,0.03);
+        color:var(--text)">
       <button id="quick-search-go" class="primary-btn">Search</button>
       <button id="quick-search-close" class="control-btn">✕</button>
     </div>
@@ -347,7 +672,8 @@
         // Helpers & state
         const $ = s => document.querySelector(s);
         const $$ = s => Array.from(document.querySelectorAll(s));
-        function el(tag, attrs = {}) { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+        function el(tag, attrs = {}) { const e = document.createElement(tag); 
+        for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
         
         function showToast(msg, t = 2200){
           const toast = document.createElement("div");
@@ -407,9 +733,21 @@
           const accent2 = getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim() || '#c30f24';
           const g = ctx.createLinearGradient(0, 0, size, size); g.addColorStop(0, accent); g.addColorStop(1, accent2);
           ctx.fillStyle = g;
-          ctx.beginPath(); ctx.moveTo(r, 0); ctx.lineTo(size - r, 0); ctx.quadraticCurveTo(size, 0, size, r); ctx.lineTo(size, size - r); ctx.quadraticCurveTo(size, size, size - r, size); ctx.lineTo(r, size); ctx.quadraticCurveTo(0, size, 0, size - r); ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0); ctx.fill();
-          ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.fillRect(0, 0, size, size);
-          ctx.fillStyle = '#fff'; ctx.font = 'bold 64px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.beginPath(); ctx.moveTo(r, 0);
+          ctx.lineTo(size - r, 0);
+          ctx.quadraticCurveTo(size, 0, size, r);
+          ctx.lineTo(size, size - r);
+          ctx.quadraticCurveTo(size, size, size - r, size);
+          ctx.lineTo(r, size);
+          ctx.quadraticCurveTo(0, size, 0, size - r);
+          ctx.lineTo(0, r);
+          ctx.quadraticCurveTo(0, 0, r, 0); ctx.fill();
+          ctx.fillStyle = 'rgba(0,0,0,0.12)';
+          ctx.fillRect(0, 0, size, size);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 64px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
           const letter = (text || '?').toString().trim().charAt(0).toUpperCase();
           ctx.fillText(letter, size / 2, size / 2 + 6);
           return c.toDataURL();
@@ -435,11 +773,22 @@
         const quickClose = $('#quick-search-close');
 
         function buildTile(item) {
-          const tile = el('div'); tile.style.padding = '10px'; tile.style.borderRadius = '12px'; tile.style.textAlign = 'center'; tile.style.cursor = 'pointer';
-          const img = el('img'); img.src = item.icon || makePlaceholderIcon(item.name || item.label || 'App'); img.style.width = '56px'; img.style.height = '56px'; img.style.borderRadius = '10px';
-          const lbl = el('div'); lbl.textContent = item.name || item.label; lbl.style.marginTop = '8px'; lbl.style.fontSize = '13px';
+          const tile = el('div'); 
+          tile.style.padding = '10px'; 
+          tile.style.borderRadius = '12px'; tile.style.textAlign = 'center'; 
+          tile.style.cursor = 'pointer';
+          const img = el('img'); 
+          img.src = item.icon || makePlaceholderIcon(item.name || item.label || 'App'); 
+          img.style.width = '56px'; img.style.height = '56px'; 
+          img.style.borderRadius = '10px';
+          const lbl = el('div'); 
+          lbl.textContent = item.name || item.label; 
+          lbl.style.marginTop = '8px';
+          lbl.style.fontSize = '13px';
           tile.appendChild(img); tile.appendChild(lbl);
-          tile.addEventListener('click', () => { if (launcherPanel) launcherPanel.style.display = 'none'; if (item.action) item.action(); else openInstalledApp(item); });
+          tile.addEventListener('click', () => { if (launcherPanel) launcherPanel.style.display = 'none'; 
+          if (item.action) item.action(); 
+          else openInstalledApp(item); });
           return tile;
         }
 
@@ -476,7 +825,9 @@
         if (quickClose) quickClose.addEventListener('click', () => { quickOverlay.style.display = 'none'; });
         if (quickGo) quickGo.addEventListener('click', () => {
           const q = (quickInput && quickInput.value || '').trim();
-          if (q) { openBrowser({ url: 'https://duckduckgo.com/?q=' + encodeURIComponent(q), label: 'Eclipse://Search' }); quickOverlay.style.display = 'none'; if (quickInput) quickInput.value = ''; }
+          if (q) { openBrowser({ url: 'https://duckduckgo.com/?q=' + encodeURIComponent(q), label: 'Eclipse://Search' });
+                  quickOverlay.style.display = 'none'; 
+                  if (quickInput) quickInput.value = ''; }
         });
 
         if (!Array.isArray(installedApps)) installedApps = [];
@@ -487,10 +838,18 @@
             $$('.desktop-icon[data-custom-id]').forEach(n => n.remove());
             for (const it of (desktopIconsPersist || [])) {
               if (document.querySelector('.desktop-icon[data-custom-id="' + it.id + '"]')) continue;
-              const d = el('div'); d.className = 'desktop-icon'; d.dataset.customId = it.id; d.dataset.app = it.appRef || it.url || '';
-              d.style.top = it.top; d.style.left = it.left; d.style.zIndex = 90;
-              const img = el('img'); img.src = it.icon || makePlaceholderIcon(it.name || it.label || '?'); const sp = el('span'); sp.textContent = it.name || it.label || 'App';
-              d.appendChild(img); d.appendChild(sp);
+              const d = el('div'); 
+              d.className = 'desktop-icon'; 
+              d.dataset.customId = it.id; 
+              d.dataset.app = it.appRef || it.url || '';
+              d.style.top = it.top; 
+              d.style.left = it.left; d.style.zIndex = 90;
+              const img = el('img'); 
+              img.src = it.icon || makePlaceholderIcon(it.name || it.label || '?'); 
+              const sp = el('span'); 
+              sp.textContent = it.name || it.label || 'App';
+              d.appendChild(img); 
+              d.appendChild(sp);
               document.getElementById('desktop').appendChild(d);
               attachIconHandlers(d);
             }
