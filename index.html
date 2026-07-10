@@ -387,6 +387,11 @@
 
         document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity));
         if (settings.devMode) document.body.classList.add('dev-mode');
+        addressBar.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        iframe.src = resolveUrlForIframe(addressBar.value);
+    }
+});
 
         function saveState() {
           localStorage.setItem(KEY_APPS, JSON.stringify(installedApps));
@@ -606,11 +611,6 @@
           showToast(appName + " removed");
         }
 
-        // Placeholder stubs for undefined functions
-        const openInstalledApp = (app) => console.log('Open app:', app);
-        const openBuiltIn = (app) => console.log('Open built-in:', app);
-        const openUrlInBrowser = (url) => console.log('Open URL:', url);
-        const openBrowser = (opts) => console.log('Open browser:', opts);
 
         // Attach handlers to initial desktop icons
         $$('.desktop-icon').forEach(icon => attachIconHandlers(icon));
@@ -619,6 +619,7 @@
         console.error('Initialization error:', e);
       }
     });
+    
   </script>
 </body>
 </html>
