@@ -713,11 +713,7 @@
 
         document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity));
         if (settings.devMode) document.body.classList.add('dev-mode');
-        addressBar.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        iframe.src = resolveUrlForIframe(addressBar.value);
-    }
-});
+   
 
         function saveState() {
           localStorage.setItem(KEY_APPS, JSON.stringify(installedApps));
