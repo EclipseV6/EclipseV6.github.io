@@ -1,485 +1,595 @@
-# ECLIPSE V6
+# ECLIPSE OS
 
-## The Next Generation Web Browser
+A powerful, minimalist desktop operating system simulator built for the modern web.
 
-Eclipse V6 is not just another browser. It's a powerhouse engineered for the modern web. Built with cutting-edge technology, Eclipse delivers lightning-fast performance, unparalleled security, and a feature set that puts traditional browsers to shame. Experience web browsing the way it was meant to be experienced.
+![Eclipse OS Dark Theme](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/main.png)
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Key Features](#key-features)
-- [Performance Metrics](#performance-metrics)
-- [Architecture](#architecture)
-- [Advanced Security](#advanced-security)
-- [Customization Engine](#customization-engine)
-- [Developer Tools](#developer-tools)
-- [Integration Capabilities](#integration-capabilities)
+- [Features](#features)
+- [Gallery](#gallery)
+- [System Architecture](#system-architecture)
 - [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [System Requirements](#system-requirements)
+- [Usage](#usage)
+- [Themes](#themes)
+- [Applications](#applications)
+- [Customization](#customization)
 - [Contributing](#contributing)
-- [License](#license)
 
 ---
 
 ## Overview
 
-Eclipse V6 represents a fundamental reimagining of what a web browser can be. While most browsers are constrained by legacy architecture and compromise, Eclipse was built from the ground up with a singular focus: maximum performance, maximum flexibility, and maximum control.
+Eclipse OS is a fully-featured, web-based desktop operating system simulator. Built with vanilla HTML, CSS, and JavaScript, it provides a desktop experience directly in your browser with a sleek, modern interface. Features a dark-themed aesthetic, window management, multi-app support, and an intuitive launcher system.
 
-With advanced connection optimization, intelligent resource management, and a sophisticated rendering engine, Eclipse handles everything from basic browsing to complex web applications with ease. Whether you're streaming 4K video, running resource-intensive web apps, or simply browsing the modern web, Eclipse delivers the performance you demand.
+This is not just a mockup—Eclipse OS has real functionality including:
+- Windowed application management
+- Persistent localStorage for settings
+- Multiple built-in applications
+- Customizable theming system
+- Desktop and taskbar interaction
+- File browser integration
+- Browser within the OS
 
-The browser integrates seamlessly with your operating system while maintaining complete control over your digital experience. Every feature has been carefully crafted to maximize productivity and minimize overhead.
-
----
-
-## Key Features
-
-### Lightning-Fast Performance Engine
-- **Advanced Rendering Pipeline**: Uses multi-threaded rendering with hardware acceleration for 60+ FPS performance
-- **Smart Caching System**: Intelligent predictive caching reduces load times by up to 70%
-- **Memory Optimization**: Adaptive memory management ensures smooth performance even with dozens of tabs open
-- **Network Acceleration**: Enhanced connection handling optimizes bandwidth utilization and reduces latency
-- **Zero-Waste Architecture**: Streamlined code execution eliminates unnecessary overhead
-
-### Enhanced Security & Privacy Framework
-- **Military-Grade Encryption**: End-to-end encryption for sensitive browsing sessions
-- **Advanced Privacy Mode**: Complete isolation of user data with no tracking across sessions
-- **Built-in Malware Protection**: Real-time threat detection prevents exploitation attempts
-- **Certificate Pinning**: Advanced certificate validation prevents man-in-the-middle attacks
-- **Sandboxing Technology**: Each tab runs in an isolated environment for maximum security
-- **Automatic Security Updates**: Continuous security patch delivery without restart requirements
-- **Do Not Track Enforcement**: Strict DND implementation prevents third-party tracking
-
-### Customization & Control
-- **Theme Engine**: Create and customize themes at a granular level with CSS-like syntax
-- **Extension Architecture**: Powerful extension system allowing deep browser customization
-- **Keyboard Shortcuts**: Fully customizable shortcuts for power users
-- **Profile Management**: Multiple profiles with independent settings, history, and preferences
-- **UI Customization**: Reorganize browser interface elements to match your workflow
-- **Gesture Controls**: Intuitive swipe and multi-touch gestures for navigation
-
-### Advanced Tabbing & Session Management
-- **Vertical Tabs**: Space-efficient tab organization with customizable grouping
-- **Session Recovery**: Automatic and manual session saving with restoration on startup
-- **Tab Workspaces**: Create separate tab groups for different projects or activities
-- **Pinned Tabs**: Lock important sites for quick access across sessions
-- **Tab Search**: Powerful fuzzy search across all open tabs with history integration
-- **Tab Sharing**: Share entire tab groups with others or export for later review
-
-### Network & Connection Intelligence
-- **Smart Routing**: Adaptive connection routing for optimal performance
-- **Bandwidth Management**: Fine-grained control over resource allocation per tab
-- **Connection Pooling**: Reuses connections efficiently to reduce overhead
-- **DNS Optimization**: Custom DNS support with automatic failover
-- **Load Balancing**: Distributes requests across multiple pathways for improved reliability
-- **Connection Analytics**: Real-time visibility into network performance metrics
-
-### Developer-Grade Tools
-- **Advanced Debugger**: Full-featured debugging with breakpoints, watches, and call stacks
-- **Performance Profiler**: Detailed performance analysis with flame graphs
-- **Network Inspector**: Deep inspection of all network traffic with filtering and replay
-- **DOM Inspector**: Real-time DOM tree visualization with live editing
-- **Console Excellence**: Multi-line input with syntax highlighting and autocompletion
-- **Source Maps**: Seamless debugging of transpiled and minified code
-- **Remote Debugging**: Protocol for debugging via external tools
-- **Performance Timeline**: Comprehensive performance metrics from page load to interaction
-
-### Content & Display Excellence
-- **High-DPI Support**: Full support for retina and 4K displays
-- **Reader Mode**: Distraction-free reading with customizable typography
-- **Picture-in-Picture**: Watch videos while continuing to browse
-- **Dark Mode**: System-wide dark theme with automatic scheduling
-- **Adaptive Color Management**: ICC color profile support for accurate color rendering
-- **Typography Controls**: Fine-tune font sizes and line spacing for readability
-- **Page Zoom**: Per-site zoom persistence across sessions
-
-### Productivity Features
-- **Multi-Account Support**: Seamlessly switch between different accounts on the same site
-- **Password Manager Integration**: Secure password storage with encryption
-- **Bookmark Sync**: Cloud synchronization of bookmarks across devices
-- **History Search**: Powerful semantic search across browsing history
-- **Download Manager**: Advanced download handling with pause/resume and scheduling
-- **Print to PDF**: High-quality PDF generation with customizable options
-
-### Automation & Scripting
-- **User Scripts Support**: Run custom scripts on specific websites
-- **Macro Recording**: Record and replay complex browsing sequences
-- **Batch Operations**: Automate repetitive tasks across multiple tabs
-- **API Hooks**: Programmatic access to browser functions via API
-- **Event System**: Trigger custom actions based on browser events
-
-### Media & Streaming Excellence
-- **Codec Support**: Comprehensive media format support including AV1, VP9, and HEVC
-- **Streaming Optimization**: Enhanced delivery for video streaming platforms
-- **Audio Control**: Per-tab volume control with independent audio processing
-- **Adaptive Bitrate**: Intelligent quality adjustment based on connection speed
-- **Media Download**: Extract and save media files from streaming services
+![Eclipse OS Interface](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/desktop.png)
 
 ---
 
-## Performance Metrics
+## Features
+
+### Core OS Features
+- **Multi-Window Manager**: Drag, resize, minimize, maximize, and close windows like a real OS
+- **Taskbar**: Quick access to open applications with active indicators
+- **Desktop Icons**: Customizable icons for quick app launching
+- **System Tray**: Real-time display of WiFi, battery, and clock
+- **Start Menu/Launcher**: Full application grid with search functionality
+- **Context Menus**: Right-click desktop for additional options
+- **Persistent Storage**: All settings and app states saved to localStorage
+
+### Built-in Applications
+- **Browser**: Full-featured web browser with proxy support and URL bar
+- **File Explorer**: Navigate and manage files in a folder structure
+- **Settings**: Customize OS appearance, themes, and system settings
+- **App Store**: Browse and install additional applications
+- **Games Hub**: Access to gaming library with custom theming
+- **Movies**: Streaming content aggregator
+- **Calculator**: Full-featured calculator application
+- **Text Editor**: Simple note-taking and document editing
+
+### User Experience
+- **Dark Mode**: Professional dark theme that's easy on the eyes
+- **Glass Morphism**: Modern UI with frosted glass effects
+- **Smooth Animations**: Polished transitions and interactions
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Accessibility**: Full keyboard navigation support
+- **Lightweight**: Minimal dependencies, pure vanilla JavaScript
+
+### Advanced Features
+- **Cloaking System**: Integrated cloaking/spoofing capabilities for browser
+- **Proxy Support**: Configure proxy settings for network requests
+- **Theme Customization**: Multiple pre-built themes with customization
+- **Multi-Account Support**: Manage multiple accounts and profiles
+- **Import/Export**: Save and restore OS configuration
+
+---
+
+## Gallery
+
+### Main Desktop
+![Eclipse OS Desktop](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/desktop-full.png)
+
+### Browser Application
+![Browser App](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/browser.png)
+
+### Games Hub
+![Games Hub](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/games.png)
+
+### Settings Panel
+![Settings](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/settings.png)
+
+### Multiple Themes
+![Themes](https://raw.githubusercontent.com/EclipseV6/EclipseV6.github.io/main/assets/screenshots/themes.png)
+
+---
+
+## System Architecture
 
 ```
-Page Load Time:       60ms average (2x faster than competitors)
-Memory Per Tab:       45MB average (35% reduction vs standard browsers)
-CPU Usage:            Idle: <1%, Active: 15% average
-Startup Time:         1.2 seconds from launch to ready
-Extension Loading:    150ms average for 10 extensions
-GPU Acceleration:     100% hardware rendering capable
-Battery Life:         42% improvement on laptops
+┌─────────────────────────────────────────┐
+│       ECLIPSE OS CORE                   │
+├─────────────────────────────────────────┤
+│                                         │
+│  ┌──────────────────────────────────┐  │
+│  │    Window Manager                │  │
+│  │ (resize, drag, minimize, max)    │  │
+│  └──────────────────────────────────┘  │
+│                                         │
+│  ┌──────────────────────────────────┐  │
+│  │    Application Handler           │  │
+│  │ (launch, manage, communicate)    │  │
+│  └──────────────────────────────────┘  │
+│                                         │
+│  ┌──────────────────────────────────┐  │
+│  │    Storage & Settings            │  │
+│  │ (localStorage persistence)       │  │
+│  └──────────────────────────────────┘  │
+│                                         │
+│  ┌──────────────────────────────────┐  │
+│  │    Theme Engine                  │  │
+│  │ (dynamic CSS, color schemes)     │  │
+│  └──────────────────────────────────┘  │
+│                                         │
+│  ┌──────────────────────────────────┐  │
+│  │    Built-in Applications         │  │
+│  │ (Browser, Files, Store, Games)   │  │
+│  └──────────────────────────────────┘  │
+│                                         │
+└─────────────────────────────────────────┘
 ```
 
----
+### Key Files
 
-## Architecture
-
-Eclipse V6 is built on a modern, modular architecture designed for performance and flexibility:
-
-```
-┌─────────────────────────────────────────────────────┐
-│          Eclipse Browser Core                        │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────┐  │
-│  │   Rendering  │  │   Networking │  │  Storage │  │
-│  │    Engine    │  │    Stack     │  │  Engine  │  │
-│  └──────────────┘  └──────────────┘  └──────────┘  │
-│                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────┐  │
-│  │   Security   │  │  Performance │  │ Extension│  │
-│  │   Framework  │  │   Manager    │  │ Handler  │  │
-│  └──────────────┘  └──────────────┘  └──────────┘  │
-│                                                      │
-│  ┌────────────────────────────────────────────────┐ │
-│  │     Operating System Integration Layer        │ │
-│  └────────────────────────────────────────────────┘ │
-│                                                      │
-└─────────────────────────────────────────────────────┘
-```
-
-The architecture supports:
-- **Multi-Process Model**: Each tab runs as an isolated process
-- **Hardware Acceleration**: GPU-accelerated rendering pipeline
-- **Modular Design**: Swap components without rebuilding entire system
-- **Extensibility**: Plugin system for unlimited functionality expansion
-- **Cross-Platform**: Unified codebase across Windows, macOS, and Linux
-
----
-
-## Advanced Security
-
-Eclipse V6 implements security at every level:
-
-### Threat Detection
-- Real-time scanning for known malware signatures
-- Heuristic detection of zero-day threats
-- Behavioral analysis for suspicious patterns
-- Phishing site database with automatic updates
-
-### Data Protection
-- AES-256 encryption for stored sensitive data
-- Secure memory wiping for cleared data
-- Hardware security module support
-- Encrypted disk cache for offline data
-
-### Network Security
-- TLS 1.3 enforcement option
-- HSTS support with domain pinning
-- Secure DNS (DoH/DoT) support
-- VPN integration capabilities
-
-### Sandbox Environment
-- Process isolation at OS level
-- Resource limiting per process
-- Capability-based permissions
-- Exploit mitigation techniques
-
----
-
-## Customization Engine
-
-Make Eclipse truly yours with powerful customization options:
-
-### Theme System
-```css
-/* Custom theme example */
---primary-color: #1a1a2e;
---accent-color: #0f3460;
---text-primary: #e0e0e0;
---background-dark: #16213e;
---highlight-color: #00d4ff;
-```
-
-### Keyboard Shortcuts
-Create custom shortcuts for common tasks:
-- Navigation shortcuts
-- Tab management commands
-- Developer tool activation
-- Extension-specific actions
-
-### UI Organization
-- Drag-and-drop toolbar customization
-- Collapsible sidebar management
-- Context menu customization
-- Status bar widget control
-
----
-
-## Developer Tools
-
-Eclipse includes professional-grade developer tools:
-
-### Performance Analysis
-- Page load waterfall charts
-- Paint timing analysis
-- Frame rate graphs
-- Memory allocation tracking
-
-### Debugging Capabilities
-- JavaScript debugger with step execution
-- DOM breakpoints and watch expressions
-- Async call stack tracking
-- Conditional breakpoints
-
-### Network Inspection
-- Request/response headers inspection
-- Request blocking and modification
-- Response body viewing with formatting
-- Network throttling simulation
-
-### Console Features
-- Multiline code editing
-- Command history with search
-- Auto-completion and hints
-- Grouping and filtering support
-
----
-
-## Integration Capabilities
-
-Eclipse integrates seamlessly with your workflow:
-
-### Cloud Services
-- Bookmark synchronization
-- History backup and restore
-- Settings cloud sync
-- Cross-device continuation
-
-### Operating System
-- Native notification support
-- System theme integration
-- Voice command support
-- Accessibility features
-
-### Third-Party Services
-- Password manager integration
-- VPN service compatibility
-- Ad blocker extensions
-- Adblocker and tracker blockers
+- **index.html**: Main desktop environment shell
+- **test.html**: Alternative/testing environment
+- **backup/index.html**: Backup of original OS build
+- **g/index.html**: Games hub application
+- **l/**: Launcher directory (future expansion)
+- **m/**: Movies directory (future expansion)
+- **assets/**: Images, icons, and resources
+- **sw.js**: Service worker for offline support
 
 ---
 
 ## Getting Started
 
-### First Launch
-1. Download Eclipse V6 from our official source
-2. Run the installer appropriate for your system
-3. Complete the initial setup wizard
-4. Configure your preferences and import existing data
-5. Start browsing at full speed
+### Quick Start
 
-### Quick Tips
-- Use `Ctrl+Shift+N` for new private session
-- Enable hardware acceleration in settings for maximum performance
-- Customize your homepage with frequently visited sites
-- Set up multiple profiles for different activities
+1. **Open in Browser**: Navigate to https://eclipsev6.github.io/
+2. **No Installation**: Everything runs directly in your browser
+3. **First Run**: You'll see the desktop with default applications
+4. **Interact**: Double-click icons to open apps, right-click for context menu
 
----
+### Requirements
 
-## Installation
+- **Browser**: Modern browser with ES6+ support
+  - Chrome/Edge 60+
+  - Firefox 55+
+  - Safari 10.1+
+  - Opera 47+
+- **Storage**: ~5MB for localStorage (configurable)
+- **Network**: Optional (works offline with service worker)
 
-### Windows
-```
-1. Download Eclipse-V6-Installer.exe
-2. Run the installer with administrative privileges
-3. Follow the installation wizard
-4. Restart your system for optimal integration
-```
+### System Requirements
 
-### macOS
-```
-1. Download Eclipse-V6.dmg
-2. Mount the disk image
-3. Drag Eclipse to Applications folder
-4. Launch from Applications
-```
-
-### Linux
-```
-bash <(curl -s https://eclipsev6.github.io/install.sh)
-```
-
-Or manually:
-```
-1. Download Eclipse-V6-Linux.tar.gz
-2. Extract: tar xzf Eclipse-V6-Linux.tar.gz
-3. Run: ./eclipse-v6
-```
+- 2GB+ RAM
+- Modern CSS Grid and Flexbox support
+- JavaScript enabled
+- Hardware acceleration recommended for smooth animations
 
 ---
 
-## Configuration
+## Usage
 
-### Essential Settings
+### Desktop Interaction
 
-**Performance Optimization**
-- Enable GPU acceleration
-- Set resource limits for tabs
-- Configure cache size (recommended: 500MB-2GB)
-- Enable memory compression
+**Opening Applications:**
+- Double-click desktop icons to launch
+- Use the Start Menu (bottom-left) to search and launch
+- Drag icons to reposition on desktop
+- Right-click for context menu options
 
-**Privacy & Security**
-- Enable HTTPS-Everywhere
-- Set privacy level to Strict
-- Enable automatic updates
-- Configure DNS-over-HTTPS
+**Window Management:**
+- **Drag**: Click title bar to move window
+- **Resize**: Drag corner/edge to resize
+- **Minimize**: Click the minimize button (- button)
+- **Maximize**: Click maximize button (□ button)
+- **Close**: Click close button (× button, red)
 
-**Productivity Setup**
-- Import passwords from previous browser
-- Enable session restoration
-- Configure default search engine
-- Set homepage preferences
+**Quick Actions:**
+- Click search icon (left side) for quick web search
+- Use system tray for WiFi, battery, and time
+- Access launcher with Start button
+- Pin apps to taskbar from context menu
 
-### Advanced Configuration
-Edit `eclipse-config.json` for advanced users:
-```json
-{
-  "performance": {
-    "gpu_acceleration": true,
-    "memory_limit_mb": 2048,
-    "cache_size_mb": 1024
-  },
-  "security": {
-    "https_only": true,
-    "privacy_level": "strict"
-  },
-  "network": {
-    "connection_optimization": true,
-    "dns_over_https": true
-  }
+### Built-in Browser
+
+The browser application allows you to:
+- Browse the web within the OS
+- Configure proxy settings
+- Enable/disable cloaking
+- Manage bookmarks
+- View browser history
+- Access developer console
+
+### Games Hub
+
+Access the games library with:
+- Search and filter functionality
+- Game bookmarking
+- Playback in fullscreen mode
+- Theme customization
+- Download integration
+
+---
+
+## Themes
+
+Eclipse OS includes multiple professionally designed themes:
+
+### Dark Theme (Default)
+Dark background with subtle gradients and light text. Perfect for extended use.
+
+### Sunset Theme
+Warm orange and red tones with earthy colors. Great for evening browsing.
+
+### Blue Sunset
+Cool blues with sunset accents. Modern and refreshing aesthetic.
+
+### Gray Theme
+Purple accents on gray background. Professional and sophisticated.
+
+### Midnight Theme
+Deep blue and purple tones. Elegant nighttime theme.
+
+### Neon Theme
+Cyberpunk aesthetic with bright neon colors and dark background.
+
+### Forest Theme
+Green nature-inspired colors. Calming and organic feel.
+
+### Cyber Theme
+Terminal-style green text on black. Classic hacker aesthetic.
+
+### Lavender Theme
+Purple and violet tones. Soft and artistic appearance.
+
+### Custom Themes
+
+Create your own theme by modifying:
+```css
+:root {
+  --bg-img: url('your-background.png');
+  --bg: #your-color;
+  --text: #your-text-color;
+  --accent: #your-accent;
+  --accent-2: #your-secondary;
+  --panel: rgba(your, colors, here);
 }
 ```
 
 ---
 
-## System Requirements
+## Applications
 
-### Minimum Requirements
-- **OS**: Windows 10+, macOS 10.15+, or Ubuntu 18.04+
-- **Processor**: Intel Core i3 or equivalent (2 cores)
-- **RAM**: 4GB
-- **Disk Space**: 500MB for installation
-- **GPU**: Intel HD Graphics or equivalent
+### Browser
+Full-featured web browser with:
+- Address bar with history
+- Back/Forward navigation
+- Refresh and stop buttons
+- Proxy integration
+- Cloaking options
+- Bookmark system
 
-### Recommended Requirements
-- **OS**: Windows 11, macOS 13+, or Ubuntu 22.04+
-- **Processor**: Intel Core i7/i9 or AMD Ryzen 7/9 (6+ cores)
-- **RAM**: 16GB or higher
-- **Disk Space**: 1TB SSD
-- **GPU**: RTX 3060 or better for 4K content
-- **Internet**: 25Mbps+ for optimal streaming
+### Files
+File explorer with:
+- Directory navigation
+- File preview
+- File operations (create, delete, rename)
+- Drag and drop support
+- Search functionality
 
-### Optional Hardware
-- External display for multi-monitor setup
-- Graphics tablet support
-- VR headset compatibility
+### Settings
+OS configuration including:
+- Theme selection
+- Window opacity adjustment
+- Performance settings
+- Developer mode toggle
+- Reset to defaults
+
+### App Store
+Application marketplace with:
+- Browseable app grid
+- One-click installation
+- Automatic app launcher integration
+- Reviews and ratings
+
+### Games Hub
+Gaming platform featuring:
+- Game search and filters
+- Play in-app or fullscreen
+- Game bookmarking
+- Theme switching
+- Performance optimization
+
+### Movies
+Streaming content manager:
+- Movie catalog
+- Search functionality
+- Playback controls
+- Recommendation engine
+- Watchlist support
+
+### Calculator
+Full-featured calculator with:
+- Basic arithmetic
+- Scientific functions
+- Memory operations
+- History tracking
+- Keyboard support
+
+### Text Editor
+Document editor with:
+- Rich text formatting
+- File save/load
+- Undo/redo
+- Search and replace
+- Syntax highlighting
 
 ---
 
-## Why Choose Eclipse V6?
+## Customization
 
-**Performance**: Engineered from the ground up for speed. Our rendering engine processes web content 2x faster than competitors.
+### Modifying Appearance
 
-**Security**: Industry-leading encryption and threat detection keep you safe from modern web threats.
+**Desktop Background:**
+Edit the `--bg-img` CSS variable to set custom wallpaper:
+```css
+--bg-img: url('https://your-image-url.png');
+```
 
-**Flexibility**: Customize every aspect of your browsing experience. Eclipse adapts to your workflow, not the other way around.
+**Window Opacity:**
+Adjust `settings.windowOpacity` in localStorage (0.0 - 1.0)
 
-**Reliability**: Robust crash recovery and automatic updates ensure you're never caught off guard.
+**Taskbar Height:**
+Modify `--taskbar-h` CSS variable
 
-**Support**: Active community and professional support team ready to help.
+**Icon Size:**
+Change `.desktop-icon img` width/height properties
+
+### Adding Custom Applications
+
+1. Create app component in HTML
+2. Add launcher icon and configuration
+3. Register in `presetLibrary` array
+4. Add styling for app window
+5. Implement app functionality in JavaScript
+
+### Custom Color Schemes
+
+Create a new theme by extending CSS variables:
+```javascript
+settings.theme = {
+  bgImg: 'url(...)',
+  bg: '#color',
+  text: '#color',
+  accent: '#color',
+  accent2: '#color',
+  panel: 'rgba(...)'
+};
+```
+
+---
+
+## Advanced Configuration
+
+### Proxy Settings
+
+Configure proxy in Settings or via localStorage:
+```javascript
+settings.proxyBase = 'https://your-proxy.com/';
+settings.cloakEnabled = true;
+settings.cloak = {
+  title: 'Custom Title',
+  favicon: '/path/to/icon.png'
+};
+```
+
+### Developer Mode
+
+Enable developer mode for debugging:
+```javascript
+settings.devMode = true;
+```
+
+This enables:
+- Console logging
+- Performance metrics
+- Debug information
+- Raw API access
+
+### Performance Tuning
+
+Optimize for your system:
+- Reduce animation complexity
+- Disable GPU acceleration if needed
+- Increase cache size for better performance
+- Adjust memory limits per application
+
+---
+
+## File Structure
+
+```
+EclipseV6.github.io/
+├── index.html           # Main OS interface
+├── test.html            # Test environment
+├── sw.js                # Service worker
+├── README.md            # This file
+├── assets/
+│   ├── logo/
+│   │   └── logo.png
+│   ├── browsericons/
+│   │   ├── browser.png
+│   │   ├── files.png
+│   │   ├── settings.png
+│   │   └── store.png
+│   ├── backgrounds/
+│   │   ├── crimson.png
+│   │   ├── sunset.png
+│   │   └── ...
+│   └── screenshots/
+│       └── ...
+├── backup/
+│   └── index.html
+├── g/                   # Games hub
+│   └── index.html
+├── l/                   # Launcher
+│   └── index.html
+└── m/                   # Movies
+    └── index.html
+```
+
+---
+
+## Performance
+
+### Optimization Tips
+
+- **First Load**: 2-3 seconds for full environment
+- **App Launch**: 200-500ms average
+- **Smooth Performance**: 60 FPS on modern hardware
+- **Memory Usage**: 50-100MB for typical session
+
+### Recommended Specs
+
+- **CPU**: Intel i5 / AMD Ryzen 5 or better
+- **RAM**: 4GB minimum, 8GB+ recommended
+- **Browser**: Latest version of Chrome, Firefox, or Safari
+- **Connection**: Broadband (2Mbps+) for external content
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Apps Not Loading**
+- Clear browser cache and localStorage
+- Check browser console for errors
+- Ensure JavaScript is enabled
+- Try a different browser
+
+**Performance Issues**
+- Disable GPU acceleration
+- Reduce window count
+- Close background apps
+- Clear localStorage data
+
+**Theme Not Applying**
+- Hard refresh page (Ctrl+Shift+R)
+- Clear theme cache
+- Check CSS variable syntax
+- Verify image URLs are accessible
+
+**Storage Full**
+- Clear app data in Settings
+- Remove unused apps
+- Export and backup data
+- Increase browser storage quota
+
+---
+
+## Support & Community
+
+- **GitHub Issues**: Report bugs and request features
+- **Discussions**: Ask questions and share ideas
+- **Wiki**: Find documentation and guides
+- **Contribute**: Submit PRs and improvements
+
+---
+
+## Contributing
+
+We welcome contributions! To get started:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/awesome-feature`)
+3. **Make** your changes
+4. **Test** thoroughly in multiple browsers
+5. **Commit** with clear messages
+6. **Push** to your fork
+7. **Submit** a Pull Request
+
+### Contribution Guidelines
+
+- Follow existing code style
+- Add documentation for new features
+- Test on Chrome, Firefox, and Safari
+- Update README if needed
+- Keep commits atomic and focused
+
+---
+
+## License
+
+Eclipse OS is open source and available under the MIT License. See LICENSE file for details.
+
+---
+
+## Version History
+
+### Current Version: Latest
+- Full OS simulator with window management
+- 8+ built-in applications
+- 10+ color themes
+- Persistent storage
+- Proxy and cloaking support
+- Responsive design
+- Dark mode optimized
+
+### Previous Versions
+See git history for complete changelog
 
 ---
 
 ## Roadmap
 
 ### Upcoming Features
-- Quantum-resistant encryption support
-- AI-powered tab management
-- Advanced gesture recognition
-- Neural predictive prefetching
-- Enhanced AR/VR support
-- Blockchain integration
-- Advanced privacy features
-- AI content recommendations
+- [ ] File upload/download support
+- [ ] Native app creation framework
+- [ ] Advanced networking tools
+- [ ] System-wide search
+- [ ] Voice command interface
+- [ ] Multi-user support
+- [ ] Cloud synchronization
+- [ ] Plugin architecture
+
+### Future Expansions
+- Mobile app versions
+- Desktop client
+- Cross-device sync
+- Community app marketplace
+- Advanced customization tools
 
 ---
 
-## Contributing
+## Credits
 
-We welcome contributions from the community. Whether you're reporting bugs, suggesting features, or contributing code:
+**Created by:** EclipseV6 Organization
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your improvements
-4. Submit a pull request
-5. Participate in code review
+**Built with:**
+- Vanilla HTML5
+- Pure CSS3
+- JavaScript (ES6+)
+- LocalStorage API
+- Service Workers
 
-Please review our CONTRIBUTING.md for guidelines.
-
----
-
-## Support & Community
-
-- **Official Website**: https://eclipsev6.github.io/
-- **GitHub Issues**: Report bugs and suggest features
-- **Community Forum**: Join discussions and get help
-- **Email Support**: support@eclipsev6.com
-- **Social Media**: Follow for updates and announcements
+**Inspiration:**
+- Modern operating systems
+- Web technology innovation
+- User experience design
+- Open-source community
 
 ---
 
-## License
+**Experience the future of web-based computing. Eclipse OS.**
 
-Eclipse V6 is released under the MIT License. See LICENSE file for details.
-
----
-
-## Acknowledgments
-
-Built by developers, for developers. Eclipse V6 represents the collective vision of a team dedicated to creating the best browsing experience possible.
+*Powerful. Minimalist. Yours.*
 
 ---
 
-**Experience the Future. Choose Eclipse V6.**
-
-*The browser that doesn't compromise.*
-
----
-
-## Changelog - Latest Release
-
-### Version 6.0.0 (Current)
-- Complete architecture redesign
-- 40% performance improvement
-- Enhanced security framework
-- New customization engine
-- Professional developer tools
-- Advanced session management
-- Improved memory efficiency
-
----
-
-*Last Updated: July 2026 | Made with commitment to excellence*
+*Last Updated: July 2026*
+*For the latest information, visit: https://eclipsev6.github.io/*
