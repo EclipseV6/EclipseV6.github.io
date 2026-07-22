@@ -1091,14 +1091,6 @@
                 <li><i class="fas fa-check-circle"></i> For the Chronos file, an HTML file will be downloaded that embeds the site in an iframe</li>
             </ul>
         </div>
-        <div class="instructions animate-in delay-2">
-    <h2>
-        <i class="fas fa-history"></i>
-        Recent Launches
-    </h2>
-
-    <div id="historyList"></div>
-</div>
         <div id="iframeContainer" class="iframe-container" style="display: none; margin-top: 30px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <h3><i class="fas fa-window-restore"></i> Embedded Site</h3>
@@ -1219,12 +1211,61 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeOptions = document.querySelectorAll('.theme-option');
     const iframeContainer = document.getElementById('iframeContainer');
     const embeddedFrame = document.getElementById('embeddedFrame');
+    embeddedFrame.addEventListener('error', () => {
+    showStatus(
+        'Failed to load website.',
+        'error'
+    );
+});
+
+embeddedFrame.addEventListener('load', () => {
+    try {
+        const frameUrl = embeddedFrame.contentWindow.location.href;
+
+        console.log('Loaded:', frameUrl);
+    } catch {
+        showStatus(
+            'Website loaded but cross-origin restrictions apply.',
+            'success'
+        );
+    }
+});
+    window.addEventListener("offline", () => {
+    showStatus(
+        "Internet connection lost.",
+        "error"
+    );
+});
+
+window.addEventListener("online", () => {
+    showStatus(
+        "Connection restored.",
+        "success"
+    );
+});
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     
     // Initialize everything
     initializePersonalization();
     initializeSettingsPersonalization();
     loadSettings();
+    window.addEventListener("error", (event) => {
+    console.error("Global Error:", event.error);
+
+    showStatus(
+        `Unexpected Error: ${event.message}`,
+        "error"
+    );
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+    console.error("Unhandled Promise:", event.reason);
+
+    showStatus(
+        "A background task failed unexpectedly.",
+        "error"
+    );
+});
     
     // Settings functions
     settingsBtn.addEventListener('click', function() {
@@ -1262,8 +1303,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Submit button event
     submitBtn.addEventListener('click', function() {
         const url = urlInput.value.trim();
-        saveToHistory(url);
-        preloadAndCache(url);
         const action = actionSelect.value;
         
         if (!url) {
@@ -1273,7 +1312,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate URL format
         try {
-            new URL(url);
+            let parsedUrl;
+
+try {
+    parsedUrl = new URL(url);
+
+    if (
+        parsedUrl.protocol !== "http:" &&
+        parsedUrl.protocol !== "https:"
+    ) {
+        throw new Error();
+    }
+
+} catch {
+    showStatus(
+        "Only HTTP and HTTPS URLs are supported.",
+        "error"
+    );
+    return;
+}
         } catch (e) {
             showStatus('Please enter a valid URL', 'error');
             return;
@@ -1291,12 +1348,7 @@ document.addEventListener('DOMContentLoaded', function() {
             generateDataUrl(url);
         }
     });
-    // Eclipse Offline Engine
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js")
-        .then(() => console.log("Eclipse SW Loaded"))
-        .catch(err => console.error(err));
-}
+    
     
     // Launch in about:blank
     function launchInAboutBlank(url) {
@@ -1650,39 +1702,7 @@ if ("serviceWorker" in navigator) {
         });
     }, 100);
 });
-        function saveToHistory(url) {
-    let history =
-        JSON.parse(localStorage.getItem("eclipse_history") || "[]");
-
-    history = history.filter(item => item.url !== url);
-
-    history.unshift({
-        url,
-        title: new URL(url).hostname,
-        timestamp: Date.now()
-    });
-
-    history = history.slice(0, 50);
-
-    localStorage.setItem(
-        "eclipse_history",
-        JSON.stringify(history)
-    );
-}
-        async function preloadAndCache(url) {
-    try {
-        const cache = await caches.open("eclipse-sites");
-
-        const response = await fetch(url);
-
-        await cache.put(url, response.clone());
-
-        console.log("Cached:", url);
-
-    } catch (err) {
-        console.warn("Cache Failed:", url);
-    }
-}
+        
         
     </script>
 </body>
