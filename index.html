@@ -32,6 +32,191 @@
       justify-content:flex-end;
       overflow:hidden;}
 
+    /* Auth Modal */
+    #auth-modal {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(6,6,6,0.98));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50000;
+      backdrop-filter: blur(8px);
+    }
+
+    #auth-modal.hidden {
+      display: none;
+    }
+
+    .auth-container {
+      position: relative;
+      width: 90%;
+      max-width: 420px;
+      padding: 48px 32px;
+      background: linear-gradient(180deg, rgba(20,20,20,0.96), rgba(10,10,10,0.96));
+      border-radius: 20px;
+      border: 1px solid rgba(255,31,58,0.2);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,31,58,0.1);
+      animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-logo h1 {
+      font-size: 32px;
+      margin: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .auth-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-input-group {
+      margin-bottom: 20px;
+    }
+
+    .auth-label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 0 3px rgba(255,31,58,0.1);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(255,31,58,0.3);
+    }
+
+    .auth-skip {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-skip:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text);
+    }
+
+    .auth-codes {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,31,58,0.1);
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .auth-codes strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .tier-info {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .tier-vip { background: rgba(255,215,0,0.2); color: #ffd700; }
+    .tier-dev { background: rgba(100,200,255,0.2); color: #64c8ff; }
+
+    .auth-error {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255,68,68,0.1);
+      border: 1px solid rgba(255,68,68,0.3);
+      color: #ff4444;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .auth-error.show {
+      display: block;
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
     /* Desktop */
     #desktop{
       position:absolute;
@@ -98,7 +283,7 @@
       color:var(--muted);
       font-size:13px}
 
-    /* Quick-left stack: store + quick search */
+    /* Quick-left stack */
     #quick-left{
       position:fixed;
       left:18px;
@@ -219,54 +404,79 @@
       display:flex;
       align-items:center;
       gap:10px;
-      padding:10px;
-      border-radius:12px;
-      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));
-      border:1px solid rgba(255,255,255,0.05)}
+      padding:12px;
+      border-radius:0;
+      background:linear-gradient(180deg,rgba(25,25,25,.95),rgba(10,10,10,.95));
+      border-bottom:1px solid rgba(255,255,255,.05);}
     
     .browser-btn{
-      padding:8px 10px;
-      border-radius:8px;
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.02);
-      color:var(--text);
-      cursor:pointer}
-    
-    .browser-address{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:white;
+      cursor:pointer;
+      transition:.18s;
       display:flex;
       align-items:center;
-      gap:10px;
-      padding:9px 12px;
-      border-radius:999px;
+      justify-content:center;
+      font-size:16px;
+    }
+    
+    .browser-btn:hover{
+      background:rgba(255,31,58,.15);
+      color:var(--accent);
+    }
+    
+    .browser-urlbar{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex:1;
+      padding:8px 12px;
+      border-radius:10px;
       background:rgba(0,0,0,0.36);
-      border:1px solid rgba(255,255,255,0.02);
-      flex:1}
+      border:1px solid rgba(255,255,255,0.05);
+    }
     
-    .browser-address .label{
-      color:var(--muted);
-      font-size:12px;
-      max-width:220px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap}
-    
-    .browser-address input{
+    .browser-urlbar input{
       border:none;
       outline:none;
       background:transparent;
       color:var(--text);
-      font-size:14px;
-      width:100%}
-    
-    .browser-favicon{
-      width:18px;
-      height:18px;
-      border-radius:4px}
+      font-size:13px;
+      width:100%;
+      font-family:var(--font);
+    }
+
+    .browser-urlbar input::placeholder{
+      color:var(--muted);
+    }
+
+    .browser-go-btn{
+      padding:6px 12px;
+      border-radius:8px;
+      border:none;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:600;
+      transition:.15s;
+    }
+
+    .browser-go-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(255,31,58,0.3);
+    }
     
     .browser-page{
       flex:1;
       display:block;
-      background:transparent}
+      background:transparent;
+      overflow:hidden;
+    }
     
     .browser-page iframe{
       width:100%;
@@ -274,6 +484,76 @@
       border:0;
       display:block;
       background:transparent}
+
+    /* Startpage */
+    .startpage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px;
+      text-align: center;
+      background: transparent;
+    }
+
+    .startpage-logo {
+      font-size: 64px;
+      margin-bottom: 24px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+    }
+
+    .startpage-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .startpage-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .startpage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 800px;
+      margin-top: 32px;
+    }
+
+    .startpage-card {
+      padding: 24px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,31,58,0.1), rgba(195,15,36,0.05));
+      border: 1px solid rgba(255,31,58,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .startpage-card:hover {
+      transform: translateY(-4px);
+      background: linear-gradient(180deg, rgba(255,31,58,0.15), rgba(195,15,36,0.1));
+      border-color: rgba(255,31,58,0.4);
+    }
+
+    .startpage-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .startpage-card p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
 
     /* Settings/Store */
     .settings-card{
@@ -283,10 +563,9 @@
       border:1px solid rgba(255,255,255,0.03);
       box-shadow:0 10px 30px rgba(0,0,0,0.3)}
 
-    
     .muted{
       color:var(--muted);
-           font-size:13px}
+      font-size:13px}
     
     .switch{
       width:46px;
@@ -346,34 +625,43 @@
       background:linear-gradient(90deg,var(--accent),var(--accent-2));
       color:#fff;cursor:pointer}
 
-    /* iframe overlay when blocked */
-    .iframe-overlay{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));
-      color:var(--muted);gap:10px}
-
-    /* toast */
     .eos-toast{
       position:fixed;
       right:20px;
       bottom:100px;
-      background:rgba(0,0,0,0.7);
-      color:#fff;
-      padding:10px 12px;
-      border-radius:8px;
-      z-index:3000;
-      box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+      min-width:280px;
+      background:rgba(12,12,12,.96);
+      color:white;
+      padding:14px 16px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(20px);
+      box-shadow:0 20px 40px rgba(0,0,0,.55);
+      overflow:hidden;
+      animation:toastIn .18s ease-out;
+      z-index:99999;
+    }
+
+    .eos-toast-bar{
+      position:absolute;
+      left:0;
+      bottom:0;
+      height:4px;
+      width:100%;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transform-origin:left center;
+    }
+
+    @keyframes toastIn{
+      from{opacity:0;transform:translateY(15px);}
+      to{opacity:1;transform:translateY(0);}
+    }
 
     @media (max-width:900px){
       .browser-address{max-width:520px}
       #quick-left{display:none}
     }
-    /* Context Menu */
+
     #context-menu{
       position:fixed;
       display:none;
@@ -441,98 +729,50 @@
       text-align:center;
     }
 
-    input[type="range"]{
-      -webkit-appearance:none;
-      appearance:none;
-      width:100%;
-      height:6px;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      outline:none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance:none;
-      width:20px;
-      height:20px;
-      border-radius:50%;
-      background:white;
-      border:3px solid var(--accent);
-      cursor:pointer;
-      box-shadow:0 0 12px rgba(255,31,58,.6);
-    }
-
-    input[type="range"]::-moz-range-thumb{
-      width:20px;
-      height:20px;
-      border:none;
-      border-radius:50%;
-      background:white;
-    }
-
     #desktop{z-index:1;}
     .desktop-icon{z-index:5;}
     #taskbar{position:relative;z-index:9999;}
     #launcher{z-index:10000 !important;}
     #start-btn{position:relative;z-index:10002;}
 
-    .eos-toast{
-      position:fixed;
-      right:20px;
-      bottom:100px;
-      min-width:280px;
-      background:rgba(12,12,12,.96);
-      color:white;
-      padding:14px 16px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.06);
-      backdrop-filter:blur(20px);
-      box-shadow:0 20px 40px rgba(0,0,0,.55);
-      overflow:hidden;
-      animation:toastIn .18s ease-out;
-      z-index:99999;
-    }
-
-    .eos-toast-bar{
-      position:absolute;
-      left:0;
-      bottom:0;
-      height:4px;
-      width:100%;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      transform-origin:left center;
-    }
-
-    @keyframes toastIn{
-      from{opacity:0;transform:translateY(15px);}
-      to{opacity:1;transform:translateY(0);}
-    }
-
-    .browser-toolbar{
-      padding:12px;
-      gap:8px;
-      background:linear-gradient(180deg,rgba(25,25,25,.95),rgba(10,10,10,.95));
-      border-bottom:1px solid rgba(255,255,255,.05);
-    }
-
-    .browser-btn{
-      width:42px;
-      height:42px;
-      border:none;
-      border-radius:12px;
-      background:rgba(255,255,255,.04);
-      color:white;
-      transition:.18s;
-    }
-
-    .browser-btn:hover{
-      background:rgba(255,31,58,.15);
-      color:var(--accent);
-    }
-
   </style>
 </head>
 <body>
+  <!-- Auth Modal -->
+  <div id="auth-modal">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <h1>ECLIPSE</h1>
+        <div class="auth-subtitle">SECURE ACCESS PORTAL</div>
+      </div>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="auth-input-group">
+          <label class="auth-label">Enter Code</label>
+          <input type="password" id="auth-code-input" class="auth-input" placeholder="VIP Code, Dev Code, or leave blank..." autocomplete="off">
+        </div>
+
+        <button type="submit" class="auth-submit">Enter Eclipse OS</button>
+        <button type="button" class="auth-skip" onclick="skipAuth()">Skip for Now</button>
+      </form>
+
+      <div class="auth-codes">
+        <strong>🔑 Available Codes</strong>
+        <div class="tier-info">
+          <span class="tier-badge tier-vip">VIP</span> vip2024eclipse
+        </div>
+        <div class="tier-info">
+          <span class="tier-badge tier-dev">DEV</span> dev-eclipse-2024
+        </div>
+        <div style="margin-top: 12px; color: #666; font-size: 11px;">
+          Leave blank for regular access
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="desktop">
     <div class="desktop-icon" style="top:20px; left:20px" data-app="browser" data-name="Browser">
       <img src="/assets/browsericons/browser.png" alt=""><span>Browser</span>
@@ -595,7 +835,6 @@
     </div>
   </div>
 
-  <!-- Launcher (hidden by default) -->
   <div id="launcher"  style="
     position:fixed;
     left:18px;
@@ -630,7 +869,6 @@
     </div>
   </div>
 
-  <!-- Quick search overlay (hidden by default) -->
   <div id="quick-search-overlay" style="
     display:none;
     position:fixed;
@@ -658,7 +896,6 @@
     </div>
   </div>
 
-  <!-- Context menu -->
   <div id="context-menu" role="menu" aria-hidden="true" style="display:none">
     <div class="ctx-item" data-action="open" role="menuitem">Open</div>
     <div class="ctx-item" data-action="edit" role="menuitem">Edit (enable move)</div>
@@ -667,9 +904,61 @@
   </div>
 
   <script>
+    // Auth System
+    let authTier = 'regular'; // regular, vip, dev
+    const VIP_CODE = 'vip2024eclipse';
+    const DEV_CODE = 'dev-eclipse-2024';
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const code = document.getElementById('auth-code-input').value.trim();
+      const errorEl = document.getElementById('auth-error');
+      
+      if (!code) {
+        authTier = 'regular';
+        closeAuthModal();
+        return;
+      }
+
+      if (code === VIP_CODE) {
+        authTier = 'vip';
+        closeAuthModal();
+        showToast('🌟 VIP Access Granted');
+        localStorage.setItem('eclipse_auth_tier', 'vip');
+      } else if (code === DEV_CODE) {
+        authTier = 'dev';
+        closeAuthModal();
+        showToast('👨‍💻 Developer Access Granted');
+        localStorage.setItem('eclipse_auth_tier', 'dev');
+      } else {
+        errorEl.textContent = '❌ Invalid code. Try again or skip for regular access.';
+        errorEl.classList.add('show');
+        setTimeout(() => errorEl.classList.remove('show'), 3000);
+      }
+    }
+
+    function skipAuth() {
+      authTier = 'regular';
+      closeAuthModal();
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function checkAuthOnStartup() {
+      const savedTier = localStorage.getItem('eclipse_auth_tier');
+      if (savedTier) {
+        authTier = savedTier;
+        closeAuthModal();
+      }
+    }
+
+    // Initialize auth on load
     document.addEventListener('DOMContentLoaded', () => {
+      checkAuthOnStartup();
+      
       try {
-        // Helpers & state
         const $ = s => document.querySelector(s);
         const $$ = s => Array.from(document.querySelectorAll(s));
         function el(tag, attrs = {}) { const e = document.createElement(tag); 
@@ -693,14 +982,6 @@
         const KEY_ICONS = 'eclipse_icons_v_safe';
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
 
-        const presetLibrary = [
-          {id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: ''},
-          {id: 'games', name: 'Games', url: 'https://eclipsev6.github.io/g/', icon: '/assets/browsericons/games.png', label: ''},
-          {id: 'movies', name: 'Movies', url: 'https://eclipsev6.github.io/m/', icon: '/assets/browsericons/movies.png', label: ''},
-          {id: 'launcher', name: 'Launcher', url: 'https://eclipsev6.github.io/l/', icon: '/assets/browsericons/launch.png', label: ''},
-          {id: 'phoenix', name: 'Phoenix', url: 'https://eclipsev6.github.io/m/p/', icon: '/assets/browsericons/phoenix.png', label: ''}
-        ];
-
         let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
         let desktopIconsPersist = JSON.parse(localStorage.getItem(KEY_ICONS) || '[]');
         let settings = JSON.parse(localStorage.getItem(KEY_SETTINGS) || '{}');
@@ -713,7 +994,6 @@
 
         document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity));
         if (settings.devMode) document.body.classList.add('dev-mode');
-   
 
         function saveState() {
           localStorage.setItem(KEY_APPS, JSON.stringify(installedApps));
@@ -767,6 +1047,8 @@
         const quickInput = $('#quick-search-input');
         const quickGo = $('#quick-search-go');
         const quickClose = $('#quick-search-close');
+
+        let currentBrowserWindow = null;
 
         function buildTile(item) {
           const tile = el('div'); 
@@ -868,7 +1150,6 @@
           ctx.style.display = "none";
         }
 
-        // Set up context menu item listeners (delegate)
         document.addEventListener('click', (e) => {
           if (e.target.matches('#context-menu .ctx-item')) {
             const action = e.target.dataset.action;
@@ -898,7 +1179,7 @@
 
         function enableIconEdit(node) {
           try {
-            const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 2200;
+            const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 220;
             done.innerHTML = '<button id="icon-done" style="padding:10px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done</button>';
             document.body.appendChild(done);
             node.style.cursor = 'grab';
@@ -966,8 +1247,136 @@
           showToast(appName + " removed");
         }
 
+        function createBrowserWindow(url) {
+          const winId = 'win-' + Math.random().toString(36).slice(2,9);
+          const w = el('div');
+          w.className = 'window';
+          w.id = winId;
+          w.style.left = (100 + Math.random() * 200) + 'px';
+          w.style.top = (80 + Math.random() * 150) + 'px';
+          
+          w.innerHTML = `
+            <div class="titlebar">
+              <div class="title">Browser</div>
+              <div class="win-controls">
+                <button class="control-btn" onclick="this.closest('.window').classList.add('maximized')">□</button>
+                <button class="control-btn close" onclick="this.closest('.window').remove()">✕</button>
+              </div>
+            </div>
+            <div class="browser-toolbar">
+              <button class="browser-btn">←</button>
+              <button class="browser-btn">→</button>
+              <button class="browser-btn">⟳</button>
+              <div class="browser-urlbar">
+                <input type="text" class="browser-url-input" placeholder="Enter URL or search..." value="${url || ''}">
+                <button class="browser-go-btn" onclick="navigateBrowser(this)">Go</button>
+              </div>
+            </div>
+            <div class="browser-page">
+              ${authTier === 'vip' || authTier === 'dev' ? `<iframe src="${resolveUrlForIframe(url || 'https://7-7-7-14.github.io/active')}"></iframe>` : `<div class="startpage">
+                <div class="startpage-logo">✦</div>
+                <div class="startpage-title">Eclipse Browser</div>
+                <div class="startpage-subtitle">Enter a URL to begin browsing</div>
+                <div class="startpage-grid">
+                  <div class="startpage-card">
+                    <h3>🔍 Search</h3>
+                    <p>Find anything on the web</p>
+                  </div>
+                  <div class="startpage-card">
+                    <h3>🔐 Secure</h3>
+                    <p>Private browsing mode</p>
+                  </div>
+                  <div class="startpage-card">
+                    <h3>⚡ Fast</h3>
+                    <p>Lightning quick performance</p>
+                  </div>
+                </div>
+              </div>`}
+            </div>
+          `;
 
-        // Attach handlers to initial desktop icons
+          document.getElementById('desktop').appendChild(w);
+          currentBrowserWindow = w;
+
+          // URL input handling
+          const urlInput = w.querySelector('.browser-url-input');
+          if (urlInput) {
+            urlInput.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') navigateBrowser(w.querySelector('.browser-go-btn'));
+            });
+          }
+
+          makeDraggable(w);
+          return w;
+        }
+
+        function navigateBrowser(btn) {
+          const win = btn.closest('.window');
+          const urlInput = win.querySelector('.browser-url-input');
+          const url = urlInput.value.trim();
+          if (!url) return;
+
+          if (authTier === 'vip' || authTier === 'dev') {
+            const page = win.querySelector('.browser-page');
+            page.innerHTML = `<iframe src="${resolveUrlForIframe(url)}"></iframe>`;
+          } else {
+            showToast('🔒 VIP/Dev access required for browsing');
+          }
+        }
+
+        function makeDraggable(elm) {
+          let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+          const header = elm.querySelector('.titlebar');
+          if (header) {
+            header.onmousedown = dragMouseDown;
+          }
+          function dragMouseDown(e) {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+          }
+          function elementDrag(e) {
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            elm.style.top = (elm.offsetTop - pos2) + "px";
+            elm.style.left = (elm.offsetLeft - pos1) + "px";
+          }
+          function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+          }
+        }
+
+        function openBrowser(opts = {}) {
+          const url = opts.url || (authTier === 'vip' || authTier === 'dev' ? 'https://7-7-7-14.github.io/active' : '');
+          createBrowserWindow(url);
+        }
+
+        function openBuiltIn(app) {
+          if (app === 'browser') {
+            openBrowser();
+          } else if (app === 'files') {
+            showToast('📁 Files coming soon');
+          } else if (app === 'settings') {
+            showToast('⚙️ Settings coming soon');
+          } else if (app === 'store') {
+            showToast('🛍️ Store coming soon');
+          }
+        }
+
+        function openInstalledApp(app) {
+          if (app.url) openBrowser({ url: app.url, label: app.name });
+        }
+
+        function openUrlInBrowser(url) {
+          openBrowser({ url });
+        }
+
         $$('.desktop-icon').forEach(icon => attachIconHandlers(icon));
 
       } catch (e) {
