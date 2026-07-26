@@ -350,6 +350,12 @@
       height:calc(100vh - var(--taskbar-h))!important;
       border-radius:0}
     
+    .window.fullscreen{
+      top:0!important;left:0!important;
+      width:100vw!important;
+      height:100vh!important;
+      border-radius:0}
+    
     .titlebar{
       height:56px;
       display:flex;
@@ -1057,20 +1063,16 @@
           const tb = el('div'); tb.className = 'titlebar';
           const t = el('div'); t.className = 'title'; t.textContent = item.label || item.name || 'Browser';
           const wc = el('div'); wc.className = 'win-controls';
-          const btnBack = el('button'); btnBack.className = 'browser-btn control-btn'; btnBack.innerHTML = '←'; 
-          btnBack.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.history.back(); });
-          const btnFwd = el('button'); btnFwd.className = 'browser-btn control-btn'; btnFwd.innerHTML = '→'; 
-          btnFwd.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.history.forward(); });
-          const btnRefresh = el('button'); btnRefresh.className = 'browser-btn control-btn'; btnRefresh.innerHTML = '↻'; 
-          btnRefresh.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.location.reload(); });
           const btnMin = el('button'); btnMin.className = 'browser-btn control-btn'; btnMin.innerHTML = '−'; 
           btnMin.addEventListener('click', () => { w.style.display = 'none'; });
-          const btnMax = el('button'); btnMax.className = 'browser-btn control-btn'; btnMax.innerHTML = '⬜'; 
+          const btnMax = el('button'); btnMax.className = 'browser-btn control-btn'; btnMax.innerHTML = '□'; 
           btnMax.addEventListener('click', () => w.classList.toggle('maximized'));
+          const btnFullscreen = el('button'); btnFullscreen.className = 'browser-btn control-btn'; btnFullscreen.innerHTML = '⛶'; 
+          btnFullscreen.addEventListener('click', () => w.classList.toggle('fullscreen'));
           const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
           btnClose.addEventListener('click', () => w.remove());
-          wc.appendChild(btnBack); wc.appendChild(btnFwd); wc.appendChild(btnRefresh); 
-          wc.appendChild(btnMin); wc.appendChild(btnMax); wc.appendChild(btnClose);
+          wc.appendChild(btnMin); wc.appendChild(btnMax); wc.appendChild(btnFullscreen); 
+          wc.appendChild(btnClose);
           tb.appendChild(t); tb.appendChild(wc);
           const toolbar = el('div'); toolbar.className = 'browser-toolbar';
           const urlbar = el('div'); urlbar.className = 'browser-urlbar';
@@ -1102,6 +1104,115 @@
           enableWindowDrag(w);
         }
 
+        function buildSettingsWindow() {
+          const w = el('div'); w.className = 'window'; w.style.top = '100px'; w.style.left = '100px';
+          const tb = el('div'); tb.className = 'titlebar';
+          const t = el('div'); t.className = 'title'; t.textContent = 'Settings';
+          const wc = el('div'); wc.className = 'win-controls';
+          const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+          btnClose.addEventListener('click', () => w.remove());
+          wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
+          
+          const content = el('div'); content.className = 'content'; 
+          content.style.overflowY = 'auto';
+          content.innerHTML = `
+            <div style="padding:20px;">
+              <h2 style="color:var(--text);margin-bottom:20px;">Settings</h2>
+              
+              <div class="settings-card" style="margin-bottom:20px;">
+                <h3 style="margin-bottom:10px;color:var(--text);">Window Opacity</h3>
+                <input type="range" id="opacity-slider" min="0.5" max="1" step="0.05" value="${settings.windowOpacity}" style="width:100%;cursor:pointer;">
+                <p class="muted" style="margin-top:8px;">Current: ${Math.round(settings.windowOpacity * 100)}%</p>
+              </div>
+
+              <div class="settings-card" style="margin-bottom:20px;">
+                <h3 style="margin-bottom:10px;color:var(--text);">Cloaking</h3>
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                  <div class="switch ${settings.cloakEnabled ? 'on' : ''}" id="cloak-toggle">
+                    <div class="knob"></div>
+                  </div>
+                  <span style="color:var(--muted);">Enable Tab Cloaking</span>
+                </label>
+                <input type="text" id="cloak-title" placeholder="Tab Title" value="${settings.cloak?.title || 'Eclipse'}" style="width:100%;padding:8px;margin-top:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--text);">
+              </div>
+
+              <div class="settings-card">
+                <h3 style="margin-bottom:10px;color:var(--text);">Info</h3>
+                <p class="muted">Auth Tier: <strong style="color:var(--accent);">${authTier.toUpperCase()}</strong></p>
+                <p class="muted" style="margin-top:8px;">Version: 1.0.0</p>
+              </div>
+
+              <button onclick="saveSettingsChanges()" style="width:100%;padding:10px;margin-top:20px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600;">Save Changes</button>
+            </div>
+          `;
+          
+          w.appendChild(tb); w.appendChild(content);
+          document.body.appendChild(w);
+          enableWindowDrag(w);
+
+          const slider = content.querySelector('#opacity-slider');
+          const cloakToggle = content.querySelector('#cloak-toggle');
+          
+          slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            document.documentElement.style.setProperty('--window-opacity', String(val));
+            content.querySelector('p.muted').textContent = `Current: ${Math.round(val * 100)}%`;
+          });
+
+          cloakToggle.addEventListener('click', () => {
+            cloakToggle.classList.toggle('on');
+          });
+
+          window.saveSettingsChanges = () => {
+            settings.windowOpacity = parseFloat(slider.value);
+            settings.cloakEnabled = cloakToggle.classList.contains('on');
+            settings.cloak.title = content.querySelector('#cloak-title').value || 'Eclipse';
+            saveState();
+            showToast('Settings saved');
+          };
+        }
+
+        function buildStoreWindow() {
+          const w = el('div'); w.className = 'window'; w.style.top = '120px'; w.style.left = '120px';
+          const tb = el('div'); tb.className = 'titlebar';
+          const t = el('div'); t.className = 'title'; t.textContent = 'Store';
+          const wc = el('div'); wc.className = 'win-controls';
+          const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+          btnClose.addEventListener('click', () => w.remove());
+          wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
+          
+          const content = el('div'); content.className = 'content'; 
+          content.style.overflowY = 'auto';
+
+          const storeItems = [
+            { name: 'Dark Mode', price: 'Free', desc: 'Enhanced dark theme' },
+            { name: 'Custom Themes', price: authTier === 'vip' ? 'Included' : 'VIP Only', desc: 'Premium color schemes' },
+            { name: 'UV Search', price: authTier === 'vip' ? 'Included' : 'VIP Only', desc: 'Bypass content filtering' }
+          ];
+
+          content.innerHTML = `
+            <div style="padding:20px;">
+              <h2 style="color:var(--text);margin-bottom:20px;">Store</h2>
+              <div class="store-grid">
+                ${storeItems.map(item => `
+                  <div class="store-card">
+                    <div style="width:96px;height:96px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:12px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">
+                      ${item.name.charAt(0)}
+                    </div>
+                    <div style="color:var(--text);font-weight:600;font-size:13px;margin-bottom:4px;">${item.name}</div>
+                    <p class="muted" style="margin:0 0 8px 0;font-size:11px;">${item.desc}</p>
+                    <div style="color:var(--accent);font-size:12px;font-weight:600;">${item.price}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          
+          w.appendChild(tb); w.appendChild(content);
+          document.body.appendChild(w);
+          enableWindowDrag(w);
+        }
+
         function openBuiltIn(type) {
           if (type === 'browser') openBrowser({ url: '', label: 'Browser' });
           else if (type === 'files') {
@@ -1113,39 +1224,13 @@
             btnClose.addEventListener('click', () => w.remove());
             wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
             const content = el('div'); content.className = 'content'; 
-            content.innerHTML = '<p style="padding:20px;">File manager coming soon</p>';
+            content.innerHTML = '<p style="padding:20px;color:var(--muted);">File manager coming soon</p>';
             w.appendChild(tb); w.appendChild(content);
             document.body.appendChild(w);
             enableWindowDrag(w);
           }
-          else if (type === 'settings') {
-            const w = el('div'); w.className = 'window'; w.style.top = '120px'; w.style.left = '120px';
-            const tb = el('div'); tb.className = 'titlebar';
-            const t = el('div'); t.className = 'title'; t.textContent = 'Settings';
-            const wc = el('div'); wc.className = 'win-controls';
-            const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
-            btnClose.addEventListener('click', () => w.remove());
-            wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
-            const content = el('div'); content.className = 'content'; 
-            content.innerHTML = '<p style="padding:20px;">Settings coming soon</p>';
-            w.appendChild(tb); w.appendChild(content);
-            document.body.appendChild(w);
-            enableWindowDrag(w);
-          }
-          else if (type === 'store') {
-            const w = el('div'); w.className = 'window'; w.style.top = '140px'; w.style.left = '140px';
-            const tb = el('div'); tb.className = 'titlebar';
-            const t = el('div'); t.className = 'title'; t.textContent = 'Store';
-            const wc = el('div'); wc.className = 'win-controls';
-            const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
-            btnClose.addEventListener('click', () => w.remove());
-            wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
-            const content = el('div'); content.className = 'content'; 
-            content.innerHTML = '<p style="padding:20px;">Store coming soon</p>';
-            w.appendChild(tb); w.appendChild(content);
-            document.body.appendChild(w);
-            enableWindowDrag(w);
-          }
+          else if (type === 'settings') buildSettingsWindow();
+          else if (type === 'store') buildStoreWindow();
         }
 
         function openInstalledApp(item) {
@@ -1236,9 +1321,15 @@
         if (quickClose) quickClose.addEventListener('click', () => { quickOverlay.style.display = 'none'; });
         if (quickGo) quickGo.addEventListener('click', () => {
           const q = (quickInput && quickInput.value || '').trim();
-          if (q) { openBrowser({ url: 'https://duckduckgo.com/?q=' + encodeURIComponent(q), label: 'Eclipse://Search' });
-                  quickOverlay.style.display = 'none'; 
-                  if (quickInput) quickInput.value = ''; }
+          if (q) { 
+            let searchUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
+            if (authTier === 'vip' || authTier === 'dev') {
+              searchUrl = 'https://www.bing.com/search?q=' + encodeURIComponent('site:uv.proxy ' + q);
+            }
+            openBrowser({ url: searchUrl, label: 'Search Results' });
+            quickOverlay.style.display = 'none'; 
+            if (quickInput) quickInput.value = ''; 
+          }
         });
 
         if (!Array.isArray(installedApps)) installedApps = [];
