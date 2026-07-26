@@ -759,7 +759,7 @@
       </form>
 
       <div class="auth-codes">
-        <strong>🔑 Available Codes</strong>
+        <strong>Available Codes</strong>
         <div class="tier-info">
           <span class="tier-badge tier-vip">VIP</span> vip2024eclipse
         </div>
@@ -916,22 +916,25 @@
       
       if (!code) {
         authTier = 'regular';
+        localStorage.setItem('eclipse_auth_completed', 'true');
         closeAuthModal();
         return;
       }
 
       if (code === VIP_CODE) {
         authTier = 'vip';
-        closeAuthModal();
-        showToast('🌟 VIP Access Granted');
         localStorage.setItem('eclipse_auth_tier', 'vip');
+        localStorage.setItem('eclipse_auth_completed', 'true');
+        closeAuthModal();
+        showToast('VIP Access Granted');
       } else if (code === DEV_CODE) {
         authTier = 'dev';
-        closeAuthModal();
-        showToast('👨‍💻 Developer Access Granted');
         localStorage.setItem('eclipse_auth_tier', 'dev');
+        localStorage.setItem('eclipse_auth_completed', 'true');
+        closeAuthModal();
+        showToast('Developer Access Granted');
       } else {
-        errorEl.textContent = '❌ Invalid code. Try again or skip for regular access.';
+        errorEl.textContent = 'Invalid code. Try again or skip for regular access.';
         errorEl.classList.add('show');
         setTimeout(() => errorEl.classList.remove('show'), 3000);
       }
@@ -939,6 +942,7 @@
 
     function skipAuth() {
       authTier = 'regular';
+      localStorage.setItem('eclipse_auth_completed', 'true');
       closeAuthModal();
     }
 
@@ -947,9 +951,11 @@
     }
 
     function checkAuthOnStartup() {
+      const authCompleted = localStorage.getItem('eclipse_auth_completed');
       const savedTier = localStorage.getItem('eclipse_auth_tier');
-      if (savedTier) {
-        authTier = savedTier;
+      
+      if (authCompleted) {
+        authTier = savedTier || 'regular';
         closeAuthModal();
       }
     }
@@ -981,6 +987,14 @@
         const KEY_APPS = 'eclipse_apps_v_safe';
         const KEY_ICONS = 'eclipse_icons_v_safe';
         const KEY_SETTINGS = 'eclipse_settings_v_safe';
+
+        const presetLibrary = [
+          {id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: ''},
+          {id: 'games', name: 'Games', url: 'https://eclipsev6.github.io/g/', icon: '/assets/browsericons/games.png', label: ''},
+          {id: 'movies', name: 'Movies', url: 'https://eclipsev6.github.io/m/', icon: '/assets/browsericons/movies.png', label: ''},
+          {id: 'launcher', name: 'Launcher', url: 'https://eclipsev6.github.io/l/', icon: '/assets/browsericons/launch.png', label: ''},
+          {id: 'phoenix', name: 'Phoenix', url: 'https://eclipsev6.github.io/m/p/', icon: '/assets/browsericons/phoenix.png', label: ''}
+        ];
 
         let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
         let desktopIconsPersist = JSON.parse(localStorage.getItem(KEY_ICONS) || '[]');
@@ -1037,6 +1051,127 @@
           return full;
         }
 
+        function openBrowser(item) {
+          const w = el('div'); w.className = 'window'; 
+          w.style.top = Math.random() * 60 + 'px'; w.style.left = Math.random() * 60 + 'px';
+          const tb = el('div'); tb.className = 'titlebar';
+          const t = el('div'); t.className = 'title'; t.textContent = item.label || item.name || 'Browser';
+          const wc = el('div'); wc.className = 'win-controls';
+          const btnBack = el('button'); btnBack.className = 'browser-btn control-btn'; btnBack.innerHTML = '←'; 
+          btnBack.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.history.back(); });
+          const btnFwd = el('button'); btnFwd.className = 'browser-btn control-btn'; btnFwd.innerHTML = '→'; 
+          btnFwd.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.history.forward(); });
+          const btnRefresh = el('button'); btnRefresh.className = 'browser-btn control-btn'; btnRefresh.innerHTML = '↻'; 
+          btnRefresh.addEventListener('click', () => { if (iframe.contentWindow) iframe.contentWindow.location.reload(); });
+          const btnMin = el('button'); btnMin.className = 'browser-btn control-btn'; btnMin.innerHTML = '−'; 
+          btnMin.addEventListener('click', () => { w.style.display = 'none'; });
+          const btnMax = el('button'); btnMax.className = 'browser-btn control-btn'; btnMax.innerHTML = '⬜'; 
+          btnMax.addEventListener('click', () => w.classList.toggle('maximized'));
+          const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+          btnClose.addEventListener('click', () => w.remove());
+          wc.appendChild(btnBack); wc.appendChild(btnFwd); wc.appendChild(btnRefresh); 
+          wc.appendChild(btnMin); wc.appendChild(btnMax); wc.appendChild(btnClose);
+          tb.appendChild(t); tb.appendChild(wc);
+          const toolbar = el('div'); toolbar.className = 'browser-toolbar';
+          const urlbar = el('div'); urlbar.className = 'browser-urlbar';
+          const urlInput = el('input'); urlInput.type = 'text'; urlInput.placeholder = 'Enter URL...';
+          const goBtn = el('button'); goBtn.className = 'browser-go-btn'; goBtn.type = 'button'; goBtn.textContent = 'Go';
+          goBtn.addEventListener('click', () => {
+            let url = urlInput.value.trim();
+            if (url) {
+              url = (url.startsWith('http://') || url.startsWith('https://')) ? url : 'https://' + url;
+              iframe.src = resolveUrlForIframe(url);
+            }
+          });
+          urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              let url = urlInput.value.trim();
+              if (url) {
+                url = (url.startsWith('http://') || url.startsWith('https://')) ? url : 'https://' + url;
+                iframe.src = resolveUrlForIframe(url);
+              }
+            }
+          });
+          urlbar.appendChild(urlInput); urlbar.appendChild(goBtn);
+          toolbar.appendChild(urlbar);
+          const page = el('div'); page.className = 'browser-page';
+          const iframe = el('iframe'); iframe.src = resolveUrlForIframe(item.url || 'about:blank');
+          page.appendChild(iframe);
+          w.appendChild(tb); w.appendChild(toolbar); w.appendChild(page);
+          document.body.appendChild(w);
+          enableWindowDrag(w);
+        }
+
+        function openBuiltIn(type) {
+          if (type === 'browser') openBrowser({ url: '', label: 'Browser' });
+          else if (type === 'files') {
+            const w = el('div'); w.className = 'window'; w.style.top = '100px'; w.style.left = '100px';
+            const tb = el('div'); tb.className = 'titlebar';
+            const t = el('div'); t.className = 'title'; t.textContent = 'Files';
+            const wc = el('div'); wc.className = 'win-controls';
+            const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+            btnClose.addEventListener('click', () => w.remove());
+            wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
+            const content = el('div'); content.className = 'content'; 
+            content.innerHTML = '<p style="padding:20px;">File manager coming soon</p>';
+            w.appendChild(tb); w.appendChild(content);
+            document.body.appendChild(w);
+            enableWindowDrag(w);
+          }
+          else if (type === 'settings') {
+            const w = el('div'); w.className = 'window'; w.style.top = '120px'; w.style.left = '120px';
+            const tb = el('div'); tb.className = 'titlebar';
+            const t = el('div'); t.className = 'title'; t.textContent = 'Settings';
+            const wc = el('div'); wc.className = 'win-controls';
+            const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+            btnClose.addEventListener('click', () => w.remove());
+            wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
+            const content = el('div'); content.className = 'content'; 
+            content.innerHTML = '<p style="padding:20px;">Settings coming soon</p>';
+            w.appendChild(tb); w.appendChild(content);
+            document.body.appendChild(w);
+            enableWindowDrag(w);
+          }
+          else if (type === 'store') {
+            const w = el('div'); w.className = 'window'; w.style.top = '140px'; w.style.left = '140px';
+            const tb = el('div'); tb.className = 'titlebar';
+            const t = el('div'); t.className = 'title'; t.textContent = 'Store';
+            const wc = el('div'); wc.className = 'win-controls';
+            const btnClose = el('button'); btnClose.className = 'browser-btn control-btn close'; btnClose.innerHTML = '✕'; 
+            btnClose.addEventListener('click', () => w.remove());
+            wc.appendChild(btnClose); tb.appendChild(t); tb.appendChild(wc);
+            const content = el('div'); content.className = 'content'; 
+            content.innerHTML = '<p style="padding:20px;">Store coming soon</p>';
+            w.appendChild(tb); w.appendChild(content);
+            document.body.appendChild(w);
+            enableWindowDrag(w);
+          }
+        }
+
+        function openInstalledApp(item) {
+          if (item.url) openBrowser(item);
+          else if (item.action) item.action();
+        }
+
+        function enableWindowDrag(w) {
+          const tb = w.querySelector('.titlebar');
+          let offset = { x: 0, y: 0 };
+          tb.addEventListener('mousedown', (e) => {
+            offset.x = e.clientX - w.offsetLeft;
+            offset.y = e.clientY - w.offsetTop;
+            const onMove = (ev) => {
+              w.style.left = (ev.clientX - offset.x) + 'px';
+              w.style.top = (ev.clientY - offset.y) + 'px';
+            };
+            const onUp = () => {
+              document.removeEventListener('mousemove', onMove);
+              document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+          });
+        }
+
         const launcherBtn = $('#start-btn');
         const launcherPanel = $('#launcher');
         const launcherGrid = $('#launcher-grid');
@@ -1047,8 +1182,6 @@
         const quickInput = $('#quick-search-input');
         const quickGo = $('#quick-search-go');
         const quickClose = $('#quick-search-close');
-
-        let currentBrowserWindow = null;
 
         function buildTile(item) {
           const tile = el('div'); 
@@ -1079,7 +1212,7 @@
             { id: 'settings', name: 'Settings', icon: '/assets/browsericons/settings.png', action: () => openBuiltIn('settings') },
             { id: 'store', name: 'Store', icon: '/assets/browsericons/store.png', action: () => openBuiltIn('store') }
           ];
-          const items = builtin.concat(installedApps || []);
+          const items = builtin.concat(presetLibrary).concat(installedApps || []);
           const filtered = items.filter(it => !filter || (it.name || it.label || '').toLowerCase().includes(filter.toLowerCase()));
           for (const it of filtered) launcherGrid.appendChild(buildTile(it));
         }
@@ -1111,273 +1244,17 @@
         if (!Array.isArray(installedApps)) installedApps = [];
         populateLauncher();
 
-        function renderPersistedIcons() {
-          try {
-            $$('.desktop-icon[data-custom-id]').forEach(n => n.remove());
-            for (const it of (desktopIconsPersist || [])) {
-              if (document.querySelector('.desktop-icon[data-custom-id="' + it.id + '"]')) continue;
-              const d = el('div'); 
-              d.className = 'desktop-icon'; 
-              d.dataset.customId = it.id; 
-              d.dataset.app = it.appRef || it.url || '';
-              d.style.top = it.top; 
-              d.style.left = it.left; d.style.zIndex = 90;
-              const img = el('img'); 
-              img.src = it.icon || makePlaceholderIcon(it.name || it.label || '?'); 
-              const sp = el('span'); 
-              sp.textContent = it.name || it.label || 'App';
-              d.appendChild(img); 
-              d.appendChild(sp);
-              document.getElementById('desktop').appendChild(d);
-              attachIconHandlers(d);
-            }
-          } catch (e) { console.warn('renderPersistedIcons failed', e); }
-        }
-        requestAnimationFrame(() => renderPersistedIcons());
-
-        let activeIcon = null;
-
-        function showContextMenuFor(node, x, y) {
-          activeIcon = node;
-          const ctx = document.getElementById("context-menu");
-          ctx.style.display = "block";
-          ctx.style.left = x + "px";
-          ctx.style.top = y + "px";
-        }
-
-        function closeContextMenu() {
-          const ctx = document.getElementById("context-menu");
-          ctx.style.display = "none";
-        }
-
-        document.addEventListener('click', (e) => {
-          if (e.target.matches('#context-menu .ctx-item')) {
-            const action = e.target.dataset.action;
-            if (action === "open" && activeIcon) activeIcon.dispatchEvent(new MouseEvent("dblclick"));
-            if (action === "edit" && activeIcon) enableIconEdit(activeIcon);
-            if (action === "pin" && activeIcon) pinToTaskbar(activeIcon);
-            if (action === "delete" && activeIcon) removeDesktopIcon(activeIcon);
-            closeContextMenu();
-          } else if (!e.target.closest('#context-menu')) {
-            closeContextMenu();
-          }
-        });
-
-        function attachIconHandlers(node) {
-          try {
-            node.addEventListener('dblclick', () => {
-              const appRef = node.dataset.app || node.dataset.name;
-              if (!appRef) return;
-              const byId = (installedApps || []).find(x => x.id === appRef);
-              if (byId) openInstalledApp(byId);
-              else if (appRef.startsWith('http') || appRef.startsWith('https')) openUrlInBrowser(appRef);
-              else openBuiltIn(node.dataset.app || node.dataset.name || 'browser');
-            });
-            node.addEventListener('contextmenu', (e) => { e.preventDefault(); showContextMenuFor(node, e.clientX, e.clientY); });
-          } catch (e) { console.warn('attachIconHandlers:', e); }
-        }
-
-        function enableIconEdit(node) {
-          try {
-            const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 220;
-            done.innerHTML = '<button id="icon-done" style="padding:10px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done</button>';
-            document.body.appendChild(done);
-            node.style.cursor = 'grab';
-            node.classList.add('editable');
-            function onDown(e) {
-              if (e.button !== 0) return;
-              e.preventDefault();
-              const rect = node.getBoundingClientRect();
-              const offsetX = e.clientX - rect.left, offsetY = e.clientY - rect.top;
-              function onMove(ev) { node.style.left = (ev.clientX - offsetX) + 'px'; node.style.top = (ev.clientY - offsetY) + 'px'; }
-              function onUp(ev) {
-                document.removeEventListener('pointermove', onMove);
-                document.removeEventListener('pointerup', onUp);
-                const id = node.dataset.customId || ('c-' + Math.random().toString(36).slice(2, 9));
-                node.dataset.customId = id;
-                const rec = { id, name: node.querySelector('span')?.textContent || 'App', icon: node.querySelector('img')?.src || null, top: node.style.top, left: node.style.left, appRef: node.dataset.app };
-                const idx = (desktopIconsPersist || []).findIndex(x => x.id === id);
-                if (idx >= 0) desktopIconsPersist[idx] = rec; else desktopIconsPersist.push(rec);
-                saveState();
-              }
-              document.addEventListener('pointermove', onMove);
-              document.addEventListener('pointerup', onUp);
-            }
-            node.addEventListener('pointerdown', onDown);
-            done.querySelector('#icon-done').addEventListener('click', () => {
-              node.style.cursor = 'default'; node.classList.remove('editable'); done.remove(); const clone = node.cloneNode(true); node.parentNode.replaceChild(clone, node); attachIconHandlers(clone);
-            });
-          } catch (e) { console.warn('enableIconEdit error', e); }
-        }
-
-        function pinToTaskbar(node) {
-          const img = node.querySelector('img')?.src || makePlaceholderIcon("A");
-          const name = node.querySelector('span')?.textContent || "App";
-          const t = document.createElement("div");
-          t.className = "taskbar-icon";
-          t.innerHTML = `<img src="${img}"><div class="dot"></div>`;
-          taskbar.appendChild(t);
-          t.addEventListener("click", () => node.dispatchEvent(new MouseEvent("dblclick")));
-          t.addEventListener("contextmenu", e => {
-            e.preventDefault();
-            const menu = document.createElement("div");
-            menu.className = "pin-menu";
-            menu.style.left = e.clientX + "px";
-            menu.style.top = e.clientY + "px";
-            menu.innerHTML = `<div class="pin-item">Unpin from Taskbar</div>`;
-            document.body.appendChild(menu);
-            menu.querySelector(".pin-item").addEventListener("click", () => {
-              t.remove();
-              menu.remove();
-              showToast(name + " unpinned");
-            });
-            document.addEventListener("click", () => menu.remove(), { once:true });
+        // Attach handlers to initial desktop icons
+        $$('.desktop-icon').forEach(icon => {
+          icon.addEventListener('dblclick', () => {
+            const appRef = icon.dataset.app || icon.dataset.name;
+            if (!appRef) return;
+            const byId = presetLibrary.find(x => x.id === appRef);
+            if (byId) openInstalledApp(byId);
+            else if (appRef.startsWith('http') || appRef.startsWith('https')) openBrowser({ url: appRef, label: 'Browser' });
+            else openBuiltIn(appRef);
           });
-        }
-
-        function removeDesktopIcon(node) {
-          const appRef = node.dataset.app;
-          const appName = node.querySelector("span")?.textContent;
-          if (!confirm(`Remove ${appName}?`)) return;
-          node.remove();
-          desktopIconsPersist = desktopIconsPersist.filter(icon => icon.appRef !== appRef);
-          installedApps = installedApps.filter(app => app.id !== appRef && app.name !== appName);
-          saveState();
-          populateLauncher();
-          showToast(appName + " removed");
-        }
-
-        function createBrowserWindow(url) {
-          const winId = 'win-' + Math.random().toString(36).slice(2,9);
-          const w = el('div');
-          w.className = 'window';
-          w.id = winId;
-          w.style.left = (100 + Math.random() * 200) + 'px';
-          w.style.top = (80 + Math.random() * 150) + 'px';
-          
-          w.innerHTML = `
-            <div class="titlebar">
-              <div class="title">Browser</div>
-              <div class="win-controls">
-                <button class="control-btn" onclick="this.closest('.window').classList.add('maximized')">□</button>
-                <button class="control-btn close" onclick="this.closest('.window').remove()">✕</button>
-              </div>
-            </div>
-            <div class="browser-toolbar">
-              <button class="browser-btn">←</button>
-              <button class="browser-btn">→</button>
-              <button class="browser-btn">⟳</button>
-              <div class="browser-urlbar">
-                <input type="text" class="browser-url-input" placeholder="Enter URL or search..." value="${url || ''}">
-                <button class="browser-go-btn" onclick="navigateBrowser(this)">Go</button>
-              </div>
-            </div>
-            <div class="browser-page">
-              ${authTier === 'vip' || authTier === 'dev' ? `<iframe src="${resolveUrlForIframe(url || 'https://7-7-7-14.github.io/active')}"></iframe>` : `<div class="startpage">
-                <div class="startpage-logo">✦</div>
-                <div class="startpage-title">Eclipse Browser</div>
-                <div class="startpage-subtitle">Enter a URL to begin browsing</div>
-                <div class="startpage-grid">
-                  <div class="startpage-card">
-                    <h3>🔍 Search</h3>
-                    <p>Find anything on the web</p>
-                  </div>
-                  <div class="startpage-card">
-                    <h3>🔐 Secure</h3>
-                    <p>Private browsing mode</p>
-                  </div>
-                  <div class="startpage-card">
-                    <h3>⚡ Fast</h3>
-                    <p>Lightning quick performance</p>
-                  </div>
-                </div>
-              </div>`}
-            </div>
-          `;
-
-          document.getElementById('desktop').appendChild(w);
-          currentBrowserWindow = w;
-
-          // URL input handling
-          const urlInput = w.querySelector('.browser-url-input');
-          if (urlInput) {
-            urlInput.addEventListener('keypress', (e) => {
-              if (e.key === 'Enter') navigateBrowser(w.querySelector('.browser-go-btn'));
-            });
-          }
-
-          makeDraggable(w);
-          return w;
-        }
-
-        function navigateBrowser(btn) {
-          const win = btn.closest('.window');
-          const urlInput = win.querySelector('.browser-url-input');
-          const url = urlInput.value.trim();
-          if (!url) return;
-
-          if (authTier === 'vip' || authTier === 'dev') {
-            const page = win.querySelector('.browser-page');
-            page.innerHTML = `<iframe src="${resolveUrlForIframe(url)}"></iframe>`;
-          } else {
-            showToast('🔒 VIP/Dev access required for browsing');
-          }
-        }
-
-        function makeDraggable(elm) {
-          let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-          const header = elm.querySelector('.titlebar');
-          if (header) {
-            header.onmousedown = dragMouseDown;
-          }
-          function dragMouseDown(e) {
-            e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-          }
-          function elementDrag(e) {
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            elm.style.top = (elm.offsetTop - pos2) + "px";
-            elm.style.left = (elm.offsetLeft - pos1) + "px";
-          }
-          function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-          }
-        }
-
-        function openBrowser(opts = {}) {
-          const url = opts.url || (authTier === 'vip' || authTier === 'dev' ? 'https://7-7-7-14.github.io/active' : '');
-          createBrowserWindow(url);
-        }
-
-        function openBuiltIn(app) {
-          if (app === 'browser') {
-            openBrowser();
-          } else if (app === 'files') {
-            showToast('📁 Files coming soon');
-          } else if (app === 'settings') {
-            showToast('⚙️ Settings coming soon');
-          } else if (app === 'store') {
-            showToast('🛍️ Store coming soon');
-          }
-        }
-
-        function openInstalledApp(app) {
-          if (app.url) openBrowser({ url: app.url, label: app.name });
-        }
-
-        function openUrlInBrowser(url) {
-          openBrowser({ url });
-        }
-
-        $$('.desktop-icon').forEach(icon => attachIconHandlers(icon));
+        });
 
       } catch (e) {
         console.error('Initialization error:', e);
