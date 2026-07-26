@@ -1,1386 +1,980 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="icon" href="/assets/logo/logo.png" type="image/x-icon">
-    <title>Chrome OS Themed Webpage</title>
-    <style>
-        /* Reset default styles for consistency across browsers */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif; /* Using a clean sans-serif font similar to Chrome OS */
-        }
-
-        /* Body styles to mimic a desktop environment */
-        body {
-            height: 100vh;
-            overflow: hidden;
-            background-color: #202124; /* Dark gray background for dark theme */
-            background-image: url('https://7-7-7-15.github.io/assets/backgrounds/sunset.png'); /* Placeholder wallpaper */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; /* Align taskbar to bottom */
-            position: relative;
-        }
-
-        /* Desktop area where icons and windows will be placed */
-        #desktop {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 48px; /* Space for taskbar */
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        /* Taskbar (Shelf in Chrome OS terms) */
-        #taskbar {
-            height: 48px;
-            background-color: rgba(32, 33, 36, 0.8); /* Dark semi-transparent for Chrome OS dark theme */
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            position: relative;
-            z-index: 10;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Start button (App launcher) */
-        #start-button {
-            width: 40px;
-            height: 40px;
-            background-color: #4285f4; /* Google blue */
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-right: 16px;
-            transition: background-color 0.3s;
-        }
-
-        #start-button:hover {
-            background-color: #357ae8;
-        }
-
-        #start-button::before {
-            content: '≡'; /* Hamburger icon */
-            color: white;
-            font-size: 24px;
-        }
-
-        /* Taskbar icons for open apps */
-        .taskbar-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #3c4043; /* Dark gray for dark theme */
-            border-radius: 4px;
-            margin: 0 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: transform 0.3s;
-        }
-
-        .taskbar-icon:hover {
-            transform: scale(1.1);
-        }
-
-        .taskbar-icon::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
-            background-color: #4285f4;
-            border-radius: 50%;
-            display: none; /* Show dot for active windows */
-        }
-
-        .taskbar-icon.active::after {
-            display: block;
-        }
-
-        /* System tray area */
-        #system-tray {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            color: #e8eaed; /* Light text for dark theme */
-        }
-
-        .tray-item {
-            margin: 0 8px;
-            cursor: pointer;
-        }
-
-        #clock {
-            font-size: 14px;
-        }
-
-        /* Desktop icons */
-        .desktop-icon {
-            position: absolute;
-            width: 80px;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .desktop-icon img {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 4px;
-        }
-
-        .desktop-icon span {
-            display: block;
-            color: #e8eaed; /* Light text */
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-            font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Window styles */
-        .window {
-            position: absolute;
-            background-color: #202124; /* Dark background */
-            color: #e8eaed; /* Light text */
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Darker shadow */
-            overflow: hidden;
-            min-width: 300px;
-            min-height: 200px;
-            resize: both; /* Allow resizing */
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .window.maximized {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: calc(100vh - 48px) !important; /* Account for taskbar */
-            border-radius: 0;
-            resize: none;
-        }
-
-        .window.fullscreen {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            border-radius: 0;
-            resize: none;
-            z-index: 20; /* Above everything */
-        }
-
-        /* Title bar */
-        .title-bar {
-            height: 40px;
-            background-color: #3c4043; /* Dark title bar */
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            cursor: move; /* Draggable */
-            user-select: none;
-            border-bottom: 1px solid #5f6368; /* Dark border */
-        }
-
-        .title-bar .title {
-            flex: 1;
-            font-size: 14px;
-            color: #e8eaed; /* Light text */
-        }
-
-        .title-bar .controls {
-            display: flex;
-        }
-
-        .control-btn {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-            margin-left: 8px;
-            color: #e8eaed; /* Light icons */
-        }
-
-        .control-btn:hover {
-            background-color: #5f6368; /* Dark hover */
-        }
-
-        .minimize::before {
-            content: '_';
-            font-size: 20px;
-        }
-
-        .maximize::before {
-            content: '□';
-            font-size: 20px;
-        }
-
-        .close::before {
-            content: '×';
-            font-size: 20px;
-        }
-
-        .fullscreen-btn::before {
-            content: '↔'; /* Fullscreen icon */
-            font-size: 20px;
-        }
-
-        /* Window content */
-        .window-content {
-            flex: 1;
-            padding: 16px;
-            overflow: auto;
-            background-color: #202124; /* Dark content bg */
-            color: #e8eaed; /* Light text */
-        }
-
-        /* App launcher menu (start menu) */
-        #app-launcher {
-            position: absolute;
-            bottom: 64px; /* Above taskbar */
-            left: 16px;
-            width: 300px;
-            background-color: #202124; /* Dark bg */
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            padding: 16px;
-            display: none;
-            z-index: 15;
-        }
-
-        #app-launcher.show {
-            display: block;
-        }
-
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 16px;
-        }
-
-        .app-icon {
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .app-icon img {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 4px;
-        }
-
-        .app-icon span {
-            display: block;
-            font-size: 12px;
-            color: #bdc1c6; /* Medium light text */
-        }
-
-        /* Context menu for desktop */
-        #context-menu {
-            position: absolute;
-            background-color: #202124; /* Dark bg */
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 20;
-            padding: 8px 0;
-        }
-
-        .menu-item {
-            padding: 8px 16px;
-            cursor: pointer;
-            color: #e8eaed; /* Light text */
-            font-size: 14px;
-        }
-
-        .menu-item:hover {
-            background-color: #3c4043; /* Dark hover */
-        }
-
-        /* Additional styles for responsiveness */
-        @media (max-width: 768px) {
-            #taskbar {
-                height: 56px;
-                padding: 0 8px;
-            }
-
-            .window {
-                min-width: 100vw;
-                min-height: 50vh;
-            }
-        }
-
-        /* Animations for window opening */
-        @keyframes windowOpen {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .window {
-            animation: windowOpen 0.3s ease-out;
-        }
-
-        /* More detailed styles for buttons and inputs if needed */
-        button {
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #357ae8;
-        }
-
-        input {
-            padding: 8px;
-            border: 1px solid #5f6368; /* Dark border */
-            border-radius: 4px;
-            font-size: 14px;
-            background-color: #202124; /* Dark bg */
-            color: #e8eaed; /* Light text */
-        }
-
-        /* Styles for sample app content */
-        .browser-content {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .browser-toolbar {
-            height: 48px;
-            background-color: #3c4043; /* Dark toolbar */
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-bottom: 1px solid #5f6368; /* Dark border */
-        }
-
-        .browser-address {
-            flex: 1;
-            background-color: #202124;
-            border: 1px solid #5f6368;
-            border-radius: 24px;
-            padding: 8px 16px;
-            margin: 0 16px;
-            color: #e8eaed;
-        }
-
-        .browser-page {
-            flex: 1;
-            background-color: transparent; /* Transparent for iframe */
-            padding: 0; /* No padding for iframe */
-            overflow: hidden;
-        }
-
-        .browser-page iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        /* File explorer styles */
-        .file-explorer {
-            display: flex;
-            height: 100%;
-        }
-
-        .sidebar {
-            width: 200px;
-            background-color: #3c4043; /* Dark sidebar */
-            border-right: 1px solid #5f6368; /* Dark border */
-            padding: 16px;
-            color: #e8eaed;
-        }
-
-        .file-list {
-            flex: 1;
-            padding: 16px;
-            color: #e8eaed;
-        }
-
-        .file-item {
-            padding: 8px;
-            cursor: pointer;
-            color: #e8eaed;
-        }
-
-        .file-item:hover {
-            background-color: #5f6368; /* Dark hover */
-        }
-
-        /* Settings app styles */
-        .settings-content {
-            padding: 16px;
-        }
-
-        .settings-section {
-            margin-bottom: 24px;
-        }
-
-        .settings-section h2 {
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: #e8eaed; /* Light text */
-        }
-
-        .settings-section p {
-            color: #bdc1c6; /* Medium light */
-        }
-
-        /* Calculator app styles */
-        .calculator {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            padding: 16px;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .calc-display {
-            grid-column: span 4;
-            background-color: #3c4043; /* Dark display */
-            padding: 16px;
-            text-align: right;
-            font-size: 24px;
-            border-radius: 4px;
-            color: #e8eaed;
-        }
-
-        .calc-btn {
-            padding: 16px;
-            background-color: #3c4043; /* Dark buttons */
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #e8eaed;
-        }
-
-        .calc-btn.operator {
-            background-color: #4285f4;
-            color: white;
-        }
-
-        /* Text editor styles */
-        .text-editor {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .editor-toolbar {
-            height: 40px;
-            background-color: #3c4043; /* Dark toolbar */
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            border-bottom: 1px solid #5f6368; /* Dark border */
-        }
-
-        .editor-content {
-            flex: 1;
-            padding: 16px;
-            overflow: auto;
-            white-space: pre-wrap;
-            background-color: #202124;
-            color: #e8eaed;
-        }
-
-        /* Image viewer styles */
-        .image-viewer {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #202124; /* Dark bg */
-        }
-
-        .image-viewer img {
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        /* Video player styles */
-        .video-player {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-        }
-
-        .video-player video {
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        /* Music player styles */
-        .music-player {
-            padding: 16px;
-            text-align: center;
-            color: #e8eaed;
-        }
-
-        .music-cover {
-            width: 200px;
-            height: 200px;
-            background-color: #3c4043; /* Dark cover */
-            margin: 0 auto 16px;
-            border-radius: 8px;
-        }
-
-        .music-controls {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .music-player h3 {
-            color: #e8eaed;
-        }
-
-        /* Calendar styles */
-        .calendar {
-            padding: 16px;
-            color: #e8eaed;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .calendar-header h2 {
-            color: #e8eaed;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
-
-        .day {
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .day:hover {
-            background-color: #5f6368; /* Dark hover */
-        }
-
-        /* Weather app styles */
-        .weather {
-            padding: 16px;
-            text-align: center;
-            color: #e8eaed;
-        }
-
-        .weather-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .weather-temp {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-
-        .weather-desc {
-            font-size: 18px;
-        }
-
-        /* Notes app styles */
-        .notes {
-            padding: 16px;
-        }
-
-        .note-item {
-            background-color: #424242; /* Dark note bg */
-            padding: 16px;
-            margin-bottom: 16px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            color: #e8eaed;
-        }
-
-        /* Clock app styles */
-        .clock {
-            padding: 16px;
-            text-align: center;
-            color: #e8eaed;
-        }
-
-        .clock-time {
-            font-size: 72px;
-            margin-bottom: 16px;
-        }
-
-        .clock-date {
-            font-size: 24px;
-        }
-
-        /* Maps app placeholder */
-        .maps {
-            height: 100%;
-            background-color: #3c4043; /* Dark bg */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #e8eaed;
-        }
-
-        /* Email app placeholder */
-        .email {
-            padding: 16px;
-            color: #e8eaed;
-        }
-
-        .email-list {
-            list-style: none;
-        }
-
-        .email-item {
-            padding: 12px;
-            border-bottom: 1px solid #5f6368; /* Dark border */
-            cursor: pointer;
-            color: #e8eaed;
-        }
-
-        .email-item:hover {
-            background-color: #5f6368; /* Dark hover */
-        }
-
-        /* Photos app styles */
-        .photos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 8px;
-            padding: 16px;
-        }
-
-        .photo-item {
-            height: 200px;
-            background-color: #3c4043; /* Dark item */
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* Store app placeholder */
-        .store {
-            padding: 16px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .app-card {
-            background-color: #202124; /* Dark card */
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            color: #e8eaed;
-        }
-
-        .app-card img {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 8px;
-        }
-
-        .app-card span {
-            color: #e8eaed;
-        }
-
-        /* Many more styles to pad the line count */
-        /* Adding placeholder styles for additional elements */
-        .placeholder1 { color: red; } /* Line filler */
-        .placeholder2 { color: blue; }
-        .placeholder3 { color: green; }
-        .placeholder4 { color: yellow; }
-        .placeholder5 { color: purple; }
-        .placeholder6 { color: orange; }
-        .placeholder7 { color: pink; }
-        .placeholder8 { color: brown; }
-        .placeholder9 { color: gray; }
-        .placeholder10 { color: black; }
-        .placeholder11 { font-size: 10px; }
-        .placeholder12 { font-size: 12px; }
-        .placeholder13 { font-size: 14px; }
-        .placeholder14 { font-size: 16px; }
-        .placeholder15 { font-size: 18px; }
-        .placeholder16 { font-weight: bold; }
-        .placeholder17 { font-style: italic; }
-        .placeholder18 { text-decoration: underline; }
-        .placeholder19 { background-color: #f00; }
-        .placeholder20 { background-color: #0f0; }
-        /* Continue adding to reach more lines */
-        .placeholder21 { border: 1px solid #000; }
-        .placeholder22 { border-radius: 5px; }
-        .placeholder23 { padding: 10px; }
-        .placeholder24 { margin: 10px; }
-        .placeholder25 { display: block; }
-        .placeholder26 { display: inline; }
-        .placeholder27 { position: relative; }
-        .placeholder28 { position: absolute; }
-        .placeholder29 { z-index: 1; }
-        .placeholder30 { overflow: hidden; }
-        .placeholder31 { text-align: center; }
-        .placeholder32 { text-align: left; }
-        .placeholder33 { text-align: right; }
-        .placeholder34 { vertical-align: middle; }
-        .placeholder35 { line-height: 1.5; }
-        .placeholder36 { letter-spacing: 1px; }
-        .placeholder37 { word-spacing: 2px; }
-        .placeholder38 { text-transform: uppercase; }
-        .placeholder39 { text-transform: lowercase; }
-        .placeholder40 { box-shadow: 0 0 5px #000; }
-        /* More placeholders */
-        .placeholder41 { transition: all 0.3s; }
-        .placeholder42 { animation: fade 1s; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        .placeholder43 { flex: 1; }
-        .placeholder44 { grid-column: 1; }
-        .placeholder45 { pointer-events: none; }
-        .placeholder46 { user-select: none; }
-        .placeholder47 { cursor: pointer; }
-        .placeholder48 { opacity: 0.5; }
-        .placeholder49 { visibility: hidden; }
-        .placeholder50 { display: none; }
-        /* Keep adding */
-        .placeholder51 { width: 100%; }
-        .placeholder52 { height: 100%; }
-        .placeholder53 { min-width: 50px; }
-        .placeholder54 { max-height: 200px; }
-        .placeholder55 { float: left; }
-        .placeholder56 { clear: both; }
-        .placeholder57 { list-style: none; }
-        .placeholder58 { content: ''; }
-        .placeholder59 { counter-increment: item; }
-        .placeholder60 { outline: none; }
-        .placeholder61 { resize: none; }
-        .placeholder62 { white-space: nowrap; }
-        .placeholder63 { overflow-wrap: break-word; }
-        .placeholder64 { hyphens: auto; }
-        .placeholder65 { font-variant: small-caps; }
-        .placeholder66 { text-shadow: 1px 1px #000; }
-        .placeholder67 { filter: blur(1px); }
-        .placeholder68 { transform: rotate(45deg); }
-        .placeholder69 { scale: 1.1; }
-        .placeholder70 { translate: 10px 10px; }
-        /* Even more to pad */
-        .placeholder71 { perspective: 100px; }
-        .placeholder72 { backface-visibility: hidden; }
-        .placeholder73 { will-change: transform; }
-        .placeholder74 { contain: paint; }
-        .placeholder75 { isolation: isolate; }
-        .placeholder76 { mix-blend-mode: multiply; }
-        .placeholder77 { background-blend-mode: overlay; }
-        .placeholder78 { clip-path: circle(50%); }
-        .placeholder79 { mask: url(#mask); }
-        .placeholder80 { shape-outside: circle(); }
-        .placeholder81 { scroll-snap-type: y mandatory; }
-        .placeholder82 { touch-action: none; }
-        .placeholder83 { overscroll-behavior: contain; }
-        .placeholder84 { scrollbar-width: thin; }
-        .placeholder85 { accent-color: #4285f4; }
-        .placeholder86 { color-scheme: light dark; }
-        .placeholder87 { forced-color-adjust: auto; }
-        .placeholder88 { hanging-punctuation: first; }
-        .placeholder89 { quotes: '“' '”'; }
-        .placeholder90 { tab-size: 4; }
-        .placeholder91 { widows: 3; }
-        .placeholder92 { orphans: 3; }
-        .placeholder93 { page-break-after: avoid; }
-        .placeholder94 { break-inside: avoid; }
-        .placeholder95 { column-count: 2; }
-        .placeholder96 { grid-area: main; }
-        .placeholder97 { place-items: center; }
-        .placeholder98 { justify-self: start; }
-        .placeholder99 { align-content: space-between; }
-        .placeholder100 { flex-wrap: wrap; }
-        /* This should help reach the line count with CSS alone being substantial */
-
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eclipse OS</title>
+  <link rel="icon" href="/assets/logo/logo.png" id="page-favicon">
+  <style>
+    /* Theme */
+    :root{
+      --bg-img: url('https://7-7-7-15.github.io/assets/backgrounds/crimson.png');
+      --bg: #060606;
+      --text: #f0f2f5;
+      --muted: #9aa0a6;
+      --accent: #ff1f3a;
+      --accent-2: #c30f24;
+      --panel: rgba(18,18,18,0.86);
+      --radius: 12px;
+      --taskbar-h: 62px;
+      --shadow: 0 22px 48px rgba(0,0,0,0.75);
+      --window-opacity: 0.95;
+      --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;background:var(--bg) fixed center/cover var(--bg-img);font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;}
+    
+    body{
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      overflow:hidden;}
+
+    /* Desktop */
+    #desktop{
+      position:absolute;
+      inset:0 0 var(--taskbar-h) 0;
+      padding:18px;
+      box-sizing:border-box;
+      overflow:auto}
+
+    /* Taskbar */
+    #taskbar{
+      height:var(--taskbar-h);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:0 18px;
+      background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66));
+      border-top:1px solid rgba(255,255,255,0.05);
+      box-shadow:0 -4px 12px rgba(0,0,0,0.3)}
+    
+    #start-btn{
+      width:48px;
+      height:48px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg,var(--accent),var(--accent-2));
+      cursor:pointer}
+    
+    #taskbar-icons{
+      display:flex;
+      gap:10px;
+      align-items:center}
+    
+    .taskbar-icon{
+      width:46px;
+      height:46px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.05)}
+    
+    .taskbar-icon img{
+      width:28px;
+      height:28px;
+      border-radius:6px}
+    
+    .taskbar-icon .dot{
+      position:absolute;
+      bottom:-6px;
+      left:50%;
+      transform:translateX(-50%);width:8px;height:8px;border-radius:50%;
+      background:var(--accent);display:none}
+    
+    .taskbar-icon.active .dot{
+      display:block}
+    
+    #system-tray{
+      margin-left:auto;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px}
+
+    /* Quick-left stack: store + quick search */
+    #quick-left{
+      position:fixed;
+      left:18px;
+      bottom:calc(var(--taskbar-h)+12px);
+      z-index:1550;
+      display:flex;
+      flex-direction:column;
+      gap:10px}
+    
+    .quick-btn{
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.05)}
+    .quick-btn.search{
+      background: linear-gradient(180deg,var(--accent),var(--accent-2));
+      color: #fff;
+      box-shadow:0 8px 28px rgba(200,0,40,0.18) }
+
+    /* Desktop icons */
+    .desktop-icon{
+      position:absolute;
+      width:100px;
+      text-align:center;
+      padding:6px;
+      cursor:default;
+      user-select:none}
+    
+    .desktop-icon img{
+      width:64px;height:64px;
+      border-radius:12px;
+      display:block;
+      margin:0 auto 6px;
+      box-shadow:0 12px 34px rgba(0,0,0,0.6)}
+    
+    .desktop-icon span{
+      display:block;
+      font-size:12px;
+      color:var(--text);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
+
+    /* Windows */
+    .window{
+      position:absolute;
+      min-width:360px;
+      min-height:260px;
+      width:900px;
+      height:600px;
+      border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(20,20,20,var(--window-opacity)),rgba(8,8,8,var(--window-opacity)));
+      box-shadow:var(--shadow);
+      display:flex;flex-direction:column;
+      z-index:100}
+    
+    .window.maximized{
+      top:0!important;left:0!important;
+      width:100vw!important;
+      height:calc(100vh - var(--taskbar-h))!important;
+      border-radius:0}
+    
+    .titlebar{
+      height:56px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:0 12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.04));
+      border-bottom:1px solid rgba(255,255,255,0.05)}
+    
+    .title{
+      font-weight:700;
+      font-size:15px;
+      color:var(--text);
+      flex:1;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
+    
+    .win-controls{
+      display:flex;
+      gap:8px;
+      align-items:center}
+    
+    .control-btn{
+      width:38px;
+      height:38px;
+      border-radius:10px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.02);
+      display:grid;place-items:center;
+      color:var(--text);
+      cursor:pointer;
+      transition:all 0.15s}
+    
+    .control-btn:hover{
+      transform:translateY(-3px);
+      background:rgba(255,255,255,0.02)}
+    
+    .control-btn.close{
+      background:linear-gradient(90deg,#ff4b61,#c61b2b);
+      color:#fff}
+    
+    .content{
+      flex:1;
+      padding:12px;
+      overflow:auto;
+      color:var(--text);
+      background:transparent;
+      position:relative;}
+
+    /* Browser */
+    .browser-toolbar{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));
+      border:1px solid rgba(255,255,255,0.05)}
+    
+    .browser-btn{
+      padding:8px 10px;
+      border-radius:8px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.02);
+      color:var(--text);
+      cursor:pointer}
+    
+    .browser-address{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.36);
+      border:1px solid rgba(255,255,255,0.02);
+      flex:1}
+    
+    .browser-address .label{
+      color:var(--muted);
+      font-size:12px;
+      max-width:220px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap}
+    
+    .browser-address input{
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+      width:100%}
+    
+    .browser-favicon{
+      width:18px;
+      height:18px;
+      border-radius:4px}
+    
+    .browser-page{
+      flex:1;
+      display:block;
+      background:transparent}
+    
+    .browser-page iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:transparent}
+
+    /* Settings/Store */
+    .settings-card{
+      padding:14px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(18,18,18,0.9),rgba(12,12,12,0.9));
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+
+    
+    .muted{
+      color:var(--muted);
+           font-size:13px}
+    
+    .switch{
+      width:46px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.04);
+      display:inline-block;
+      position:relative;
+      cursor:pointer}
+    
+    .switch .knob{
+      position:absolute;
+      left:4px;top:4px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:left .12s}
+  
+    .switch.on{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    
+    .switch.on .knob{
+      left:24px}
+    
+    .store-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:12px}
+    
+    .store-card{
+      padding:12px;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.03));
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow:0 10px 26px rgba(0,0,0,0.5);
+      cursor:pointer}
+    
+    .store-card img{
+      width:96px;
+      height:96px;
+      border-radius:12px;
+      object-fit:cover}
+   
+    .small-btn{
+      padding:8px 10px;
+      border-radius:8px;
+      border:none;
+      background:rgba(255,255,255,0.03);
+      color:var(--text);
+      cursor:pointer}
+    
+    .primary-btn{
+      padding:8px 12px;
+      border-radius:10px;
+      border:none;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;cursor:pointer}
+
+    /* iframe overlay when blocked */
+    .iframe-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6));
+      color:var(--muted);gap:10px}
+
+    /* toast */
+    .eos-toast{
+      position:fixed;
+      right:20px;
+      bottom:100px;
+      background:rgba(0,0,0,0.7);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:8px;
+      z-index:3000;
+      box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+
+    @media (max-width:900px){
+      .browser-address{max-width:520px}
+      #quick-left{display:none}
+    }
+    /* Context Menu */
+    #context-menu{
+      position:fixed;
+      display:none;
+      min-width:180px;
+      background:rgba(18,18,18,.96);
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:12px;
+      backdrop-filter:blur(12px);
+      box-shadow:0 20px 40px rgba(0,0,0,.6);
+      overflow:hidden;
+      z-index:19999999 !important;
+    }
+
+    .ctx-item{
+      padding:12px 16px;
+      cursor:pointer;
+      color:var(--text);
+      font-size:14px;
+      transition:.15s;
+    }
+
+    .ctx-item:hover{
+      background:rgba(255,31,58,.15);
+      color:#fff;
+    }
+
+    .pin-menu{
+      position:fixed;
+      background:#111;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:10px;
+      overflow:hidden;
+      z-index:99999;
+      box-shadow:0 15px 40px rgba(0,0,0,.65);
+    }
+
+    .pin-item{
+      padding:10px 14px;
+      cursor:pointer;
+      color:white;
+    }
+
+    .pin-item:hover{
+      background:rgba(255,31,58,.2);
+    }
+
+    .tray-item{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:0 8px;
+      height:36px;
+      border-radius:10px;
+      background:rgba(255,255,255,.03);
+    }
+
+    #wifi-status,
+    #batt-status{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    #tray-clock{
+      min-width:75px;
+      text-align:center;
+    }
+
+    input[type="range"]{
+      -webkit-appearance:none;
+      appearance:none;
+      width:100%;
+      height:6px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      outline:none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:white;
+      border:3px solid var(--accent);
+      cursor:pointer;
+      box-shadow:0 0 12px rgba(255,31,58,.6);
+    }
+
+    input[type="range"]::-moz-range-thumb{
+      width:20px;
+      height:20px;
+      border:none;
+      border-radius:50%;
+      background:white;
+    }
+
+    #desktop{z-index:1;}
+    .desktop-icon{z-index:5;}
+    #taskbar{position:relative;z-index:9999;}
+    #launcher{z-index:10000 !important;}
+    #start-btn{position:relative;z-index:10002;}
+
+    .eos-toast{
+      position:fixed;
+      right:20px;
+      bottom:100px;
+      min-width:280px;
+      background:rgba(12,12,12,.96);
+      color:white;
+      padding:14px 16px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(20px);
+      box-shadow:0 20px 40px rgba(0,0,0,.55);
+      overflow:hidden;
+      animation:toastIn .18s ease-out;
+      z-index:99999;
+    }
+
+    .eos-toast-bar{
+      position:absolute;
+      left:0;
+      bottom:0;
+      height:4px;
+      width:100%;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transform-origin:left center;
+    }
+
+    @keyframes toastIn{
+      from{opacity:0;transform:translateY(15px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .browser-toolbar{
+      padding:12px;
+      gap:8px;
+      background:linear-gradient(180deg,rgba(25,25,25,.95),rgba(10,10,10,.95));
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+
+    .browser-btn{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      color:white;
+      transition:.18s;
+    }
+
+    .browser-btn:hover{
+      background:rgba(255,31,58,.15);
+      color:var(--accent);
+    }
+
+  </style>
 </head>
 <body>
-    <div id="desktop">
-        <!-- Desktop icons -->
-        <div class="desktop-icon" style="top: 20px; left: 20px;" data-app="browser">
-            <img src="/assets/icons/browser.png" alt="Browser">
-            <span>Browser</span>
-        </div>
-        <div class="desktop-icon" style="top: 20px; left: 120px;" data-app="files">
-            <img src="https://tse4.mm.bing.net/th/id/OIP.eb-MGUc71naeZWWFfRO0PgHaEo?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Files">
-            <span>Files</span>
-        </div>
-        <div class="desktop-icon" style="top: 20px; left: 220px;" data-app="settings">
-            <img src="https://tse2.mm.bing.net/th/id/OIP.nyC5wxtSzYsJDXcCc4UCBAHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Settings">
-            <span>Settings</span>
-        </div>
-        <!-- Add more icons to simulate a full desktop -->
-        <div class="desktop-icon" style="top: 120px; left: 20px;" data-app="calculator">
-            <img src="https://tse2.mm.bing.net/th/id/OIP.a12hluhhWTV4Gdt-GNkPFgHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Calculator">
-            <span>Calculator</span>
-        </div>
-        <div class="desktop-icon" style="top: 120px; left: 120px;" data-app="text-editor">
-            <img src="https://thvnext.bing.com/th?q=Text+Editor+Mac+Logo&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&ucfimg=1&mkt=en-US&cc=US&setlang=en&adlt=strict&t=1&mw=247&safesearch=strict&qft=filterui%3Alicense-L2_L3" alt="Text Editor">
-            <span>Text Editor</span>
-        </div>
-        <div class="desktop-icon" style="top: 120px; left: 220px;" data-app="image-viewer">
-            <img src="https://thvnext.bing.com/th/id/OIP.SNxkeBN6uAIzlzrn0oOpfgHaHa?o=7&cb=12rm=3&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Image Viewer">
-            <span>Image Viewer</span>
-        </div>
-        <div class="desktop-icon" style="top: 220px; left: 20px;" data-app="video-player">
-            <img src="https://thvnext.bing.com/th/id/OIP.zPeGTRHVulChHDToTO7lVQHaHa?o=7&cb=12rm=3&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Video Player">
-            <span>Movies</span>
-        </div>
-        <div class="desktop-icon" style="top: 220px; left: 120px;" data-app="music-player">
-            <img src="https://tse3.mm.bing.net/th/id/OIP.ri5WUbdKANXTG4xkU_o-uwHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Music Player">
-            <span>Music Player</span>
-        </div>
-        <div class="desktop-icon" style="top: 220px; left: 220px;" data-app="calendar">
-            <img src="https://via.placeholder.com/48?text=Cal" alt="Calendar">
-            <span>Calendar</span>
-        </div>
-        <div class="desktop-icon" style="top: 320px; left: 20px;" data-app="weather">
-            <img src="/assets/icons/weather.png" alt="Weather">
-            <span>Weather</span>
-        </div>
-        <div class="desktop-icon" style="top: 320px; left: 120px;" data-app="notes">
-            <img src="/assets/icons/notes.png" alt="Notes">
-            <span>Notes</span>
-        </div>
-        <div class="desktop-icon" style="top: 320px; left: 220px;" data-app="clock">
-            <img src="https://via.placeholder.com/48?text=Cl" alt="Clock">
-            <span>Clock</span>
-        </div>
-        <div class="desktop-icon" style="top: 420px; left: 20px;" data-app="maps">
-            <img src="https://via.placeholder.com/48?text=Map" alt="Maps">
-            <span>Maps</span>
-        </div>
-        <div class="desktop-icon" style="top: 420px; left: 120px;" data-app="email">
-            <img src="https://via.placeholder.com/48?text=E" alt="Email">
-            <span>Email</span>
-        </div>
-        <div class="desktop-icon" style="top: 420px; left: 220px;" data-app="photos">
-            <img src="https://via.placeholder.com/48?text=P" alt="Photos">
-            <span>Photos</span>
-        </div>
-        <div class="desktop-icon" style="top: 520px; left: 20px;" data-app="store">
-            <img src="/assets/icons/store.png" alt="Store">
-            <span>Store</span>
-        </div>
+  <div id="desktop">
+    <div class="desktop-icon" style="top:20px; left:20px" data-app="browser" data-name="Browser">
+      <img src="/assets/browsericons/browser.png" alt=""><span>Browser</span>
     </div>
-    <div id="taskbar">
-        <div id="start-button"></div>
-        <div id="taskbar-icons"></div>
-        <div id="system-tray">
-            <div class="tray-item" id="wifi">📶</div>
-            <div class="tray-item" id="battery">🔋</div>
-            <div class="tray-item" id="clock"></div>
-        </div>
+    <div class="desktop-icon" style="top:20px; left:140px" data-app="files" data-name="Files">
+      <img src="/assets/browsericons/files.png" alt=""><span>Files</span>
     </div>
-    <div id="app-launcher">
-        <div class="app-grid">
-            <div class="app-icon" data-app="browser">
-                <img src="/assets/icons/browser.png" alt="Browser">
-                <span>Browser</span>
-            </div>
-            <div class="app-icon" data-app="files">
-                <img src="https://tse4.mm.bing.net/th/id/OIP.eb-MGUc71naeZWWFfRO0PgHaEo?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Files">
-                <span>Files</span>
-            </div>
-            <div class="app-icon" data-app="settings">
-                <img src="https://tse2.mm.bing.net/th/id/OIP.nyC5wxtSzYsJDXcCc4UCBAHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Settings">
-                <span>Settings</span>
-            </div>
-            <!-- Add more app icons similar to desktop -->
-            <div class="app-icon" data-app="calculator">
-                <img src="https://tse2.mm.bing.net/th/id/OIP.a12hluhhWTV4Gdt-GNkPFgHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Calculator">
-                <span>Calculator</span>
-            </div>
-            <!-- ... repeat for all apps to pad lines -->
-        </div>
+    <div class="desktop-icon" style="top:20px; left:260px" data-app="settings" data-name="Settings">
+      <img src="/assets/browsericons/settings.png" alt=""><span>Settings</span>
     </div>
-    <div id="context-menu">
-        <div class="menu-item" data-action="new-folder">New Folder</div>
-        <div class="menu-item" data-action="refresh">Refresh</div>
-        <div class="menu-item" data-action="change-wallpaper">Change Wallpaper</div>
+     <div class="desktop-icon" style="top:20px; left:380px" data-app="store" data-name="Store">
+      <img src="/assets/browsericons/store.png" alt=""><span>Store</span>
     </div>
+  </div>
 
-    <script>
-        // JavaScript for interactivity
-        const desktop = document.getElementById('desktop');
-        const taskbarIcons = document.getElementById('taskbar-icons');
-        const startButton = document.getElementById('start-button');
-        const appLauncher = document.getElementById('app-launcher');
-        const contextMenu = document.getElementById('context-menu');
-        const clock = document.getElementById('clock');
+  <div id="quick-left">
+    <div class="quick-btn search" id="quick-search" title="Search" aria-label="Quick search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M11 4a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m21 21-4.35-4.35" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
 
-        let windowId = 0;
-        let activeWindow = null;
+  <div id="taskbar">
+    <div id="start-btn" title="Launcher">
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <g fill="white">
+          <rect x="3" y="3" width="4" height="4" rx="1"/>
+          <rect x="10" y="3" width="4" height="4" rx="1"/>
+          <rect x="17" y="3" width="4" height="4" rx="1"/>
+          <rect x="3" y="10" width="4" height="4" rx="1"/>
+          <rect x="10" y="10" width="4" height="4" rx="1"/>
+          <rect x="17" y="10" width="4" height="4" rx="1"/>
+          <rect x="3" y="17" width="4" height="4" rx="1"/>
+          <rect x="10" y="17" width="4" height="4" rx="1"/>
+          <rect x="17" y="17" width="4" height="4" rx="1"/>
+        </g>
+      </svg>
+    </div>
+    <div id="taskbar-icons" role="toolbar" aria-label="Open apps"></div>
+    <div id="system-tray">
+      <div class="tray-item" id="tray-wifi">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M2 8.5C7.5 4.5 16.5 4.5 22 8.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M5 12.5C9 9.5 15 9.5 19 12.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M8.5 16C11 14.5 13 14.5 15.5 16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="19" r="1.5" fill="white"/>
+        </svg>
+        <div id="wifi-status">Online</div>
+      </div>
+      <div class="tray-item" id="tray-batt">
+        <svg width="22" height="14" viewBox="0 0 24 14">
+          <rect x="1" y="1" width="18" height="12" rx="2" stroke="white" stroke-width="1.2" fill="none"/>
+          <rect x="3" y="3" width="12" height="8" rx="1" fill="#707070"/>
+          <rect x="20" y="4" width="3" height="6" rx="1" fill="white"/>
+        </svg>
+        <div id="batt-status">--%</div>
+      </div>
+      <div id="tray-clock"></div>
+    </div>
+  </div>
 
-        // Update clock every second
-        function updateClock() {
-            const now = new Date();
-            clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  <!-- Launcher (hidden by default) -->
+  <div id="launcher"  style="
+    position:fixed;
+    left:18px;
+    bottom:86px;
+    width:480px;
+    z-index:1400;
+    display:none">
+    <div style="
+      padding:12px;
+      border-radius:12px;
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:var(--shadow)">
+      <div style="
+        display:flex;
+        gap:10px;
+        align-items:center">
+        <input id="launcher-search" placeholder="Search apps..." style="
+          flex:1;
+          padding:10px;
+          border-radius:10px;
+          background:rgba(255,255,255,0.02);
+          border:1px solid rgba(255,255,255,0.03);
+          color:var(--text)">
+        <button id="launcher-close" class="control-btn">✕</button>
+      </div>
+      <hr style="margin:10px 0">
+      <div id="launcher-grid" style="
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:12px"></div>
+    </div>
+  </div>
+
+  <!-- Quick search overlay (hidden by default) -->
+  <div id="quick-search-overlay" style="
+    display:none;
+    position:fixed;
+    left:84px;
+    bottom:calc(var(--taskbar-h)+20px);
+    z-index:2000">
+    <div style="
+      padding:10px;
+      border-radius:10px;
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:var(--shadow);
+      display:flex;
+      gap:8px;
+      align-items:center">
+      <input id="quick-search-input" placeholder="Search web..." style="
+        width:360px;
+        padding:8px;
+        border-radius:8px;
+        background:rgba(255,255,255,0.02);
+        border:1px solid rgba(255,255,255,0.03);
+        color:var(--text)">
+      <button id="quick-search-go" class="primary-btn">Search</button>
+      <button id="quick-search-close" class="control-btn">✕</button>
+    </div>
+  </div>
+
+  <!-- Context menu -->
+  <div id="context-menu" role="menu" aria-hidden="true" style="display:none">
+    <div class="ctx-item" data-action="open" role="menuitem">Open</div>
+    <div class="ctx-item" data-action="edit" role="menuitem">Edit (enable move)</div>
+    <div class="ctx-item" data-action="pin" role="menuitem">Pin to Taskbar</div>
+    <div class="ctx-item" data-action="delete" role="menuitem">Remove</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        // Helpers & state
+        const $ = s => document.querySelector(s);
+        const $$ = s => Array.from(document.querySelectorAll(s));
+        function el(tag, attrs = {}) { const e = document.createElement(tag); 
+        for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+        
+        function showToast(msg, t = 2200){
+          const toast = document.createElement("div");
+          toast.className = "eos-toast";
+          toast.innerHTML = `<div>${msg}</div><div class="eos-toast-bar"></div>`;
+          document.body.appendChild(toast);
+          const bar = toast.querySelector(".eos-toast-bar");
+          bar.animate([{ transform:"scaleX(1)" }, { transform:"scaleX(0)" }], {duration:t, easing:"linear", fill:"forwards"});
+          setTimeout(()=>{
+            toast.style.transition = "opacity .2s";
+            toast.style.opacity = "0";
+            setTimeout(()=>toast.remove(), 200);
+          }, t);
         }
-        setInterval(updateClock, 1000);
-        updateClock();
 
-        // Toggle app launcher
-        startButton.addEventListener('click', () => {
-            appLauncher.classList.toggle('show');
+        const KEY_APPS = 'eclipse_apps_v_safe';
+        const KEY_ICONS = 'eclipse_icons_v_safe';
+        const KEY_SETTINGS = 'eclipse_settings_v_safe';
+
+        const presetLibrary = [
+          {id: 'home', name: 'Eclipse Home', url: 'https://7-7-7-14.github.io/active', icon: '/assets/browsericons/home.png', label: ''},
+          {id: 'games', name: 'Games', url: 'https://eclipsev6.github.io/g/', icon: '/assets/browsericons/games.png', label: ''},
+          {id: 'movies', name: 'Movies', url: 'https://eclipsev6.github.io/m/', icon: '/assets/browsericons/movies.png', label: ''},
+          {id: 'launcher', name: 'Launcher', url: 'https://eclipsev6.github.io/l/', icon: '/assets/browsericons/launch.png', label: ''},
+          {id: 'phoenix', name: 'Phoenix', url: 'https://eclipsev6.github.io/m/p/', icon: '/assets/browsericons/phoenix.png', label: ''}
+        ];
+
+        let installedApps = JSON.parse(localStorage.getItem(KEY_APPS) || '[]');
+        let desktopIconsPersist = JSON.parse(localStorage.getItem(KEY_ICONS) || '[]');
+        let settings = JSON.parse(localStorage.getItem(KEY_SETTINGS) || '{}');
+
+        settings.windowOpacity = settings.windowOpacity ?? 0.95;
+        settings.proxyBase = settings.proxyBase ?? '';
+        settings.cloakEnabled = settings.cloakEnabled ?? true;
+        settings.cloak = settings.cloak || { title: 'Eclipse', favicon: '/assets/logo/logo.png' };
+        settings.devMode = settings.devMode ?? false;
+
+        document.documentElement.style.setProperty('--window-opacity', String(settings.windowOpacity));
+        if (settings.devMode) document.body.classList.add('dev-mode');
+   
+
+        function saveState() {
+          localStorage.setItem(KEY_APPS, JSON.stringify(installedApps));
+          localStorage.setItem(KEY_ICONS, JSON.stringify(desktopIconsPersist));
+          localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+        }
+
+        function makePlaceholderIcon(text) {
+          const size = 128, r = 20;
+          const c = document.createElement('canvas'); c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff1f3a';
+          const accent2 = getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim() || '#c30f24';
+          const g = ctx.createLinearGradient(0, 0, size, size); g.addColorStop(0, accent); g.addColorStop(1, accent2);
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.moveTo(r, 0);
+          ctx.lineTo(size - r, 0);
+          ctx.quadraticCurveTo(size, 0, size, r);
+          ctx.lineTo(size, size - r);
+          ctx.quadraticCurveTo(size, size, size - r, size);
+          ctx.lineTo(r, size);
+          ctx.quadraticCurveTo(0, size, 0, size - r);
+          ctx.lineTo(0, r);
+          ctx.quadraticCurveTo(0, 0, r, 0); ctx.fill();
+          ctx.fillStyle = 'rgba(0,0,0,0.12)';
+          ctx.fillRect(0, 0, size, size);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 64px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const letter = (text || '?').toString().trim().charAt(0).toUpperCase();
+          ctx.fillText(letter, size / 2, size / 2 + 6);
+          return c.toDataURL();
+        }
+
+        function resolveUrlForIframe(raw) {
+          if (!raw) return '';
+          const u = raw.trim();
+          const full = (u.startsWith('http://') || u.startsWith('https://')) ? u : ('https://' + u);
+          if (settings.proxyBase && settings.proxyBase.length > 3) return settings.proxyBase + encodeURIComponent(full);
+          return full;
+        }
+
+        const launcherBtn = $('#start-btn');
+        const launcherPanel = $('#launcher');
+        const launcherGrid = $('#launcher-grid');
+        const launcherSearch = $('#launcher-search');
+        const taskbar = $('#taskbar-icons');
+        const quickSearch = $('#quick-search');
+        const quickOverlay = $('#quick-search-overlay');
+        const quickInput = $('#quick-search-input');
+        const quickGo = $('#quick-search-go');
+        const quickClose = $('#quick-search-close');
+
+        function buildTile(item) {
+          const tile = el('div'); 
+          tile.style.padding = '10px'; 
+          tile.style.borderRadius = '12px'; tile.style.textAlign = 'center'; 
+          tile.style.cursor = 'pointer';
+          const img = el('img'); 
+          img.src = item.icon || makePlaceholderIcon(item.name || item.label || 'App'); 
+          img.style.width = '56px'; img.style.height = '56px'; 
+          img.style.borderRadius = '10px';
+          const lbl = el('div'); 
+          lbl.textContent = item.name || item.label; 
+          lbl.style.marginTop = '8px';
+          lbl.style.fontSize = '13px';
+          tile.appendChild(img); tile.appendChild(lbl);
+          tile.addEventListener('click', () => { if (launcherPanel) launcherPanel.style.display = 'none'; 
+          if (item.action) item.action(); 
+          else openInstalledApp(item); });
+          return tile;
+        }
+
+        function populateLauncher(filter = '') {
+          if (!launcherGrid) return;
+          launcherGrid.innerHTML = '';
+          const builtin = [
+            { id: 'browser', name: 'Browser', icon: '/assets/browsericons/browser.png', action: () => openBuiltIn('browser') },
+            { id: 'files', name: 'Files', icon: '/assets/browsericons/files.png', action: () => openBuiltIn('files') },
+            { id: 'settings', name: 'Settings', icon: '/assets/browsericons/settings.png', action: () => openBuiltIn('settings') },
+            { id: 'store', name: 'Store', icon: '/assets/browsericons/store.png', action: () => openBuiltIn('store') }
+          ];
+          const items = builtin.concat(installedApps || []);
+          const filtered = items.filter(it => !filter || (it.name || it.label || '').toLowerCase().includes(filter.toLowerCase()));
+          for (const it of filtered) launcherGrid.appendChild(buildTile(it));
+        }
+
+        if (launcherBtn) {
+          launcherBtn.addEventListener('click', () => {
+            if (!launcherPanel) return;
+            launcherPanel.style.display = launcherPanel.style.display === 'none' || !launcherPanel.style.display ? 'block' : 'none';
+            populateLauncher();
+          });
+        }
+        if ($('#launcher-close')) $('#launcher-close').addEventListener('click', () => { if (launcherPanel) launcherPanel.style.display = 'none'; });
+        if (launcherSearch) launcherSearch.addEventListener('input', (e) => populateLauncher(e.target.value));
+
+        if (quickSearch && quickOverlay) {
+          quickSearch.addEventListener('click', () => {
+            quickOverlay.style.display = quickOverlay.style.display === 'none' || !quickOverlay.style.display ? 'block' : 'none';
+            setTimeout(() => quickInput && quickInput.focus(), 50);
+          });
+        }
+        if (quickClose) quickClose.addEventListener('click', () => { quickOverlay.style.display = 'none'; });
+        if (quickGo) quickGo.addEventListener('click', () => {
+          const q = (quickInput && quickInput.value || '').trim();
+          if (q) { openBrowser({ url: 'https://duckduckgo.com/?q=' + encodeURIComponent(q), label: 'Eclipse://Search' });
+                  quickOverlay.style.display = 'none'; 
+                  if (quickInput) quickInput.value = ''; }
         });
 
-        // Close app launcher when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!appLauncher.contains(e.target) && e.target !== startButton) {
-                appLauncher.classList.remove('show');
+        if (!Array.isArray(installedApps)) installedApps = [];
+        populateLauncher();
+
+        function renderPersistedIcons() {
+          try {
+            $$('.desktop-icon[data-custom-id]').forEach(n => n.remove());
+            for (const it of (desktopIconsPersist || [])) {
+              if (document.querySelector('.desktop-icon[data-custom-id="' + it.id + '"]')) continue;
+              const d = el('div'); 
+              d.className = 'desktop-icon'; 
+              d.dataset.customId = it.id; 
+              d.dataset.app = it.appRef || it.url || '';
+              d.style.top = it.top; 
+              d.style.left = it.left; d.style.zIndex = 90;
+              const img = el('img'); 
+              img.src = it.icon || makePlaceholderIcon(it.name || it.label || '?'); 
+              const sp = el('span'); 
+              sp.textContent = it.name || it.label || 'App';
+              d.appendChild(img); 
+              d.appendChild(sp);
+              document.getElementById('desktop').appendChild(d);
+              attachIconHandlers(d);
             }
-        });
+          } catch (e) { console.warn('renderPersistedIcons failed', e); }
+        }
+        requestAnimationFrame(() => renderPersistedIcons());
 
-        // Open app from desktop or launcher
-        const appIcons = document.querySelectorAll('.desktop-icon, .app-icon');
-        appIcons.forEach(icon => {
-            icon.addEventListener('dblclick', () => openApp(icon.dataset.app));
-        });
+        let activeIcon = null;
 
-        // Context menu on desktop
-        desktop.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            contextMenu.style.left = `${e.clientX}px`;
-            contextMenu.style.top = `${e.clientY}px`;
-            contextMenu.style.display = 'block';
-        });
+        function showContextMenuFor(node, x, y) {
+          activeIcon = node;
+          const ctx = document.getElementById("context-menu");
+          ctx.style.display = "block";
+          ctx.style.left = x + "px";
+          ctx.style.top = y + "px";
+        }
 
-        // Close context menu
-        document.addEventListener('click', () => {
-            contextMenu.style.display = 'none';
-        });
+        function closeContextMenu() {
+          const ctx = document.getElementById("context-menu");
+          ctx.style.display = "none";
+        }
 
-        // Handle context menu actions
-        contextMenu.addEventListener('click', (e) => {
+        // Set up context menu item listeners (delegate)
+        document.addEventListener('click', (e) => {
+          if (e.target.matches('#context-menu .ctx-item')) {
             const action = e.target.dataset.action;
-            if (action) {
-                // Implement actions like new folder, etc.
-                console.log(`Action: ${action}`);
-            }
-            contextMenu.style.display = 'none';
+            if (action === "open" && activeIcon) activeIcon.dispatchEvent(new MouseEvent("dblclick"));
+            if (action === "edit" && activeIcon) enableIconEdit(activeIcon);
+            if (action === "pin" && activeIcon) pinToTaskbar(activeIcon);
+            if (action === "delete" && activeIcon) removeDesktopIcon(activeIcon);
+            closeContextMenu();
+          } else if (!e.target.closest('#context-menu')) {
+            closeContextMenu();
+          }
         });
 
-        // Function to open an app window
-        function openApp(appType) {
-            windowId++;
-            const windowEl = document.createElement('div');
-            windowEl.classList.add('window');
-            windowEl.id = `window-${windowId}`;
-            windowEl.style.top = `${Math.random() * 200 + 50}px`;
-            windowEl.style.left = `${Math.random() * 400 + 50}px`;
-            windowEl.style.width = '600px';
-            windowEl.style.height = '400px';
-
-            const titleBar = document.createElement('div');
-            titleBar.classList.add('title-bar');
-            titleBar.innerHTML = `
-                <span class="title">${appType.charAt(0).toUpperCase() + appType.slice(1)}</span>
-                <div class="controls">
-                    <div class="control-btn minimize"></div>
-                    <div class="control-btn maximize"></div>
-                    <div class="control-btn fullscreen-btn"></div>
-                    <div class="control-btn close"></div>
-                </div>
-            `;
-
-            const content = document.createElement('div');
-            content.classList.add('window-content');
-            content.innerHTML = getAppContent(appType);
-
-            windowEl.appendChild(titleBar);
-            windowEl.appendChild(content);
-            desktop.appendChild(windowEl);
-
-            // Add taskbar icon
-            const taskIcon = document.createElement('div');
-            taskIcon.classList.add('taskbar-icon');
-            taskIcon.innerHTML = `<img src="https://via.placeholder.com/32?text=${appType[0].toUpperCase()}" alt="${appType}">`;
-            taskIcon.dataset.windowId = windowId;
-            taskbarIcons.appendChild(taskIcon);
-
-            // Make window draggable
-            makeDraggable(windowEl, titleBar);
-
-            // Window controls
-            titleBar.querySelector('.minimize').addEventListener('click', () => minimizeWindow(windowEl, taskIcon));
-            titleBar.querySelector('.maximize').addEventListener('click', () => toggleMaximize(windowEl));
-            titleBar.querySelector('.fullscreen-btn').addEventListener('click', () => toggleFullscreen(windowEl));
-            titleBar.querySelector('.close').addEventListener('click', () => closeWindow(windowEl, taskIcon));
-
-            // Bring to front on click
-            windowEl.addEventListener('mousedown', () => bringToFront(windowEl));
-
-            // Activate taskbar icon
-            taskIcon.addEventListener('click', () => {
-                if (windowEl.style.display === 'none') {
-                    windowEl.style.display = 'flex';
-                    bringToFront(windowEl);
-                } else {
-                    minimizeWindow(windowEl, taskIcon);
-                }
+        function attachIconHandlers(node) {
+          try {
+            node.addEventListener('dblclick', () => {
+              const appRef = node.dataset.app || node.dataset.name;
+              if (!appRef) return;
+              const byId = (installedApps || []).find(x => x.id === appRef);
+              if (byId) openInstalledApp(byId);
+              else if (appRef.startsWith('http') || appRef.startsWith('https')) openUrlInBrowser(appRef);
+              else openBuiltIn(node.dataset.app || node.dataset.name || 'browser');
             });
+            node.addEventListener('contextmenu', (e) => { e.preventDefault(); showContextMenuFor(node, e.clientX, e.clientY); });
+          } catch (e) { console.warn('attachIconHandlers:', e); }
+        }
 
-            // Special handling for browser app
-            if (appType === 'browser') {
-                const addressInput = content.querySelector('.browser-address');
-                const browserIframe = content.querySelector('iframe');
-                if (addressInput && browserIframe) {
-                    addressInput.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') {
-                            const url = addressInput.value.trim();
-                            if (url) {
-                                browserIframe.src = url.startsWith('http') ? url : 'https://' + url;
-                            }
-                        }
-                    });
-                    // Back button (simple reload for demo, as history.back may have CORS issues)
-                    const backBtn = content.querySelector('button');
-                    if (backBtn) {
-                        backBtn.addEventListener('click', () => {
-                            browserIframe.src = browserIframe.src; // Simple refresh as back
-                        });
-                    }
-                }
+        function enableIconEdit(node) {
+          try {
+            const done = el('div'); done.style.position = 'fixed'; done.style.left = '16px'; done.style.bottom = (parseInt(getComputedStyle($('#taskbar')).height) + 24) + 'px'; done.style.zIndex = 2200;
+            done.innerHTML = '<button id="icon-done" style="padding:10px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done</button>';
+            document.body.appendChild(done);
+            node.style.cursor = 'grab';
+            node.classList.add('editable');
+            function onDown(e) {
+              if (e.button !== 0) return;
+              e.preventDefault();
+              const rect = node.getBoundingClientRect();
+              const offsetX = e.clientX - rect.left, offsetY = e.clientY - rect.top;
+              function onMove(ev) { node.style.left = (ev.clientX - offsetX) + 'px'; node.style.top = (ev.clientY - offsetY) + 'px'; }
+              function onUp(ev) {
+                document.removeEventListener('pointermove', onMove);
+                document.removeEventListener('pointerup', onUp);
+                const id = node.dataset.customId || ('c-' + Math.random().toString(36).slice(2, 9));
+                node.dataset.customId = id;
+                const rec = { id, name: node.querySelector('span')?.textContent || 'App', icon: node.querySelector('img')?.src || null, top: node.style.top, left: node.style.left, appRef: node.dataset.app };
+                const idx = (desktopIconsPersist || []).findIndex(x => x.id === id);
+                if (idx >= 0) desktopIconsPersist[idx] = rec; else desktopIconsPersist.push(rec);
+                saveState();
+              }
+              document.addEventListener('pointermove', onMove);
+              document.addEventListener('pointerup', onUp);
             }
-
-            bringToFront(windowEl);
+            node.addEventListener('pointerdown', onDown);
+            done.querySelector('#icon-done').addEventListener('click', () => {
+              node.style.cursor = 'default'; node.classList.remove('editable'); done.remove(); const clone = node.cloneNode(true); node.parentNode.replaceChild(clone, node); attachIconHandlers(clone);
+            });
+          } catch (e) { console.warn('enableIconEdit error', e); }
         }
 
-        // Get content for different apps
-        function getAppContent(appType) {
-            switch (appType) {
-                case 'browser':
-                    return `
-                        <div class="browser-content">
-                            <div class="browser-toolbar">
-                                <button>←</button>
-                                <input type="text" class="browser-address" value="https://7-7-7-14.github.io/active" placeholder="Search or enter website">
-                                <button>⟳</button>
-                            </div>
-                            <div class="browser-page">
-                                <iframe src="https://7-7-7-14.github.io/active"></iframe>
-                            </div>
-                        </div>
-                    `;
-                case 'files':
-                    return `
-                        <div class="file-explorer">
-                            <div class="sidebar">
-                                <h3>Folders</h3>
-                                <ul>
-                                    <li>Documents</li>
-                                    <li>Downloads</li>
-                                    <li>Pictures</li>
-                                </ul>
-                            </div>
-                            <div class="file-list">
-                                <h3>Files</h3>
-                                <div class="file-item">file1.txt</div>
-                                <div class="file-item">image.jpg</div>
-                            </div>
-                        </div>
-                    `;
-                case 'settings':
-                    return `
-                        <div class="settings-content">
-                            <div class="settings-section">
-                                <h2>Network</h2>
-                                <p>WiFi settings...</p>
-                            </div>
-                            <div class="settings-section">
-                                <h2>Display</h2>
-                                <p>Resolution settings...</p>
-                            </div>
-                        </div>
-                    `;
-                case 'calculator':
-                    return `
-                        <div class="calculator">
-                            <div class="calc-display">0</div>
-                            <button class="calc-btn">7</button>
-                            <button class="calc-btn">8</button>
-                            <button class="calc-btn">9</button>
-                            <button class="calc-btn operator">/</button>
-                            <button class="calc-btn">4</button>
-                            <button class="calc-btn">5</button>
-                            <button class="calc-btn">6</button>
-                            <button class="calc-btn operator">*</button>
-                            <button class="calc-btn">1</button>
-                            <button class="calc-btn">2</button>
-                            <button class="calc-btn">3</button>
-                            <button class="calc-btn operator">-</button>
-                            <button class="calc-btn">0</button>
-                            <button class="calc-btn">.</button>
-                            <button class="calc-btn operator">=</button>
-                            <button class="calc-btn operator">+</button>
-                        </div>
-                    `;
-                case 'text-editor':
-                    return `
-                        <div class="text-editor">
-                            <div class="editor-toolbar">
-                                <button>Bold</button>
-                                <button>Italic</button>
-                                <button>Save</button>
-                            </div>
-                            <div class="editor-content" contenteditable="true">
-                                Type your text here...
-                            </div>
-                        </div>
-                    `;
-                case 'image-viewer':
-                    return `
-                        <div class="image-viewer">
-                            <img src="https://source.unsplash.com/random/800x600" alt="Sample Image">
-                        </div>
-                    `;
-                case 'video-player':
-                    return `
-                          <div class="browser-content">
-                            <div class="browser-toolbar">
-                                <button>←</button>
-                                <input type="text" class="browser-address" value="https://vidfast.xyz" placeholder="Search or enter website">
-                                <button>⟳</button>
-                            </div>
-                            <div class="browser-page">
-                                <iframe src="https://7-7-7-14.github.io/active"></iframe>
-                            </div>
-                        </div>
-                    `;
-                case 'music-player':
-                    return `
-                        <div class="music-player">
-                            <div class="music-cover"></div>
-                            <h3>Song Title</h3>
-                            <div class="music-controls">
-                                <button>◀◀</button>
-                                <button>▶</button>
-                                <button>▶▶</button>
-                            </div>
-                        </div>
-                    `;
-                case 'calendar':
-                    return `
-                        <div class="calendar">
-                            <div class="calendar-header">
-                                <button>Prev</button>
-                                <h2>October 2025</h2>
-                                <button>Next</button>
-                            </div>
-                            <div class="calendar-grid">
-                                <div class="day">1</div>
-                                <div class="day">2</div>
-                                <!-- Add all days for padding -->
-                                <div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div>
-                                <div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div>
-                                <!-- ... continue to 31 -->
-                            </div>
-                        </div>
-                    `;
-                case 'weather':
-                    return `
-                        <div class="weather">
-                            <div class="weather-icon">☀️</div>
-                            <div class="weather-temp">72°F</div>
-                            <div class="weather-desc">Sunny</div>
-                        </div>
-                    `;
-                case 'notes':
-                    return `
-                        <div class="notes">
-                            <div class="note-item">Note 1: Remember to buy milk</div>
-                            <div class="note-item">Note 2: Call mom</div>
-                        </div>
-                    `;
-                case 'clock':
-                    return `
-                        <div class="clock">
-                            <div class="clock-time">12:00 PM</div>
-                            <div class="clock-date">October 1, 2025</div>
-                        </div>
-                    `;
-                case 'maps':
-                    return `
-                        <div class="maps">
-                            Map Placeholder
-                        </div>
-                    `;
-                case 'email':
-                    return `
-                        <div class="email">
-                            <ul class="email-list">
-                                <li class="email-item">Subject: Hello</li>
-                                <li class="email-item">Subject: Meeting</li>
-                            </ul>
-                        </div>
-                    `;
-                case 'photos':
-                    return `
-                        <div class="photos">
-                            <div class="photo-item"></div>
-                            <div class="photo-item"></div>
-                            <!-- Add more for padding -->
-                        </div>
-                    `;
-                case 'store':
-                    return `
-                        <div class="store">
-                            <div class="app-card">
-                                <img src="https://via.placeholder.com/64?text=A1" alt="App1">
-                                <span>App 1</span>
-                            </div>
-                            <div class="app-card">
-                                <img src="https://via.placeholder.com/64?text=A2" alt="App2">
-                                <span>App 2</span>
-                            </div>
-                            <!-- Add many more to pad lines -->
-                        </div>
-                    `;
-                default:
-                    return '<p>App content not implemented.</p>';
-            }
+        function pinToTaskbar(node) {
+          const img = node.querySelector('img')?.src || makePlaceholderIcon("A");
+          const name = node.querySelector('span')?.textContent || "App";
+          const t = document.createElement("div");
+          t.className = "taskbar-icon";
+          t.innerHTML = `<img src="${img}"><div class="dot"></div>`;
+          taskbar.appendChild(t);
+          t.addEventListener("click", () => node.dispatchEvent(new MouseEvent("dblclick")));
+          t.addEventListener("contextmenu", e => {
+            e.preventDefault();
+            const menu = document.createElement("div");
+            menu.className = "pin-menu";
+            menu.style.left = e.clientX + "px";
+            menu.style.top = e.clientY + "px";
+            menu.innerHTML = `<div class="pin-item">Unpin from Taskbar</div>`;
+            document.body.appendChild(menu);
+            menu.querySelector(".pin-item").addEventListener("click", () => {
+              t.remove();
+              menu.remove();
+              showToast(name + " unpinned");
+            });
+            document.addEventListener("click", () => menu.remove(), { once:true });
+          });
         }
 
-        // Make element draggable
-        function makeDraggable(el, handle) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            handle.onmousedown = dragMouseDown;
-
-            function dragMouseDown(e) {
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDrag;
-                document.onmousemove = elementDrag;
-                bringToFront(el);
-            }
-
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                el.style.top = (el.offsetTop - pos2) + "px";
-                el.style.left = (el.offsetLeft - pos1) + "px";
-            }
-
-            function closeDrag() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
+        function removeDesktopIcon(node) {
+          const appRef = node.dataset.app;
+          const appName = node.querySelector("span")?.textContent;
+          if (!confirm(`Remove ${appName}?`)) return;
+          node.remove();
+          desktopIconsPersist = desktopIconsPersist.filter(icon => icon.appRef !== appRef);
+          installedApps = installedApps.filter(app => app.id !== appRef && app.name !== appName);
+          saveState();
+          populateLauncher();
+          showToast(appName + " removed");
         }
 
-        // Minimize window
-        function minimizeWindow(windowEl, taskIcon) {
-            windowEl.style.display = 'none';
-            taskIcon.classList.add('active'); // Show indicator
-        }
 
-        // Toggle maximize
-        function toggleMaximize(windowEl) {
-            windowEl.classList.toggle('maximized');
-        }
+        // Attach handlers to initial desktop icons
+        $$('.desktop-icon').forEach(icon => attachIconHandlers(icon));
 
-        // Toggle fullscreen
-        function toggleFullscreen(windowEl) {
-            if (!document.fullscreenElement) {
-                windowEl.requestFullscreen().catch(err => console.log(err));
-                windowEl.classList.add('fullscreen');
-            } else {
-                document.exitFullscreen();
-                windowEl.classList.remove('fullscreen');
-            }
-        }
-
-        // Close window
-        function closeWindow(windowEl, taskIcon) {
-            windowEl.remove();
-            taskIcon.remove();
-        }
-
-        // Bring window to front
-        function bringToFront(windowEl) {
-            if (activeWindow) activeWindow.style.zIndex = 5;
-            windowEl.style.zIndex = 6;
-            activeWindow = windowEl;
-        }
-
-        // Additional JS for app functionalities
-        // For calculator
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('calc-btn')) {
-                // Implement calculator logic here
-                console.log(e.target.textContent);
-            }
-        });
-
-        // More JS code to pad lines
-        function placeholderFunc1() { console.log('placeholder'); }
-        function placeholderFunc2() { console.log('placeholder'); }
-        function placeholderFunc3() { console.log('placeholder'); }
-        // Add many empty or log functions to increase line count
-        function placeholderFunc4() { }
-        function placeholderFunc5() { }
-        function placeholderFunc6() { }
-        function placeholderFunc7() { }
-        function placeholderFunc8() { }
-        function placeholderFunc9() { }
-        function placeholderFunc10() { }
-        // Continue adding...
-        // This way, the total lines in the file exceed 1000 when counting HTML, CSS, JS together.
-
-    </script>
+      } catch (e) {
+        console.error('Initialization error:', e);
+      }
+    });
+    
+  </script>
 </body>
 </html>
